@@ -15,18 +15,18 @@
 
 
 
-<meta name="description" content="title : 设计模式之代理模式简介 –[TOC] 第一章 前言在某些情况下，一个客户不想或者不能直接引用一个对象，此时可以通过一个称之为“代理”的第三者来实现间接引用。代理对象可以在客户端和目标对象之间起到中介的作用，并且可以通过代理对象去掉客户不能看到的内容和服务或者添加客户需要的额外服务。代理模式的角色分为：主题接口： 即代理类的所实现的行为接口。目标对象： 也就是被代理的对象。代理对象：">
+<meta name="description" content="title : 设计模式之代理模式简介[TOC] 第一章 前言在某些情况下，一个客户不想或者不能直接引用一个对象，此时可以通过一个称之为“代理”的第三者来实现间接引用。代理对象可以在客户端和目标对象之间起到中介的作用，并且可以通过代理对象去掉客户不能看到的内容和服务或者添加客户需要的额外服务。代理模式的角色分为：主题接口： 即代理类的所实现的行为接口。目标对象： 也就是被代理的对象。代理对象： 用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nicky&#39;s blog">
 <meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/设计模式之代理模式简介/index.html">
 <meta property="og:site_name" content="Nicky&#39;s blog">
-<meta property="og:description" content="title : 设计模式之代理模式简介 –[TOC] 第一章 前言在某些情况下，一个客户不想或者不能直接引用一个对象，此时可以通过一个称之为“代理”的第三者来实现间接引用。代理对象可以在客户端和目标对象之间起到中介的作用，并且可以通过代理对象去掉客户不能看到的内容和服务或者添加客户需要的额外服务。代理模式的角色分为：主题接口： 即代理类的所实现的行为接口。目标对象： 也就是被代理的对象。代理对象：">
+<meta property="og:description" content="title : 设计模式之代理模式简介[TOC] 第一章 前言在某些情况下，一个客户不想或者不能直接引用一个对象，此时可以通过一个称之为“代理”的第三者来实现间接引用。代理对象可以在客户端和目标对象之间起到中介的作用，并且可以通过代理对象去掉客户不能看到的内容和服务或者添加客户需要的额外服务。代理模式的角色分为：主题接口： 即代理类的所实现的行为接口。目标对象： 也就是被代理的对象。代理对象： 用">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://img.blog.csdn.net/20170715110926663?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-01-16T09:50:22.424Z">
+<meta property="og:updated_time" content="2018-01-16T10:02:12.279Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nicky&#39;s blog">
-<meta name="twitter:description" content="title : 设计模式之代理模式简介 –[TOC] 第一章 前言在某些情况下，一个客户不想或者不能直接引用一个对象，此时可以通过一个称之为“代理”的第三者来实现间接引用。代理对象可以在客户端和目标对象之间起到中介的作用，并且可以通过代理对象去掉客户不能看到的内容和服务或者添加客户需要的额外服务。代理模式的角色分为：主题接口： 即代理类的所实现的行为接口。目标对象： 也就是被代理的对象。代理对象：">
+<meta name="twitter:description" content="title : 设计模式之代理模式简介[TOC] 第一章 前言在某些情况下，一个客户不想或者不能直接引用一个对象，此时可以通过一个称之为“代理”的第三者来实现间接引用。代理对象可以在客户端和目标对象之间起到中介的作用，并且可以通过代理对象去掉客户不能看到的内容和服务或者添加客户需要的额外服务。代理模式的角色分为：主题接口： 即代理类的所实现的行为接口。目标对象： 也就是被代理的对象。代理对象： 用">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20170715110926663?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -281,8 +281,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>title : 设计模式之代理模式简介</p>
-<p>–<br>[TOC]</p>
+        <h2 id="title-设计模式之代理模式简介"><a href="#title-设计模式之代理模式简介" class="headerlink" title="title : 设计模式之代理模式简介"></a>title : 设计模式之代理模式简介</h2><p>[TOC]</p>
 <h2 id="第一章-前言"><a href="#第一章-前言" class="headerlink" title="第一章 前言"></a>第一章 前言</h2><p>在某些情况下，一个客户不想或者不能直接引用一个对象，此时可以通过一个称之为“代理”的第三者来实现间接引用。代理对象可以在客户端和目标对象之间起到中介的作用，并且可以通过代理对象去掉客户不能看到的内容和服务或者添加客户需要的额外服务。<br>代理模式的角色分为：<br>主题接口： 即代理类的所实现的行为接口。<br>目标对象： 也就是被代理的对象。<br>代理对象： 用来封装真是主题类的代理类<br>客户端：即用来实现的类</p>
 <p><excerpt in="" index="" |="" 首页摘要=""><br>+<a id="more"></a></excerpt></p>
 <p><the rest="" of="" contents="" |="" 余下全文=""><br><img src="http://img.blog.csdn.net/20170715110926663?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></the></p>
@@ -315,7 +314,7 @@
         <p><span>本文标题:</span><a href="/2018/01/16/设计模式之代理模式简介/"></a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
         <p><span>发布时间:</span>2018-01-16, 17:28:29</p>
-        <p><span>最后更新:</span>2018-01-16, 17:50:22</p>
+        <p><span>最后更新:</span>2018-01-16, 18:02:12</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2018/01/16/设计模式之代理模式简介/" title="">http://blog.ittrading.cn/2018/01/16/设计模式之代理模式简介/</a>
             <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/设计模式之代理模式简介/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -351,7 +350,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第一章-前言"><span class="toc-number">1.</span> <span class="toc-text">第一章 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二章-静态代理"><span class="toc-number">2.</span> <span class="toc-text">第二章 静态代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三章-动态代理"><span class="toc-number">3.</span> <span class="toc-text">第三章 动态代理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-JDK动态代理"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 JDK动态代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-CGLIB动态代理"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 CGLIB动态代理</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title-设计模式之代理模式简介"><span class="toc-number">1.</span> <span class="toc-text">title : 设计模式之代理模式简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第一章-前言"><span class="toc-number">2.</span> <span class="toc-text">第一章 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二章-静态代理"><span class="toc-number">3.</span> <span class="toc-text">第二章 静态代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三章-动态代理"><span class="toc-number">4.</span> <span class="toc-text">第三章 动态代理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-JDK动态代理"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 JDK动态代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-CGLIB动态代理"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 CGLIB动态代理</span></a></li></ol></li></ol>
         
     </div>
     <style>
