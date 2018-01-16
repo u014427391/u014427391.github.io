@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Nicky" />
+
+
+
+<meta name="description" content="– title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 #">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="– title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 #">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-16T08:38:52.254Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+<meta name="twitter:description" content="– title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 #">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Nicky</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/2284087296@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" href="https://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于JavaEE</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Nicky</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Nicky</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/2284087296@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="https://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-MySQL数据库的锁机制" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/01/16/MySQL数据库的锁机制/" class="article-date">
+      <time datetime="2018-01-16T07:26:58.605Z" itemprop="datePublished">2018-01-16</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>–</p>
+<h2 id="title-MySQL数据库的锁机制"><a href="#title-MySQL数据库的锁机制" class="headerlink" title="title:MySQL数据库的锁机制"></a>title:MySQL数据库的锁机制</h2><p>在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。</p>
+<p>###锁分类<br>①、按操作划分：DML锁，DDL锁<br>②、按锁的粒度划分：表级锁、行级锁、页级锁<br>③、按锁级别划分：共享锁、排他锁<br>④、按加锁方式划分：自动锁、显示锁<br>⑤、按使用方式划分：乐观锁、悲观锁</p>
+<p>###乐观锁和悲观锁</p>
+<p>乐观并发控制和悲观并发控制是并发控制采用的主要方法。乐观锁和悲观锁不仅在关系数据库里应用，在Hibernate、Memcache等等也有相关概念。</p>
+<p>悲观锁：也即悲观并发控制，Pessimistic Concurrency Controller，缩写PCC。悲观锁是指在数据处理过程，使数据处于锁定状态，一般使用数据库的锁机制实现。<br>备注，在MySQL中使用悲观锁，必须关闭MySQL的自动提交，set autocommit=0。MySQL默认使用自动提交autocommit模式，也即你执行一个更新操作，MySQL会自动将结果提交。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//0.开始事务</span><br><span class="line">begin;/begin work;/start transaction; (三者选一就可</span><br><span class="line">//1.查询出商品信息</span><br><span class="line">select status from t_goods where id=1 for update;</span><br><span class="line">//2.根据商品信息生成订单</span><br><span class="line">insert into t_orders (id,goods_id) values (null,1);</span><br><span class="line">//3.修改商品status为2</span><br><span class="line">update t_goods set status=2;</span><br><span class="line">//4.提交事务</span><br><span class="line">commit;/commit work;</span><br></pre></td></tr></table></figure>
+<p>本例子使用select…for update方式将数据锁住，也就是开启了排他锁</p>
+<p><excerpt in="" index="" |="" 首页摘要=""><br><a id="more"></a></excerpt></p>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<blockquote>
+<p>悲观锁优缺点：<br>悲观并发控制(悲观锁)采用”先取锁再分”的保守策略，为数据处理提供了安全的保证。但在效率方面，加锁机制会产生额外的开销，增加产生死锁的机会。</p>
+</blockquote>
+<p>乐观锁：相对悲观锁来说，乐观锁是通过记录数据版本的方式实现乐观锁。为数据增加一个版本标识，读取数据时，将版本标识一起读出，数据没更新一次，就对版本标识进行更新。</p>
+<blockquote>
+<p>乐观锁优缺点：<br>乐观锁认为事务直接竞争的概率是很小的，在提交的时候才锁定，所以不会产生死锁。但是如果两个事务同时读取数据库的某一行，这时，就会发现乐观锁的弊端。</p>
+</blockquote>
+<p>###MySQL常用存储引擎的锁机制</p>
+<blockquote>
+<p>BDB：支持页级锁和表级锁，默认是页级锁<br>InnoDB：支持行级锁和表级锁，默认是行级锁<br>MyISAM &amp;Memory：这两个存储引擎都是采用表级锁</p>
+</blockquote>
+<p>###MySQL中排它锁和共享锁<br>排它锁(exclusive locck)<br>排它锁又叫写锁，如果事务T对A加上排它锁，则其它事务都不能对A加任何类型的锁。获准排它锁的事务既能读数据，又能写数据。</p>
+<blockquote>
+<p>用法：SELECT … FOR UPDATE</p>
+</blockquote>
+<p>共享锁(share lock)<br>共享锁又叫读锁，如果事务T对A加上共享锁，则其它事务只能对A再加共享锁，不能加其它锁。获准共享锁的事务只能读数据，不能写数据。</p>
+<blockquote>
+<p>用法：SELECT … LOCK IN SHARE MODE;</p>
+</blockquote>
+<p>###MySQL中的行级锁、表级锁和页级锁</p>
+<blockquote>
+<p>行级锁：行级锁分为共享锁和排它锁。行级锁是Mysql中锁定粒度最细的锁。InnoDB引擎支持行级锁和表级锁，只有在通过索引条件检索数据的时候，才使用行级锁，否就使用表级锁。行级锁开销大，加锁慢，锁定粒度最小，发生锁冲突概率最低，并发度最高</p>
+<p>表级锁：表级锁分为表共享锁和表独占锁。表级锁开销小，加锁快，锁定粒度大、发生锁冲突最高，并发度最低</p>
+<p>页级锁：页级锁是MySQL中锁定粒度介于行级锁和表级锁中间的一种锁。表级锁速度快，但冲突多，行级冲突少，但速度慢。所以取了折衷的页级，一次锁定相邻的一组记录。BDB支持页级锁。<br>开销和加锁时间界于表锁和行锁之间；会出现死锁；锁定粒度界于表锁和行锁之间，并发度一般</p>
+</blockquote>
+<p><a href="http://www.hollischuang.com/archives/934" target="_blank" rel="noopener">http://www.hollischuang.com/archives/934</a><br><a href="https://crossoverjie.top/2017/07/09/SSM15/" target="_blank" rel="noopener">https://crossoverjie.top/2017/07/09/SSM15/</a></p>
+</the>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/01/16/MySQL数据库的锁机制/"></a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
+        <p><span>发布时间:</span>2018-01-16, 15:26:58</p>
+        <p><span>最后更新:</span>2018-01-16, 16:38:52</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/16/MySQL数据库的锁机制/" title="">http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/">
+                    
+                </a>
+            </div>
+        
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title-MySQL数据库的锁机制"><span class="toc-number">1.</span> <span class="toc-text">title:MySQL数据库的锁机制</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2018/01/16/MySQL数据库的锁机制/" data-title="" data-url="http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/"></div>
+    <script>
+        var duoshuoQuery = {short_name:""};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/" title="上一篇: ">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/">SpringBoot集成Redis实现缓存处理(Spring AOP技术)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/MySQL数据库的锁机制/">MySQL数据库的锁机制</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2013-2018 Nicky
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

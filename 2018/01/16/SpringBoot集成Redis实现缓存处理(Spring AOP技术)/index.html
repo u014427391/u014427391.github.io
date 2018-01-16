@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Nicky" />
+
+
+
+<meta name="description" content="– title:SpringBoot集成Redis实现缓存处理第一章 需求分析计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。开源项目：https://github.com/u014427391/jeeplatform欢迎star(收藏) 第二">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="– title:SpringBoot集成Redis实现缓存处理第一章 需求分析计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。开源项目：https://github.com/u014427391/jeeplatform欢迎star(收藏) 第二">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.blog.csdn.net/20171214104855753?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171214112834478?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171214104250995?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171214104303308?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-01-16T08:39:23.591Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+<meta name="twitter:description" content="– title:SpringBoot集成Redis实现缓存处理第一章 需求分析计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。开源项目：https://github.com/u014427391/jeeplatform欢迎star(收藏) 第二">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20171214104855753?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Nicky</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/2284087296@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" href="https://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于JavaEE</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Nicky</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Nicky</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/2284087296@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="https://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-SpringBoot集成Redis实现缓存处理(Spring AOP技术)" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/" class="article-date">
+      <time datetime="2018-01-16T07:27:25.781Z" itemprop="datePublished">2018-01-16</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>–</p>
+<h2 id="title-SpringBoot集成Redis实现缓存处理"><a href="#title-SpringBoot集成Redis实现缓存处理" class="headerlink" title="title:SpringBoot集成Redis实现缓存处理"></a>title:SpringBoot集成Redis实现缓存处理</h2><h3 id="第一章-需求分析"><a href="#第一章-需求分析" class="headerlink" title="第一章 需求分析"></a>第一章 需求分析</h3><p>计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。<br>开源项目：<a href="https://github.com/u014427391/jeeplatform" target="_blank" rel="noopener">https://github.com/u014427391/jeeplatform</a><br>欢迎star(收藏)</p>
+<h3 id="第二章-SpringBoot简介"><a href="#第二章-SpringBoot简介" class="headerlink" title="第二章 SpringBoot简介"></a>第二章 SpringBoot简介</h3><blockquote>
+<p>Spring框架作为JavaEE框架领域的一款重要的开源框架，在企业应用开发中有着很重要的作用，同时Spring框架及其子框架很多，所以知识量很广。<br>SpringBoot：一款Spring框架的子框架，也可以叫微框架，是2014年推出的一款使Spring框架开发变得容易的框架。学过Spring框架的都知识，Spring框架难以避免地需要配置不少XMl，而使用SpringBoot框架的话，就可以使用注解开发，极大地简化基于Spring框架的开发。SpringBoot充分利用了JavaConfig的配置模式以及“约定优于配置”的理念，能够极大的简化基于SpringMVC的Web应用和REST服务开发。</p>
+</blockquote>
+<p><excerpt in="" index="" |="" 首页摘要=""><br><a id="more"></a></excerpt></p>
+<p><the rest="" of="" contents="" |="" 余下全文=""></the></p>
+<h3 id="第三章-Redis简介"><a href="#第三章-Redis简介" class="headerlink" title="第三章 Redis简介"></a>第三章 Redis简介</h3><p>####3.1 Redis安装部署(Linux)<br>Redis安装部署的可以参考我的博客(Redis是基于C编写的，所以安装前先安装gcc编译器)：<a href="http://blog.csdn.net/u014427391/article/details/71210989" target="_blank" rel="noopener">http://blog.csdn.net/u014427391/article/details/71210989</a></p>
+<h4 id="3-2-Redis简介"><a href="#3-2-Redis简介" class="headerlink" title="3.2 Redis简介"></a>3.2 Redis简介</h4><blockquote>
+<p>Redis如今已经成为Web开发社区最火热的内存数据库之一，随着Web2.0的快速发展，再加上半结构数据比重加大，网站对高效性能的需求也越来越多。<br>而且大型网站一般都有几百台或者更多Redis服务器。Redis作为一款功能强大的系统，无论是存储、队列还是缓存系统，都有其用武之地。</p>
+</blockquote>
+<p>SpringBoot框架入门的可以参考我之前的博客：<a href="http://blog.csdn.net/u014427391/article/details/70655332" target="_blank" rel="noopener">http://blog.csdn.net/u014427391/article/details/70655332</a></p>
+<p>###第四章 Redis缓存实现</p>
+<h4 id="4-1下面结构图"><a href="#4-1下面结构图" class="headerlink" title="4.1下面结构图"></a>4.1下面结构图</h4><p>项目结构图：<br><img src="http://img.blog.csdn.net/20171214104855753?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h4 id="4-2-SpringBoot的yml文件配置"><a href="#4-2-SpringBoot的yml文件配置" class="headerlink" title="4.2 SpringBoot的yml文件配置"></a>4.2 SpringBoot的yml文件配置</h4><p>添加resource下面的application.yml配置，这里主要配置mysql，druid，redis</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  datasource:</span><br><span class="line"></span><br><span class="line">    # 主数据源</span><br><span class="line">    shop:</span><br><span class="line">      url: jdbc:mysql://127.0.0.1:3306/jeeplatform?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;characterSetResults=utf8&amp;useSSL=false</span><br><span class="line">      username: root</span><br><span class="line">      password: root</span><br><span class="line"></span><br><span class="line">    driver-class-name: com.mysql.jdbc.Driver</span><br><span class="line">    type: com.alibaba.druid.pool.DruidDataSource</span><br><span class="line"></span><br><span class="line">    # 连接池设置</span><br><span class="line">    druid:</span><br><span class="line">      initial-size: 5</span><br><span class="line">      min-idle: 5</span><br><span class="line">      max-active: 20</span><br><span class="line">      # 配置获取连接等待超时的时间</span><br><span class="line">      max-wait: 60000</span><br><span class="line">      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒</span><br><span class="line">      time-between-eviction-runs-millis: 60000</span><br><span class="line">      # 配置一个连接在池中最小生存的时间，单位是毫秒</span><br><span class="line">      min-evictable-idle-time-millis: 300000</span><br><span class="line">      # Oracle请使用select 1 from dual</span><br><span class="line">      validation-query: SELECT &apos;x&apos;</span><br><span class="line">      test-while-idle: true</span><br><span class="line">      test-on-borrow: false</span><br><span class="line">      test-on-return: false</span><br><span class="line">      # 打开PSCache，并且指定每个连接上PSCache的大小</span><br><span class="line">      pool-prepared-statements: true</span><br><span class="line">      max-pool-prepared-statement-per-connection-size: 20</span><br><span class="line">      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，&apos;wall&apos;用于防火墙</span><br><span class="line">      filters: stat,wall,slf4j</span><br><span class="line">      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录</span><br><span class="line">      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000</span><br><span class="line">      # 合并多个DruidDataSource的监控数据</span><br><span class="line">      use-global-data-source-stat: true</span><br><span class="line">  jpa:</span><br><span class="line">    database: mysql</span><br><span class="line">    hibernate:</span><br><span class="line">      show_sql: true</span><br><span class="line">      format_sql: true</span><br><span class="line">      ddl-auto: none</span><br><span class="line">      naming:</span><br><span class="line">        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl</span><br><span class="line">  mvc:</span><br><span class="line">    view:</span><br><span class="line">      prefix: /WEB-INF/jsp/</span><br><span class="line">      suffix: .jsp</span><br><span class="line">  #Jedis配置</span><br><span class="line">  jedis :</span><br><span class="line">    pool :</span><br><span class="line">      host : 127.0.0.1</span><br><span class="line">      port : 6379</span><br><span class="line">      password : password</span><br><span class="line">      timeout : 0</span><br><span class="line">      config :</span><br><span class="line">        maxTotal : 100</span><br><span class="line">        maxIdle : 10</span><br><span class="line">        maxWaitMillis : 100000</span><br></pre></td></tr></table></figure>
+<p>编写一个配置类启动配置JedisConfig.java:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">package org.muses.jeeplatform.config;</span><br><span class="line"></span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.beans.factory.annotation.Qualifier;</span><br><span class="line">import org.springframework.beans.factory.annotation.Value;</span><br><span class="line">import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;</span><br><span class="line">import org.springframework.boot.context.properties.ConfigurationProperties;</span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import redis.clients.jedis.JedisPool;</span><br><span class="line">import redis.clients.jedis.JedisPoolConfig;</span><br><span class="line"></span><br><span class="line">@Configuration</span><br><span class="line">//@ConfigurationProperties(prefix = JedisConfig.JEDIS_PREFIX )</span><br><span class="line">public class JedisConfig &#123;</span><br><span class="line"></span><br><span class="line">    //public static final String JEDIS_PREFIX = &quot;jedis&quot;;</span><br><span class="line"></span><br><span class="line">    @Bean(name= &quot;jedisPool&quot;)</span><br><span class="line">    @Autowired</span><br><span class="line">    public JedisPool jedisPool(@Qualifier(&quot;jedisPoolConfig&quot;) JedisPoolConfig config,</span><br><span class="line">                                   @Value(&quot;$&#123;spring.jedis.pool.host&#125;&quot;)String host,</span><br><span class="line">                                   @Value(&quot;$&#123;spring.jedis.pool.port&#125;&quot;)int port,</span><br><span class="line">                                   @Value(&quot;$&#123;spring.jedis.pool.timeout&#125;&quot;)int timeout,</span><br><span class="line">                                   @Value(&quot;$&#123;spring.jedis.pool.password&#125;&quot;)String password) &#123;</span><br><span class="line">            return new JedisPool(config, host, port,timeout,password);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean(name= &quot;jedisPoolConfig&quot;)</span><br><span class="line">    public JedisPoolConfig jedisPoolConfig (@Value(&quot;$&#123;spring.jedis.pool.config.maxTotal&#125;&quot;)int maxTotal,</span><br><span class="line">                                                @Value(&quot;$&#123;spring.jedis.pool.config.maxIdle&#125;&quot;)int maxIdle,</span><br><span class="line">                                                @Value(&quot;$&#123;spring.jedis.pool.config.maxWaitMillis&#125;&quot;)int maxWaitMillis) &#123;</span><br><span class="line">            JedisPoolConfig config = new JedisPoolConfig();</span><br><span class="line">            config.setMaxTotal(maxTotal);</span><br><span class="line">            config.setMaxIdle(maxIdle);</span><br><span class="line">            config.setMaxWaitMillis(maxWaitMillis);</span><br><span class="line">            return config;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####4.3 元注解类编写<br>编写一个元注解类RedisCache.java，被改注解定义的类都自动实现AOP缓存处理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package org.muses.jeeplatform.annotation;</span><br><span class="line"></span><br><span class="line">import org.muses.jeeplatform.common.RedisCacheNamespace;</span><br><span class="line"></span><br><span class="line">import java.lang.annotation.*;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 元注解 用来标识查询数据库的方法</span><br><span class="line"> */</span><br><span class="line">@Documented</span><br><span class="line">@Target(ElementType.METHOD)</span><br><span class="line">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="line">public @interface RedisCache &#123;</span><br><span class="line">//    RedisCacheNamespace nameSpace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>JDK 5提供的注解，除了Retention以外，还有另外三个，即Target 、Inherited 和 Documented。基于这个，我们可以实现自定义的元注解<br>我们设置RedisCache基于Method方法级别引用。</p>
+<blockquote>
+<p>1.RetentionPolicy.SOURCE    这种类型的Annotations只在源代码级别保留,编译时就会被忽略<br>2.RetentionPolicy.CLASS    这种类型的Annotations编译时被保留,在class文件中存在,但JVM将会忽略<br>3.RetentionPolicy.RUNTIME    这种类型的Annotations将被JVM保留,所以他们能在运行时被JVM或其他使用反射机制的代码所读取和使用.</p>
+</blockquote>
+<h4 id="4-4-调用JedisPool实现Redis缓存处理"><a href="#4-4-调用JedisPool实现Redis缓存处理" class="headerlink" title="4.4 调用JedisPool实现Redis缓存处理"></a>4.4 调用JedisPool实现Redis缓存处理</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">package org.muses.jeeplatform.cache;</span><br><span class="line"></span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line">import redis.clients.jedis.Jedis;</span><br><span class="line">import redis.clients.jedis.JedisPool;</span><br><span class="line"></span><br><span class="line">import javax.annotation.Resource;</span><br><span class="line">@Component(&quot;redisCache&quot;)</span><br><span class="line">public class RedisCache &#123;</span><br><span class="line">	</span><br><span class="line">	@Autowired</span><br><span class="line">	private JedisPool jedisPool;</span><br><span class="line">	</span><br><span class="line">	private JedisPool getJedisPool()&#123;</span><br><span class="line">		return jedisPool;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public void setJedisPool(JedisPool jedisPool)&#123;</span><br><span class="line">		this.jedisPool = jedisPool;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 从Redis缓存获取数据</span><br><span class="line">	 * @param redisKey</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	public Object getDataFromRedis(String redisKey)&#123;</span><br><span class="line">		Jedis jedis = jedisPool.getResource();</span><br><span class="line">		byte[] byteArray = jedis.get(redisKey.getBytes());</span><br><span class="line">		</span><br><span class="line">		if(byteArray != null)&#123;</span><br><span class="line">			return SerializeUtil.unSerialize(byteArray);</span><br><span class="line">		&#125;</span><br><span class="line">		return null;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 保存数据到Redis</span><br><span class="line">	 * @param redisKey</span><br><span class="line">	 */</span><br><span class="line">	public String saveDataToRedis(String redisKey,Object obj)&#123;</span><br><span class="line">		</span><br><span class="line">		byte[] bytes = SerializeUtil.serialize(obj);</span><br><span class="line">		</span><br><span class="line">		Jedis jedis = jedisPool.getResource();</span><br><span class="line">		</span><br><span class="line">		String code = jedis.set(redisKey.getBytes(), bytes);</span><br><span class="line">		</span><br><span class="line">		return code;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对象序列化的工具类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">package org.muses.jeeplatform.cache;</span><br><span class="line"></span><br><span class="line">import java.io.*;</span><br><span class="line"></span><br><span class="line">public class SerializeUtil &#123;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 序列化对象</span><br><span class="line">	 * @param obj</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	public static byte[] serialize(Object obj)&#123;</span><br><span class="line">		ObjectOutputStream oos = null;</span><br><span class="line">		ByteArrayOutputStream baos = null;</span><br><span class="line">		try&#123;</span><br><span class="line">			baos = new ByteArrayOutputStream();</span><br><span class="line">			oos = new ObjectOutputStream(baos);</span><br><span class="line">			</span><br><span class="line">			oos.writeObject(obj);</span><br><span class="line">			byte[] byteArray = baos.toByteArray();</span><br><span class="line">			return byteArray;</span><br><span class="line">			</span><br><span class="line">		&#125;catch(IOException e)&#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		return null;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 反序列化对象</span><br><span class="line">	 * @param byteArray</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	public static Object unSerialize(byte[] byteArray)&#123;</span><br><span class="line">		ByteArrayInputStream bais = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            //反序列化为对象</span><br><span class="line">            bais = new ByteArrayInputStream(byteArray);</span><br><span class="line">            ObjectInputStream ois = new ObjectInputStream(bais);</span><br><span class="line">            return ois.readObject();</span><br><span class="line">            </span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里记得Vo类都要实现Serializable<br>例如菜单信息VO类，这是一个JPA映射的实体类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br></pre></td><td class="code"><pre><span class="line">package org.muses.jeeplatform.core.entity.admin;</span><br><span class="line"></span><br><span class="line">import javax.persistence.*;</span><br><span class="line">import java.io.Serializable;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @description 菜单信息实体</span><br><span class="line"> * @author Nicky</span><br><span class="line"> * @date 2017年3月17日</span><br><span class="line"> */</span><br><span class="line">@Table(name=&quot;sys_menu&quot;)</span><br><span class="line">@Entity</span><br><span class="line">public class Menu implements Serializable &#123;</span><br><span class="line"></span><br><span class="line">	/** 菜单Id**/</span><br><span class="line">	private int menuId;</span><br><span class="line">	</span><br><span class="line">	/** 上级Id**/</span><br><span class="line">	private int parentId;</span><br><span class="line">	</span><br><span class="line">	/** 菜单名称**/</span><br><span class="line">	private String menuName;</span><br><span class="line">	</span><br><span class="line">	/** 菜单图标**/</span><br><span class="line">	private String menuIcon;</span><br><span class="line">	</span><br><span class="line">	/** 菜单URL**/</span><br><span class="line">	private String menuUrl;</span><br><span class="line">	</span><br><span class="line">	/** 菜单类型**/</span><br><span class="line">	private String menuType;</span><br><span class="line">	</span><br><span class="line">	/** 菜单排序**/</span><br><span class="line">	private String menuOrder;</span><br><span class="line"></span><br><span class="line">	/**菜单状态**/</span><br><span class="line">	private String menuStatus;</span><br><span class="line"></span><br><span class="line">	private List&lt;Menu&gt; subMenu;</span><br><span class="line"></span><br><span class="line">	private String target;</span><br><span class="line"></span><br><span class="line">	private boolean hasSubMenu = false;</span><br><span class="line"></span><br><span class="line">	public Menu() &#123;</span><br><span class="line">		super();</span><br><span class="line">	&#125;   </span><br><span class="line">	</span><br><span class="line">	@Id</span><br><span class="line">	@GeneratedValue(strategy=GenerationType.IDENTITY)</span><br><span class="line">	public int getMenuId() &#123;</span><br><span class="line">		return this.menuId;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setMenuId(int menuId) &#123;</span><br><span class="line">		this.menuId = menuId;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Column(length=100)</span><br><span class="line">	public int getParentId() &#123;</span><br><span class="line">		return parentId;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setParentId(int parentId) &#123;</span><br><span class="line">		this.parentId = parentId;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Column(length=100)</span><br><span class="line">	public String getMenuName() &#123;</span><br><span class="line">		return this.menuName;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setMenuName(String menuName) &#123;</span><br><span class="line">		this.menuName = menuName;</span><br><span class="line">	&#125;   </span><br><span class="line">	</span><br><span class="line">	@Column(length=30)</span><br><span class="line">	public String getMenuIcon() &#123;</span><br><span class="line">		return this.menuIcon;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setMenuIcon(String menuIcon) &#123;</span><br><span class="line">		this.menuIcon = menuIcon;</span><br><span class="line">	&#125;   </span><br><span class="line">	</span><br><span class="line">	@Column(length=100)</span><br><span class="line">	public String getMenuUrl() &#123;</span><br><span class="line">		return this.menuUrl;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setMenuUrl(String menuUrl) &#123;</span><br><span class="line">		this.menuUrl = menuUrl;</span><br><span class="line">	&#125;   </span><br><span class="line">	</span><br><span class="line">	@Column(length=100)</span><br><span class="line">	public String getMenuType() &#123;</span><br><span class="line">		return this.menuType;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setMenuType(String menuType) &#123;</span><br><span class="line">		this.menuType = menuType;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Column(length=10)</span><br><span class="line">	public String getMenuOrder() &#123;</span><br><span class="line">		return menuOrder;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setMenuOrder(String menuOrder) &#123;</span><br><span class="line">		this.menuOrder = menuOrder;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Column(length=10)</span><br><span class="line">	public String getMenuStatus()&#123;</span><br><span class="line">		return menuStatus;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setMenuStatus(String menuStatus)&#123;</span><br><span class="line">		this.menuStatus = menuStatus;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Transient</span><br><span class="line">	public List&lt;Menu&gt; getSubMenu() &#123;</span><br><span class="line">		return subMenu;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setSubMenu(List&lt;Menu&gt; subMenu) &#123;</span><br><span class="line">		this.subMenu = subMenu;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setTarget(String target)&#123;</span><br><span class="line">		this.target = target;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Transient</span><br><span class="line">	public String getTarget()&#123;</span><br><span class="line">		return target;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setHasSubMenu(boolean hasSubMenu)&#123;</span><br><span class="line">		this.hasSubMenu = hasSubMenu;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Transient</span><br><span class="line">	public boolean getHasSubMenu()&#123;</span><br><span class="line">		return hasSubMenu;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####4.5 Spring AOP实现监控所有被@RedisCache注解的方法缓存</p>
+<p>先从Redis里获取缓存,查询不到，就查询MySQL数据库，然后再保存到Redis缓存里，下次查询时直接调用Redis缓存</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">package org.muses.jeeplatform.cache;</span><br><span class="line"></span><br><span class="line">import org.aspectj.lang.ProceedingJoinPoint;</span><br><span class="line">import org.aspectj.lang.annotation.Around;</span><br><span class="line">import org.aspectj.lang.annotation.Aspect;</span><br><span class="line">import org.aspectj.lang.annotation.Pointcut;</span><br><span class="line">import org.slf4j.Logger;</span><br><span class="line">import org.slf4j.LoggerFactory;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.beans.factory.annotation.Qualifier;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * AOP实现Redis缓存处理</span><br><span class="line"> */</span><br><span class="line">@Component</span><br><span class="line">@Aspect</span><br><span class="line">public class RedisAspect &#123;</span><br><span class="line"></span><br><span class="line">	private static final Logger LOGGER = LoggerFactory.getLogger(RedisAspect.class);</span><br><span class="line"></span><br><span class="line">	@Autowired</span><br><span class="line">    @Qualifier(&quot;redisCache&quot;)</span><br><span class="line">	private RedisCache redisCache;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 拦截所有元注解RedisCache注解的方法</span><br><span class="line">	 */</span><br><span class="line">	@Pointcut(&quot;@annotation(org.muses.jeeplatform.annotation.RedisCache)&quot;)</span><br><span class="line">	public void pointcutMethod()&#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 环绕处理，先从Redis里获取缓存,查询不到，就查询MySQL数据库，</span><br><span class="line">	 * 然后再保存到Redis缓存里</span><br><span class="line">	 * @param joinPoint</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	@Around(&quot;pointcutMethod()&quot;)</span><br><span class="line">	public Object around(ProceedingJoinPoint joinPoint)&#123;</span><br><span class="line">		//前置：从Redis里获取缓存</span><br><span class="line">		//先获取目标方法参数</span><br><span class="line">		long startTime = System.currentTimeMillis();</span><br><span class="line">		String applId = null;</span><br><span class="line">		Object[] args = joinPoint.getArgs();</span><br><span class="line">		if (args != null &amp;&amp; args.length &gt; 0) &#123;</span><br><span class="line">			applId = String.valueOf(args[0]);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		//获取目标方法所在类</span><br><span class="line">		String target = joinPoint.getTarget().toString();</span><br><span class="line">		String className = target.split(&quot;@&quot;)[0];</span><br><span class="line"></span><br><span class="line">		//获取目标方法的方法名称</span><br><span class="line">		String methodName = joinPoint.getSignature().getName();</span><br><span class="line"></span><br><span class="line">		//redis中key格式：    applId:方法名称</span><br><span class="line">		String redisKey = applId + &quot;:&quot; + className + &quot;.&quot; + methodName;</span><br><span class="line"></span><br><span class="line">		Object obj = redisCache.getDataFromRedis(redisKey);</span><br><span class="line"></span><br><span class="line">		if(obj!=null)&#123;</span><br><span class="line">			LOGGER.info(&quot;**********从Redis中查到了数据**********&quot;);</span><br><span class="line">			LOGGER.info(&quot;Redis的KEY值:&quot;+redisKey);</span><br><span class="line">			LOGGER.info(&quot;REDIS的VALUE值:&quot;+obj.toString());</span><br><span class="line">			return obj;</span><br><span class="line">		&#125;</span><br><span class="line">		long endTime = System.currentTimeMillis();</span><br><span class="line">		LOGGER.info(&quot;Redis缓存AOP处理所用时间:&quot;+(endTime-startTime));</span><br><span class="line">		LOGGER.info(&quot;**********没有从Redis查到数据**********&quot;);</span><br><span class="line">		try&#123;</span><br><span class="line">			obj = joinPoint.proceed();</span><br><span class="line">		&#125;catch(Throwable e)&#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		LOGGER.info(&quot;**********开始从MySQL查询数据**********&quot;);</span><br><span class="line">		//后置：将数据库查到的数据保存到Redis</span><br><span class="line">		String code = redisCache.saveDataToRedis(redisKey,obj);</span><br><span class="line">		if(code.equals(&quot;OK&quot;))&#123;</span><br><span class="line">			LOGGER.info(&quot;**********数据成功保存到Redis缓存!!!**********&quot;);</span><br><span class="line">			LOGGER.info(&quot;Redis的KEY值:&quot;+redisKey);</span><br><span class="line">			LOGGER.info(&quot;REDIS的VALUE值:&quot;+obj.toString());</span><br><span class="line">		&#125;</span><br><span class="line">		return obj;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后调用@RedisCache实现缓存</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">	 * 通过菜单Id获取菜单信息</span><br><span class="line">	 * @param id</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	@Transactional</span><br><span class="line">	@RedisCache</span><br><span class="line">	public Menu findMenuById(@RedisCacheKey int id)&#123;</span><br><span class="line">		return menuRepository.findMenuByMenuId(id);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>登录系统，然后加入@RedisCache注解的方法都会实现Redis缓存处理<br><img src="http://img.blog.csdn.net/20171214112834478?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20171214104250995?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>可以看到Redis里保存到了缓存</p>
+<p><img src="http://img.blog.csdn.net/20171214104303308?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>项目代码：<a href="https://github.com/u014427391/jeeplatform,欢迎去github上star(收藏" target="_blank" rel="noopener">https://github.com/u014427391/jeeplatform,欢迎去github上star(收藏</a>)</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/"></a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
+        <p><span>发布时间:</span>2018-01-16, 15:27:25</p>
+        <p><span>最后更新:</span>2018-01-16, 16:39:23</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/" title="">http://blog.ittrading.cn/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/01/16/MySQL数据库的锁机制/">
+                    
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title-SpringBoot集成Redis实现缓存处理"><span class="toc-number">1.</span> <span class="toc-text">title:SpringBoot集成Redis实现缓存处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一章-需求分析"><span class="toc-number">1.1.</span> <span class="toc-text">第一章 需求分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二章-SpringBoot简介"><span class="toc-number">1.2.</span> <span class="toc-text">第二章 SpringBoot简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第三章-Redis简介"><span class="toc-number">1.3.</span> <span class="toc-text">第三章 Redis简介</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-Redis简介"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.2 Redis简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1下面结构图"><span class="toc-number">1.3.2.</span> <span class="toc-text">4.1下面结构图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-SpringBoot的yml文件配置"><span class="toc-number">1.3.3.</span> <span class="toc-text">4.2 SpringBoot的yml文件配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4-调用JedisPool实现Redis缓存处理"><span class="toc-number">1.3.4.</span> <span class="toc-text">4.4 调用JedisPool实现Redis缓存处理</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/" data-title="" data-url="http://blog.ittrading.cn/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/"></div>
+    <script>
+        var duoshuoQuery = {short_name:""};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/01/16/MySQL数据库的锁机制/" title="下一篇: ">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/">SpringBoot集成Redis实现缓存处理(Spring AOP技术)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/MySQL数据库的锁机制/">MySQL数据库的锁机制</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2013-2018 Nicky
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
