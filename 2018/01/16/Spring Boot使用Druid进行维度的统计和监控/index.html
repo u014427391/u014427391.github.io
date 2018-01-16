@@ -15,19 +15,19 @@
 
 
 
-<meta name="description" content="title: SpringBoot使用Druid进行维度的统计和监控 – [TOC] ##Druid##Druid：一款为监控而生的数据库连接池框架，整个项目由数据库连接池、插件框架和SQL解析器组成。        Druid功能介于PowerDrill和Dremel之间，它几乎实现了Dremel的所有功能，并且从PowerDrill吸收一些有趣的数据格式。Druid允许以类似Dremel和Po">
+<meta name="description" content="title: SpringBoot使用Druid进行维度的统计和监控[TOC] ##Druid##Druid：一款为监控而生的数据库连接池框架，整个项目由数据库连接池、插件框架和SQL解析器组成。        Druid功能介于PowerDrill和Dremel之间，它几乎实现了Dremel的所有功能，并且从PowerDrill吸收一些有趣的数据格式。Druid允许以类似Dremel和Power">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nicky&#39;s blog">
 <meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/Spring Boot使用Druid进行维度的统计和监控/index.html">
 <meta property="og:site_name" content="Nicky&#39;s blog">
-<meta property="og:description" content="title: SpringBoot使用Druid进行维度的统计和监控 – [TOC] ##Druid##Druid：一款为监控而生的数据库连接池框架，整个项目由数据库连接池、插件框架和SQL解析器组成。        Druid功能介于PowerDrill和Dremel之间，它几乎实现了Dremel的所有功能，并且从PowerDrill吸收一些有趣的数据格式。Druid允许以类似Dremel和Po">
+<meta property="og:description" content="title: SpringBoot使用Druid进行维度的统计和监控[TOC] ##Druid##Druid：一款为监控而生的数据库连接池框架，整个项目由数据库连接池、插件框架和SQL解析器组成。        Druid功能介于PowerDrill和Dremel之间，它几乎实现了Dremel的所有功能，并且从PowerDrill吸收一些有趣的数据格式。Druid允许以类似Dremel和Power">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://img.blog.csdn.net/20170428110806925?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20170428110824226?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-01-16T09:48:11.666Z">
+<meta property="og:updated_time" content="2018-01-16T09:56:18.936Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nicky&#39;s blog">
-<meta name="twitter:description" content="title: SpringBoot使用Druid进行维度的统计和监控 – [TOC] ##Druid##Druid：一款为监控而生的数据库连接池框架，整个项目由数据库连接池、插件框架和SQL解析器组成。        Druid功能介于PowerDrill和Dremel之间，它几乎实现了Dremel的所有功能，并且从PowerDrill吸收一些有趣的数据格式。Druid允许以类似Dremel和Po">
+<meta name="twitter:description" content="title: SpringBoot使用Druid进行维度的统计和监控[TOC] ##Druid##Druid：一款为监控而生的数据库连接池框架，整个项目由数据库连接池、插件框架和SQL解析器组成。        Druid功能介于PowerDrill和Dremel之间，它几乎实现了Dremel的所有功能，并且从PowerDrill吸收一些有趣的数据格式。Druid允许以类似Dremel和Power">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20170428110806925?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -282,9 +282,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>title: SpringBoot使用Druid进行维度的统计和监控</p>
-<p>–</p>
-<p>[TOC]</p>
+        <h2 id="title-SpringBoot使用Druid进行维度的统计和监控"><a href="#title-SpringBoot使用Druid进行维度的统计和监控" class="headerlink" title="title: SpringBoot使用Druid进行维度的统计和监控"></a>title: SpringBoot使用Druid进行维度的统计和监控</h2><p>[TOC]</p>
 <p>##Druid##<br>Druid：一款为监控而生的数据库连接池框架，整个项目由数据库连接池、插件框架和SQL解析器组成。<br>        Druid功能介于PowerDrill和Dremel之间，它几乎实现了Dremel的所有功能，并且从PowerDrill吸收一些有趣的数据格式。Druid允许以类似Dremel和PowerDrill的方式进行单表查询，同时还增加了一些新特性，如为局部嵌套数据结构提供列式存储格式、为快速过滤做索引、实时摄取和查询、高容错的分布式体系架构等。</p>
 <p>##Spring Boot##<br>spring框架作为JavaEE框架领域的一款重要的开源框架，在企业应用开发中有着很重要的作用，同时Spring框架及其子框架很多，所以知识量很广。<br>Spring Boot：一款Spring框架的子框架，也可以叫微框架，是2014年推出的一款使Spring框架开发变得容易的框架。学过Spring框架的都知识，Spring框架难以避免地需要配置不少XMl，而使用Spring Boot框架的话，就可以使用注解开发，极大地简化基于Spring框架的开发。Spring Boot充分利用了JavaConfig的配置模式以及“约定优于配置”的理念，能够极大的简化基于Spring MVC的Web应用和REST服务开发。<br>然后本博客介绍基于IDEA编辑器的Spring Boot项目创建和部署。</p>
 <p>##Spring Boot使用Druid监控##</p>
@@ -313,7 +311,7 @@
         <p><span>本文标题:</span><a href="/2018/01/16/Spring Boot使用Druid进行维度的统计和监控/"></a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
         <p><span>发布时间:</span>2018-01-16, 17:29:32</p>
-        <p><span>最后更新:</span>2018-01-16, 17:48:11</p>
+        <p><span>最后更新:</span>2018-01-16, 17:56:18</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2018/01/16/Spring Boot使用Druid进行维度的统计和监控/" title="">http://blog.ittrading.cn/2018/01/16/Spring Boot使用Druid进行维度的统计和监控/</a>
             <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/Spring Boot使用Druid进行维度的统计和监控/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -349,7 +347,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title-SpringBoot使用Druid进行维度的统计和监控"><span class="toc-number">1.</span> <span class="toc-text">title: SpringBoot使用Druid进行维度的统计和监控</span></a></li></ol>
         
     </div>
     <style>

@@ -15,19 +15,19 @@
 
 
 
-<meta name="description" content="title : 分布式消息中间件RocketMQ学习教程① –[TOC] 消息中间件简介消息队列(Message Queue，简称MQ)。消息中间件作为实现分布式消息系统可拓展、可伸缩性的关键组件，具有高吞吐量、高可用等等优点。 常用消息队列对比常用的消息队列有RocketMQ、kafka、ActiveMQ、RabbitMQ、ZeroMQ等等activemq rabbitmq 与 kafka、ro">
+<meta name="description" content="title : 分布式消息中间件RocketMQ学习教程①[TOC] 消息中间件简介消息队列(Message Queue，简称MQ)。消息中间件作为实现分布式消息系统可拓展、可伸缩性的关键组件，具有高吞吐量、高可用等等优点。 常用消息队列对比常用的消息队列有RocketMQ、kafka、ActiveMQ、RabbitMQ、ZeroMQ等等activemq rabbitmq 与 kafka、rock">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nicky&#39;s blog">
 <meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/分布式消息中间件RocketMQ学习教程①/index.html">
 <meta property="og:site_name" content="Nicky&#39;s blog">
-<meta property="og:description" content="title : 分布式消息中间件RocketMQ学习教程① –[TOC] 消息中间件简介消息队列(Message Queue，简称MQ)。消息中间件作为实现分布式消息系统可拓展、可伸缩性的关键组件，具有高吞吐量、高可用等等优点。 常用消息队列对比常用的消息队列有RocketMQ、kafka、ActiveMQ、RabbitMQ、ZeroMQ等等activemq rabbitmq 与 kafka、ro">
+<meta property="og:description" content="title : 分布式消息中间件RocketMQ学习教程①[TOC] 消息中间件简介消息队列(Message Queue，简称MQ)。消息中间件作为实现分布式消息系统可拓展、可伸缩性的关键组件，具有高吞吐量、高可用等等优点。 常用消息队列对比常用的消息队列有RocketMQ、kafka、ActiveMQ、RabbitMQ、ZeroMQ等等activemq rabbitmq 与 kafka、rock">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://img.blog.csdn.net/20171106110449702?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20171025170915316?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-01-16T09:49:30.740Z">
+<meta property="og:updated_time" content="2018-01-16T09:55:38.913Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nicky&#39;s blog">
-<meta name="twitter:description" content="title : 分布式消息中间件RocketMQ学习教程① –[TOC] 消息中间件简介消息队列(Message Queue，简称MQ)。消息中间件作为实现分布式消息系统可拓展、可伸缩性的关键组件，具有高吞吐量、高可用等等优点。 常用消息队列对比常用的消息队列有RocketMQ、kafka、ActiveMQ、RabbitMQ、ZeroMQ等等activemq rabbitmq 与 kafka、ro">
+<meta name="twitter:description" content="title : 分布式消息中间件RocketMQ学习教程①[TOC] 消息中间件简介消息队列(Message Queue，简称MQ)。消息中间件作为实现分布式消息系统可拓展、可伸缩性的关键组件，具有高吞吐量、高可用等等优点。 常用消息队列对比常用的消息队列有RocketMQ、kafka、ActiveMQ、RabbitMQ、ZeroMQ等等activemq rabbitmq 与 kafka、rock">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20171106110449702?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -282,8 +282,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>title : 分布式消息中间件RocketMQ学习教程①</p>
-<p>–<br>[TOC]</p>
+        <h2 id="title-分布式消息中间件RocketMQ学习教程①"><a href="#title-分布式消息中间件RocketMQ学习教程①" class="headerlink" title="title : 分布式消息中间件RocketMQ学习教程①"></a>title : 分布式消息中间件RocketMQ学习教程①</h2><p>[TOC]</p>
 <h1 id="消息中间件简介"><a href="#消息中间件简介" class="headerlink" title="消息中间件简介"></a>消息中间件简介</h1><p>消息队列(Message Queue，简称MQ)。消息中间件作为实现分布式消息系统可拓展、可伸缩性的关键组件，具有高吞吐量、高可用等等优点。</p>
 <h1 id="常用消息队列对比"><a href="#常用消息队列对比" class="headerlink" title="常用消息队列对比"></a>常用消息队列对比</h1><p>常用的消息队列有RocketMQ、kafka、ActiveMQ、RabbitMQ、ZeroMQ等等<br>activemq rabbitmq 与 kafka、rocketmq有很大的区别就是前2个只支持主从模式，后2个是分布式消息系统，支持分布式。<br>持久化消息比较： zeroMq不支持，activeMq和rabbitMq都支持。</p>
 <p><excerpt in="" index="" |="" 首页摘要=""><br>+<a id="more"></a></excerpt></p>
@@ -359,7 +358,7 @@
         <p><span>本文标题:</span><a href="/2018/01/16/分布式消息中间件RocketMQ学习教程①/"></a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
         <p><span>发布时间:</span>2018-01-16, 17:27:55</p>
-        <p><span>最后更新:</span>2018-01-16, 17:49:30</p>
+        <p><span>最后更新:</span>2018-01-16, 17:55:38</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2018/01/16/分布式消息中间件RocketMQ学习教程①/" title="">http://blog.ittrading.cn/2018/01/16/分布式消息中间件RocketMQ学习教程①/</a>
             <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/分布式消息中间件RocketMQ学习教程①/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -395,7 +394,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#消息中间件简介"><span class="toc-number">1.</span> <span class="toc-text">消息中间件简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#常用消息队列对比"><span class="toc-number">2.</span> <span class="toc-text">常用消息队列对比</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RocketMQ"><span class="toc-number">2.1.</span> <span class="toc-text">RocketMQ</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka"><span class="toc-number">2.2.</span> <span class="toc-text">Kafka</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ActiveMQ"><span class="toc-number">2.3.</span> <span class="toc-text">ActiveMQ</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RabbitMQ"><span class="toc-number">2.4.</span> <span class="toc-text">RabbitMQ</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ZeroMQ"><span class="toc-number">2.5.</span> <span class="toc-text">ZeroMQ</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RocketMQ简介"><span class="toc-number">3.</span> <span class="toc-text">RocketMQ简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#NameServer"><span class="toc-number">3.0.1.</span> <span class="toc-text">NameServer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Producer"><span class="toc-number">3.0.2.</span> <span class="toc-text">Producer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Consumer"><span class="toc-number">3.0.3.</span> <span class="toc-text">Consumer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Broker"><span class="toc-number">3.0.4.</span> <span class="toc-text">Broker</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RocketMQ存储特点"><span class="toc-number">4.</span> <span class="toc-text">RocketMQ存储特点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RocketMQ集群配置"><span class="toc-number">5.</span> <span class="toc-text">RocketMQ集群配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#附录：安装教程"><span class="toc-number">6.</span> <span class="toc-text">附录：安装教程</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title-分布式消息中间件RocketMQ学习教程①"><span class="toc-number">1.</span> <span class="toc-text">title : 分布式消息中间件RocketMQ学习教程①</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#消息中间件简介"><span class="toc-number"></span> <span class="toc-text">消息中间件简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#常用消息队列对比"><span class="toc-number"></span> <span class="toc-text">常用消息队列对比</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RocketMQ"><span class="toc-number">1.</span> <span class="toc-text">RocketMQ</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka"><span class="toc-number">2.</span> <span class="toc-text">Kafka</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ActiveMQ"><span class="toc-number">3.</span> <span class="toc-text">ActiveMQ</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RabbitMQ"><span class="toc-number">4.</span> <span class="toc-text">RabbitMQ</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ZeroMQ"><span class="toc-number">5.</span> <span class="toc-text">ZeroMQ</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RocketMQ简介"><span class="toc-number"></span> <span class="toc-text">RocketMQ简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#NameServer"><span class="toc-number">0.1.</span> <span class="toc-text">NameServer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Producer"><span class="toc-number">0.2.</span> <span class="toc-text">Producer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Consumer"><span class="toc-number">0.3.</span> <span class="toc-text">Consumer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Broker"><span class="toc-number">0.4.</span> <span class="toc-text">Broker</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RocketMQ存储特点"><span class="toc-number"></span> <span class="toc-text">RocketMQ存储特点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RocketMQ集群配置"><span class="toc-number"></span> <span class="toc-text">RocketMQ集群配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#附录：安装教程"><span class="toc-number"></span> <span class="toc-text">附录：安装教程</span></a>
         
     </div>
     <style>

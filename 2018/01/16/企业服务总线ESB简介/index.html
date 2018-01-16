@@ -15,19 +15,19 @@
 
 
 
-<meta name="description" content="title : 企业服务总线ESB简介 –[TOC] ESB介绍本博客介绍一款ESB产品，IBM WebSphere ESB。ESB(Enterprise Service Bus)也即企业服务总线。ESB有很多产品，IBM的IBM WebSphere就是其中一款。ESB是传统中间件技术与XML、Web服务等技术结合的产物。虽然现在基于RPC的微服务结构兴起，但是ESB作为传统的解耦合技术。在一些企">
+<meta name="description" content="title : 企业服务总线ESB简介[TOC] ESB介绍本博客介绍一款ESB产品，IBM WebSphere ESB。ESB(Enterprise Service Bus)也即企业服务总线。ESB有很多产品，IBM的IBM WebSphere就是其中一款。ESB是传统中间件技术与XML、Web服务等技术结合的产物。虽然现在基于RPC的微服务结构兴起，但是ESB作为传统的解耦合技术。在一些企业里">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nicky&#39;s blog">
 <meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/企业服务总线ESB简介/index.html">
 <meta property="og:site_name" content="Nicky&#39;s blog">
-<meta property="og:description" content="title : 企业服务总线ESB简介 –[TOC] ESB介绍本博客介绍一款ESB产品，IBM WebSphere ESB。ESB(Enterprise Service Bus)也即企业服务总线。ESB有很多产品，IBM的IBM WebSphere就是其中一款。ESB是传统中间件技术与XML、Web服务等技术结合的产物。虽然现在基于RPC的微服务结构兴起，但是ESB作为传统的解耦合技术。在一些企">
+<meta property="og:description" content="title : 企业服务总线ESB简介[TOC] ESB介绍本博客介绍一款ESB产品，IBM WebSphere ESB。ESB(Enterprise Service Bus)也即企业服务总线。ESB有很多产品，IBM的IBM WebSphere就是其中一款。ESB是传统中间件技术与XML、Web服务等技术结合的产物。虽然现在基于RPC的微服务结构兴起，但是ESB作为传统的解耦合技术。在一些企业里">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://img.blog.csdn.net/20170607090834736?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20170703100131115?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-01-16T09:49:55.881Z">
+<meta property="og:updated_time" content="2018-01-16T09:55:32.330Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nicky&#39;s blog">
-<meta name="twitter:description" content="title : 企业服务总线ESB简介 –[TOC] ESB介绍本博客介绍一款ESB产品，IBM WebSphere ESB。ESB(Enterprise Service Bus)也即企业服务总线。ESB有很多产品，IBM的IBM WebSphere就是其中一款。ESB是传统中间件技术与XML、Web服务等技术结合的产物。虽然现在基于RPC的微服务结构兴起，但是ESB作为传统的解耦合技术。在一些企">
+<meta name="twitter:description" content="title : 企业服务总线ESB简介[TOC] ESB介绍本博客介绍一款ESB产品，IBM WebSphere ESB。ESB(Enterprise Service Bus)也即企业服务总线。ESB有很多产品，IBM的IBM WebSphere就是其中一款。ESB是传统中间件技术与XML、Web服务等技术结合的产物。虽然现在基于RPC的微服务结构兴起，但是ESB作为传统的解耦合技术。在一些企业里">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20170607090834736?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -282,8 +282,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>title : 企业服务总线ESB简介</p>
-<p>–<br>[TOC]</p>
+        <h2 id="title-企业服务总线ESB简介"><a href="#title-企业服务总线ESB简介" class="headerlink" title="title : 企业服务总线ESB简介"></a>title : 企业服务总线ESB简介</h2><p>[TOC]</p>
 <h3 id="ESB介绍"><a href="#ESB介绍" class="headerlink" title="ESB介绍"></a>ESB介绍</h3><p>本博客介绍一款ESB产品，IBM WebSphere ESB。ESB(Enterprise Service Bus)也即企业服务总线。ESB有很多产品，IBM的IBM WebSphere就是其中一款。ESB是传统中间件技术与XML、Web服务等技术结合的产物。虽然现在基于RPC的微服务结构兴起，但是ESB作为传统的解耦合技术。在一些企业里还是有应用的。</p>
 <h3 id="为什么使用ESB"><a href="#为什么使用ESB" class="headerlink" title="为什么使用ESB"></a>为什么使用ESB</h3><p>在一个企业里必然有很多系统，但是不是操作系统之间的数据传输格式、传输协议等等都是不相同的。这样的话，不同系统之间调用肯定是非常复杂的，接口的维护费用肯定是很庞大的，这时企业服务总线ESB应运而生。</p>
 <p><excerpt in="" index="" |="" 首页摘要=""><br>+<a id="more"></a></excerpt></p>
@@ -309,7 +308,7 @@
         <p><span>本文标题:</span><a href="/2018/01/16/企业服务总线ESB简介/"></a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
         <p><span>发布时间:</span>2018-01-16, 17:28:47</p>
-        <p><span>最后更新:</span>2018-01-16, 17:49:55</p>
+        <p><span>最后更新:</span>2018-01-16, 17:55:32</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2018/01/16/企业服务总线ESB简介/" title="">http://blog.ittrading.cn/2018/01/16/企业服务总线ESB简介/</a>
             <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/企业服务总线ESB简介/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -345,7 +344,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#ESB介绍"><span class="toc-number">1.</span> <span class="toc-text">ESB介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么使用ESB"><span class="toc-number">2.</span> <span class="toc-text">为什么使用ESB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ESB担任的角色"><span class="toc-number">3.</span> <span class="toc-text">ESB担任的角色</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title-企业服务总线ESB简介"><span class="toc-number">1.</span> <span class="toc-text">title : 企业服务总线ESB简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ESB介绍"><span class="toc-number">1.1.</span> <span class="toc-text">ESB介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么使用ESB"><span class="toc-number">1.2.</span> <span class="toc-text">为什么使用ESB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ESB担任的角色"><span class="toc-number">1.3.</span> <span class="toc-text">ESB担任的角色</span></a></li></ol></li></ol>
         
     </div>
     <style>
