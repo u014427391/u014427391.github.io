@@ -19,17 +19,17 @@
 
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
+<meta property="og:title" content="Nicky&#39;s blog">
 <meta property="og:url" content="http://blog.ittrading.cn/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="Nicky&#39;s blog">
 <meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="Nicky&#39;s blog">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
 
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="Nicky&#39;s blog" type="application/atom+xml">
 
 
 
@@ -58,7 +58,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Hexo</title>
+<title>Nicky&#39;s blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -282,12 +282,11 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <p>–</p>
-<h2 id="title-SpringBoot集成Redis实现缓存处理"><a href="#title-SpringBoot集成Redis实现缓存处理" class="headerlink" title="title:SpringBoot集成Redis实现缓存处理"></a>title:SpringBoot集成Redis实现缓存处理</h2><h3 id="第一章-需求分析"><a href="#第一章-需求分析" class="headerlink" title="第一章 需求分析"></a>第一章 需求分析</h3><p>计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。<br>开源项目：<a href="https://github.com/u014427391/jeeplatform" target="_blank" rel="noopener">https://github.com/u014427391/jeeplatform</a><br>欢迎star(收藏)</p>
+              <h2 id="title-SpringBoot集成Redis实现缓存处理"><a href="#title-SpringBoot集成Redis实现缓存处理" class="headerlink" title="title:SpringBoot集成Redis实现缓存处理"></a>title:SpringBoot集成Redis实现缓存处理</h2><h3 id="第一章-需求分析"><a href="#第一章-需求分析" class="headerlink" title="第一章 需求分析"></a>第一章 需求分析</h3><p>计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。<br>开源项目：<a href="https://github.com/u014427391/jeeplatform" target="_blank" rel="noopener">https://github.com/u014427391/jeeplatform</a><br>欢迎star(收藏)</p>
 <h3 id="第二章-SpringBoot简介"><a href="#第二章-SpringBoot简介" class="headerlink" title="第二章 SpringBoot简介"></a>第二章 SpringBoot简介</h3><blockquote>
 <p>Spring框架作为JavaEE框架领域的一款重要的开源框架，在企业应用开发中有着很重要的作用，同时Spring框架及其子框架很多，所以知识量很广。<br>SpringBoot：一款Spring框架的子框架，也可以叫微框架，是2014年推出的一款使Spring框架开发变得容易的框架。学过Spring框架的都知识，Spring框架难以避免地需要配置不少XMl，而使用SpringBoot框架的话，就可以使用注解开发，极大地简化基于Spring框架的开发。SpringBoot充分利用了JavaConfig的配置模式以及“约定优于配置”的理念，能够极大的简化基于SpringMVC的Web应用和REST服务开发。</p>
 </blockquote>
-<p><excerpt in="" index="" |="" 首页摘要=""><br>
+<p><excerpt in="" index="" |="" 首页摘要=""><br>+
           
       
     </div>
@@ -336,15 +335,14 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <p>–</p>
-<h2 id="title-MySQL数据库的锁机制"><a href="#title-MySQL数据库的锁机制" class="headerlink" title="title:MySQL数据库的锁机制"></a>title:MySQL数据库的锁机制</h2><p>在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。</p>
+              <h2 id="title-MySQL数据库的锁机制"><a href="#title-MySQL数据库的锁机制" class="headerlink" title="title:MySQL数据库的锁机制"></a>title:MySQL数据库的锁机制</h2><p>在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。</p>
 <p>###锁分类<br>①、按操作划分：DML锁，DDL锁<br>②、按锁的粒度划分：表级锁、行级锁、页级锁<br>③、按锁级别划分：共享锁、排他锁<br>④、按加锁方式划分：自动锁、显示锁<br>⑤、按使用方式划分：乐观锁、悲观锁</p>
 <p>###乐观锁和悲观锁</p>
 <p>乐观并发控制和悲观并发控制是并发控制采用的主要方法。乐观锁和悲观锁不仅在关系数据库里应用，在Hibernate、Memcache等等也有相关概念。</p>
 <p>悲观锁：也即悲观并发控制，Pessimistic Concurrency Controller，缩写PCC。悲观锁是指在数据处理过程，使数据处于锁定状态，一般使用数据库的锁机制实现。<br>备注，在MySQL中使用悲观锁，必须关闭MySQL的自动提交，set autocommit=0。MySQL默认使用自动提交autocommit模式，也即你执行一个更新操作，MySQL会自动将结果提交。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//0.开始事务</span><br><span class="line">begin;/begin work;/start transaction; (三者选一就可</span><br><span class="line">//1.查询出商品信息</span><br><span class="line">select status from t_goods where id=1 for update;</span><br><span class="line">//2.根据商品信息生成订单</span><br><span class="line">insert into t_orders (id,goods_id) values (null,1);</span><br><span class="line">//3.修改商品status为2</span><br><span class="line">update t_goods set status=2;</span><br><span class="line">//4.提交事务</span><br><span class="line">commit;/commit work;</span><br></pre></td></tr></table></figure>
 <p>本例子使用select…for update方式将数据锁住，也就是开启了排他锁</p>
-<p><excerpt in="" index="" |="" 首页摘要=""><br>
+<p><excerpt in="" index="" |="" 首页摘要=""><br>+
           
       
     </div>

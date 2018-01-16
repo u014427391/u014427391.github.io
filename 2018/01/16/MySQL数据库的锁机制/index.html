@@ -15,22 +15,22 @@
 
 
 
-<meta name="description" content="– title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 #">
+<meta name="description" content="title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 ###">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
+<meta property="og:title" content="Nicky&#39;s blog">
 <meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="– title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 #">
+<meta property="og:site_name" content="Nicky&#39;s blog">
+<meta property="og:description" content="title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 ###">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-16T08:38:52.254Z">
+<meta property="og:updated_time" content="2018-01-16T08:54:57.767Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="– title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 #">
+<meta name="twitter:title" content="Nicky&#39;s blog">
+<meta name="twitter:description" content="title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 ###">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
 
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="Nicky&#39;s blog" type="application/atom+xml">
 
 
 
@@ -57,7 +57,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Hexo</title>
+<title>Nicky&#39;s blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -279,15 +279,14 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>–</p>
-<h2 id="title-MySQL数据库的锁机制"><a href="#title-MySQL数据库的锁机制" class="headerlink" title="title:MySQL数据库的锁机制"></a>title:MySQL数据库的锁机制</h2><p>在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。</p>
+        <h2 id="title-MySQL数据库的锁机制"><a href="#title-MySQL数据库的锁机制" class="headerlink" title="title:MySQL数据库的锁机制"></a>title:MySQL数据库的锁机制</h2><p>在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。</p>
 <p>###锁分类<br>①、按操作划分：DML锁，DDL锁<br>②、按锁的粒度划分：表级锁、行级锁、页级锁<br>③、按锁级别划分：共享锁、排他锁<br>④、按加锁方式划分：自动锁、显示锁<br>⑤、按使用方式划分：乐观锁、悲观锁</p>
 <p>###乐观锁和悲观锁</p>
 <p>乐观并发控制和悲观并发控制是并发控制采用的主要方法。乐观锁和悲观锁不仅在关系数据库里应用，在Hibernate、Memcache等等也有相关概念。</p>
 <p>悲观锁：也即悲观并发控制，Pessimistic Concurrency Controller，缩写PCC。悲观锁是指在数据处理过程，使数据处于锁定状态，一般使用数据库的锁机制实现。<br>备注，在MySQL中使用悲观锁，必须关闭MySQL的自动提交，set autocommit=0。MySQL默认使用自动提交autocommit模式，也即你执行一个更新操作，MySQL会自动将结果提交。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//0.开始事务</span><br><span class="line">begin;/begin work;/start transaction; (三者选一就可</span><br><span class="line">//1.查询出商品信息</span><br><span class="line">select status from t_goods where id=1 for update;</span><br><span class="line">//2.根据商品信息生成订单</span><br><span class="line">insert into t_orders (id,goods_id) values (null,1);</span><br><span class="line">//3.修改商品status为2</span><br><span class="line">update t_goods set status=2;</span><br><span class="line">//4.提交事务</span><br><span class="line">commit;/commit work;</span><br></pre></td></tr></table></figure>
 <p>本例子使用select…for update方式将数据锁住，也就是开启了排他锁</p>
-<p><excerpt in="" index="" |="" 首页摘要=""><br><a id="more"></a></excerpt></p>
+<p><excerpt in="" index="" |="" 首页摘要=""><br>+<a id="more"></a></excerpt></p>
 <the rest="" of="" contents="" |="" 余下全文="">
 
 <blockquote>
@@ -327,7 +326,7 @@
         <p><span>本文标题:</span><a href="/2018/01/16/MySQL数据库的锁机制/"></a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
         <p><span>发布时间:</span>2018-01-16, 15:26:58</p>
-        <p><span>最后更新:</span>2018-01-16, 16:38:52</p>
+        <p><span>最后更新:</span>2018-01-16, 16:54:57</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2018/01/16/MySQL数据库的锁机制/" title="">http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/</a>
             <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -393,7 +392,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"　| Nicky's blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 

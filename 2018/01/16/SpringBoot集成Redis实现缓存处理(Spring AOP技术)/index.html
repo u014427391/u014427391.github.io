@@ -15,27 +15,27 @@
 
 
 
-<meta name="description" content="– title:SpringBoot集成Redis实现缓存处理第一章 需求分析计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。开源项目：https://github.com/u014427391/jeeplatform欢迎star(收藏) 第二">
+<meta name="description" content="title:SpringBoot集成Redis实现缓存处理第一章 需求分析计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。开源项目：https://github.com/u014427391/jeeplatform欢迎star(收藏) 第二章">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
+<meta property="og:title" content="Nicky&#39;s blog">
 <meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="– title:SpringBoot集成Redis实现缓存处理第一章 需求分析计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。开源项目：https://github.com/u014427391/jeeplatform欢迎star(收藏) 第二">
+<meta property="og:site_name" content="Nicky&#39;s blog">
+<meta property="og:description" content="title:SpringBoot集成Redis实现缓存处理第一章 需求分析计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。开源项目：https://github.com/u014427391/jeeplatform欢迎star(收藏) 第二章">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://img.blog.csdn.net/20171214104855753?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20171214112834478?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20171214104250995?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20171214104303308?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-01-16T08:39:23.591Z">
+<meta property="og:updated_time" content="2018-01-16T08:54:52.319Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="– title:SpringBoot集成Redis实现缓存处理第一章 需求分析计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。开源项目：https://github.com/u014427391/jeeplatform欢迎star(收藏) 第二">
+<meta name="twitter:title" content="Nicky&#39;s blog">
+<meta name="twitter:description" content="title:SpringBoot集成Redis实现缓存处理第一章 需求分析计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。开源项目：https://github.com/u014427391/jeeplatform欢迎star(收藏) 第二章">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20171214104855753?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
 
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="Nicky&#39;s blog" type="application/atom+xml">
 
 
 
@@ -62,7 +62,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Hexo</title>
+<title>Nicky&#39;s blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -284,12 +284,11 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>–</p>
-<h2 id="title-SpringBoot集成Redis实现缓存处理"><a href="#title-SpringBoot集成Redis实现缓存处理" class="headerlink" title="title:SpringBoot集成Redis实现缓存处理"></a>title:SpringBoot集成Redis实现缓存处理</h2><h3 id="第一章-需求分析"><a href="#第一章-需求分析" class="headerlink" title="第一章 需求分析"></a>第一章 需求分析</h3><p>计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。<br>开源项目：<a href="https://github.com/u014427391/jeeplatform" target="_blank" rel="noopener">https://github.com/u014427391/jeeplatform</a><br>欢迎star(收藏)</p>
+        <h2 id="title-SpringBoot集成Redis实现缓存处理"><a href="#title-SpringBoot集成Redis实现缓存处理" class="headerlink" title="title:SpringBoot集成Redis实现缓存处理"></a>title:SpringBoot集成Redis实现缓存处理</h2><h3 id="第一章-需求分析"><a href="#第一章-需求分析" class="headerlink" title="第一章 需求分析"></a>第一章 需求分析</h3><p>计划在Team的开源项目里加入Redis实现缓存处理，因为业务功能已经实现了一部分，通过写Redis工具类，然后引用，改动量较大，而且不可以实现解耦合，所以想到了Spring框架的AOP(面向切面编程)。<br>开源项目：<a href="https://github.com/u014427391/jeeplatform" target="_blank" rel="noopener">https://github.com/u014427391/jeeplatform</a><br>欢迎star(收藏)</p>
 <h3 id="第二章-SpringBoot简介"><a href="#第二章-SpringBoot简介" class="headerlink" title="第二章 SpringBoot简介"></a>第二章 SpringBoot简介</h3><blockquote>
 <p>Spring框架作为JavaEE框架领域的一款重要的开源框架，在企业应用开发中有着很重要的作用，同时Spring框架及其子框架很多，所以知识量很广。<br>SpringBoot：一款Spring框架的子框架，也可以叫微框架，是2014年推出的一款使Spring框架开发变得容易的框架。学过Spring框架的都知识，Spring框架难以避免地需要配置不少XMl，而使用SpringBoot框架的话，就可以使用注解开发，极大地简化基于Spring框架的开发。SpringBoot充分利用了JavaConfig的配置模式以及“约定优于配置”的理念，能够极大的简化基于SpringMVC的Web应用和REST服务开发。</p>
 </blockquote>
-<p><excerpt in="" index="" |="" 首页摘要=""><br><a id="more"></a></excerpt></p>
+<p><excerpt in="" index="" |="" 首页摘要=""><br>+<a id="more"></a></excerpt></p>
 <p><the rest="" of="" contents="" |="" 余下全文=""></the></p>
 <h3 id="第三章-Redis简介"><a href="#第三章-Redis简介" class="headerlink" title="第三章 Redis简介"></a>第三章 Redis简介</h3><p>####3.1 Redis安装部署(Linux)<br>Redis安装部署的可以参考我的博客(Redis是基于C编写的，所以安装前先安装gcc编译器)：<a href="http://blog.csdn.net/u014427391/article/details/71210989" target="_blank" rel="noopener">http://blog.csdn.net/u014427391/article/details/71210989</a></p>
 <h4 id="3-2-Redis简介"><a href="#3-2-Redis简介" class="headerlink" title="3.2 Redis简介"></a>3.2 Redis简介</h4><blockquote>
@@ -333,7 +332,7 @@
         <p><span>本文标题:</span><a href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/"></a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
         <p><span>发布时间:</span>2018-01-16, 15:27:25</p>
-        <p><span>最后更新:</span>2018-01-16, 16:39:23</p>
+        <p><span>最后更新:</span>2018-01-16, 16:54:52</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/" title="">http://blog.ittrading.cn/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/</a>
             <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -399,7 +398,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"　| Nicky's blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
