@@ -15,19 +15,19 @@
 
 
 
-<meta name="description" content="[TOC] ##kafka原理简介Kafka是由LinkedIn开发的一个分布式的消息系统，使用Scala编写，它以可水平扩展和高吞吐率而被广泛使用。目前越来越多的开源分布式处理系统如Cloudera、Apache Storm、Spark都支持与Kafka集成。消息的发布描述为producer，消息的订阅描述为consumer，将中间的存储阵列称作broker(代理)。kafka是linkedin">
+<meta name="description" content="title : 分布式消息队列kafka原理简介 –[TOC] ##kafka原理简介Kafka是由LinkedIn开发的一个分布式的消息系统，使用Scala编写，它以可水平扩展和高吞吐率而被广泛使用。目前越来越多的开源分布式处理系统如Cloudera、Apache Storm、Spark都支持与Kafka集成。消息的发布描述为producer，消息的订阅描述为consumer，将中间的存储阵列称">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nicky&#39;s blog">
 <meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/分布式消息队列kafka原理简介/index.html">
 <meta property="og:site_name" content="Nicky&#39;s blog">
-<meta property="og:description" content="[TOC] ##kafka原理简介Kafka是由LinkedIn开发的一个分布式的消息系统，使用Scala编写，它以可水平扩展和高吞吐率而被广泛使用。目前越来越多的开源分布式处理系统如Cloudera、Apache Storm、Spark都支持与Kafka集成。消息的发布描述为producer，消息的订阅描述为consumer，将中间的存储阵列称作broker(代理)。kafka是linkedin">
+<meta property="og:description" content="title : 分布式消息队列kafka原理简介 –[TOC] ##kafka原理简介Kafka是由LinkedIn开发的一个分布式的消息系统，使用Scala编写，它以可水平扩展和高吞吐率而被广泛使用。目前越来越多的开源分布式处理系统如Cloudera、Apache Storm、Spark都支持与Kafka集成。消息的发布描述为producer，消息的订阅描述为consumer，将中间的存储阵列称">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://img.blog.csdn.net/20170712161517067?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20170712150728482?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-01-16T09:37:03.697Z">
+<meta property="og:updated_time" content="2018-01-16T09:49:03.585Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nicky&#39;s blog">
-<meta name="twitter:description" content="[TOC] ##kafka原理简介Kafka是由LinkedIn开发的一个分布式的消息系统，使用Scala编写，它以可水平扩展和高吞吐率而被广泛使用。目前越来越多的开源分布式处理系统如Cloudera、Apache Storm、Spark都支持与Kafka集成。消息的发布描述为producer，消息的订阅描述为consumer，将中间的存储阵列称作broker(代理)。kafka是linkedin">
+<meta name="twitter:description" content="title : 分布式消息队列kafka原理简介 –[TOC] ##kafka原理简介Kafka是由LinkedIn开发的一个分布式的消息系统，使用Scala编写，它以可水平扩展和高吞吐率而被广泛使用。目前越来越多的开源分布式处理系统如Cloudera、Apache Storm、Spark都支持与Kafka集成。消息的发布描述为producer，消息的订阅描述为consumer，将中间的存储阵列称">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20170712161517067?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -282,7 +282,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>[TOC]</p>
+        <p>title : 分布式消息队列kafka原理简介</p>
+<p>–<br>[TOC]</p>
 <p>##kafka原理简介<br>Kafka是由LinkedIn开发的一个分布式的消息系统，使用Scala编写，它以可水平扩展和高吞吐率而被广泛使用。目前越来越多的开源分布式处理系统如Cloudera、Apache Storm、Spark都支持与Kafka集成。<br>消息的发布描述为producer，消息的订阅描述为consumer，将中间的存储阵列称作broker(代理)。kafka是linkedin用于日志处理的分布式消息队列，同时支持离线和在线日志处理。kafka对消息保存时根据Topic进行归类，发送消息者就是Producer，消息接受者就是Consumer，每个kafka实例称为broker。然后三者都通过Zookeeper进行协调。<br>也即：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、启动zookeeper的server</span><br><span class="line">2、启动kafka的server</span><br><span class="line">3、Producer生产数据，然后通过zookeeper找到broker，再讲数据push到broker进行保存</span><br><span class="line">4、Consumer通过zookeeper找到broker，然后再主动pull数据</span><br></pre></td></tr></table></figure>
 <p><excerpt in="" index="" |="" 首页摘要=""><br>+<a id="more"></a></excerpt></p>
@@ -369,7 +370,7 @@
         <p><span>本文标题:</span><a href="/2018/01/16/分布式消息队列kafka原理简介/"></a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
         <p><span>发布时间:</span>2018-01-16, 17:28:39</p>
-        <p><span>最后更新:</span>2018-01-16, 17:37:03</p>
+        <p><span>最后更新:</span>2018-01-16, 17:49:03</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2018/01/16/分布式消息队列kafka原理简介/" title="">http://blog.ittrading.cn/2018/01/16/分布式消息队列kafka原理简介/</a>
             <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/分布式消息队列kafka原理简介/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
