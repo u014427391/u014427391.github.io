@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Nicky" />
+
+
+
+<meta name="description" content="[TOC] ##前言##本博客介绍Java中间件的一些知识，仅仅是一些知识储备。 ##中间件## ###中间件概念###中间件：中间件是一种介于操作系统和应用软件之间的一种软件，它使用系统软件所提供的基础服务（功能），衔接网络上应用系统的各个部分或不同的应用，能够达到资源共享、功能共享的目的。若是以新一代的中间件系列产品来组合应用，同时配合以可复用的商务对象构件，则应用开发费用可节省至80%。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nicky&#39;s blog">
+<meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/中间件技术入门教程/index.html">
+<meta property="og:site_name" content="Nicky&#39;s blog">
+<meta property="og:description" content="[TOC] ##前言##本博客介绍Java中间件的一些知识，仅仅是一些知识储备。 ##中间件## ###中间件概念###中间件：中间件是一种介于操作系统和应用软件之间的一种软件，它使用系统软件所提供的基础服务（功能），衔接网络上应用系统的各个部分或不同的应用，能够达到资源共享、功能共享的目的。若是以新一代的中间件系列产品来组合应用，同时配合以可复用的商务对象构件，则应用开发费用可节省至80%。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.blog.csdn.net/20170424134902455?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-01-16T09:37:33.809Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nicky&#39;s blog">
+<meta name="twitter:description" content="[TOC] ##前言##本博客介绍Java中间件的一些知识，仅仅是一些知识储备。 ##中间件## ###中间件概念###中间件：中间件是一种介于操作系统和应用软件之间的一种软件，它使用系统软件所提供的基础服务（功能），衔接网络上应用系统的各个部分或不同的应用，能够达到资源共享、功能共享的目的。若是以新一代的中间件系列产品来组合应用，同时配合以可复用的商务对象构件，则应用开发费用可节省至80%。">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20170424134902455?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Nicky&#39;s blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Nicky&#39;s blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Nicky</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/2284087296@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" href="https://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于JavaEE</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Nicky</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Nicky</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/2284087296@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="https://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-中间件技术入门教程" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/01/16/中间件技术入门教程/" class="article-date">
+      <time datetime="2018-01-16T09:29:40.734Z" itemprop="datePublished">2018-01-16</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>[TOC]</p>
+<p>##前言##<br>本博客介绍Java中间件的一些知识，仅仅是一些知识储备。</p>
+<p>##中间件##</p>
+<p>###中间件概念###<br>中间件：中间件是一种介于操作系统和应用软件之间的一种软件，它使用系统软件所提供的基础服务（功能），衔接网络上应用系统的各个部分或不同的应用，能够达到资源共享、功能共享的目的。<br>若是以新一代的中间件系列产品来组合应用，同时配合以可复用的商务对象构件，则应用开发费用可节省至80%。 </p>
+<p><excerpt in="" index="" |="" 首页摘要=""><br>+<a id="more"></a></excerpt></p>
+<p><the rest="" of="" contents="" |="" 余下全文=""></the></p>
+<p>###中间件分类###</p>
+<ol>
+<li>消息中间件<br>消息中间件适用与进行网络通讯的系统，建立网络通讯的通道，进行数据和文件的传送<br>产品：ActiveMQ、ZeroMQ、RabbitMQ、IBM webSphere MQ…</li>
+<li>交易中间件<br>交易中间件管理分布与不同操作系统的数据，实现数据一致性，保证系统的负载均衡<br>产品：IBM CICS,Bea tuxedo…</li>
+<li>对象中间件<br>保证不同厂家的软件之间的交互访问<br>产品：IBM componentbroker, iona orbix,borland visibroker…</li>
+<li>应用服务器<br>用来构造internet/intranet应用和其它分布式构件应用<br>产品：IBM Websphere,Bea weblogic…</li>
+<li>安全中间件<br>以公钥基础设施（pki）为核心的、建立在一系列相关国际安全标准之上的一个开放式应用开发平台<br>产品：entrust entrust…</li>
+<li>应用集成服务器<br>把工作流和应用开发技术如消息及分布式构件结合在一起，使处理能方便自动地和构件、script 应用、工作流行为结合在一起，同时集成文档和电子邮件<br>产品：lss flowman、ibm flowmark、vitria businessagiliti</li>
+</ol>
+<p>##ESB##<br>ESB，即企业服务总线<br>松散耦合一直是企业软件开发中的一个很重要的内容，而面向服务的SOA编程在随着ESB的应用得到了进一步的发展，ESB就像服务提供者和服务使用者之间的中间层<br><img src="http://img.blog.csdn.net/20170424134902455?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>##JMS##<br>JMS，即Java Message Service<br>ESB仅仅是作为一个中间层，所以应用程序之间的消息通讯必须借助JMS，即通过JMS从服务使用者接收消息，并将其转发到相应的服务提供者。<br>而且，JMS 还定义了可发送的若干不同类型的消息。例如，Text 消息包含消息的字符串表示形式；Object 消息包含序列化的 Java 对象；Map 消息包含键/值对的映射，等等。</p>
+<p>附录：<br>MQ DEMO：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br></pre></td><td class="code"><pre><span class="line">package com.wms.batchMsg;</span><br><span class="line"></span><br><span class="line">import java.io.File;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.sql.Timestamp;</span><br><span class="line">import java.text.ParseException;</span><br><span class="line">import java.util.Date;</span><br><span class="line"></span><br><span class="line">import org.apache.log4j.Logger;</span><br><span class="line"></span><br><span class="line">import com.ibm.mq.MQEnvironment;</span><br><span class="line">import com.ibm.mq.MQException;</span><br><span class="line">import com.ibm.mq.MQGetMessageOptions;</span><br><span class="line">import com.ibm.mq.MQMessage;</span><br><span class="line">import com.ibm.mq.MQPutMessageOptions;</span><br><span class="line">import com.ibm.mq.MQQueue;</span><br><span class="line">import com.ibm.mq.MQQueueManager;</span><br><span class="line">import com.ibm.mq.constants.MQConstants;</span><br><span class="line"></span><br><span class="line">public class MQUtil &#123;</span><br><span class="line">	</span><br><span class="line">	private static String qmName;      </span><br><span class="line">    private static MQQueueManager qMgr;</span><br><span class="line">    </span><br><span class="line">    private static Logger logger = Logger.getLogger(MQUtil.class);</span><br><span class="line">    </span><br><span class="line">    static&#123;</span><br><span class="line">    	try&#123;</span><br><span class="line">	        MQEnvironment.hostname=ConfigManager.getValue(&quot;MQ_MQHost&quot;);</span><br><span class="line">	        MQEnvironment.channel=ConfigManager.getValue(&quot;MQ_Server_Channel&quot;);</span><br><span class="line">	        MQEnvironment.CCSID=Integer.parseInt(ConfigManager.getValue(&quot;MQ_CCSID&quot;));</span><br><span class="line">	        MQEnvironment.port=Integer.parseInt(ConfigManager.getValue(&quot;MQ_port&quot;));</span><br><span class="line">	        //MQEnvironment.userID = ConfigManager.getValue(&quot;MQ_UserId&quot;);</span><br><span class="line">	        //MQEnvironment.password = ConfigManager.getValue(&quot;MQ_pass&quot;);</span><br><span class="line">	        qmName = ConfigManager.getValue(&quot;MQ_QMname&quot;);</span><br><span class="line">	        MQEnvironment.properties.put(MQConstants.TRANSPORT_PROPERTY,MQConstants.TRANSPORT_MQSERIES_CLIENT);</span><br><span class="line">	        qMgr = new MQQueueManager(qmName);</span><br><span class="line">		&#125;catch(MQException e)&#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			logger.info(&quot;qManager failed: Completion code &quot; + e.completionCode + &quot; Reason Code is &quot;</span><br><span class="line">					+ e.reasonCode);</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public static MQQueue getSendQueue(String queueName) &#123;</span><br><span class="line">		MQQueue sQueue;</span><br><span class="line">        int openSendOptions = MQConstants.MQOO_OUTPUT | MQConstants.MQOO_FAIL_IF_QUIESCING</span><br><span class="line">                | MQConstants.MQOO_SET_IDENTITY_CONTEXT;</span><br><span class="line">        try &#123;</span><br><span class="line">            sQueue = qMgr.accessQueue(queueName, openSendOptions);</span><br><span class="line">        &#125; catch (MQException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        return sQueue;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public static MQQueue getReceiveQueue(String revQueueName)&#123;</span><br><span class="line">		MQQueue rQueue ;</span><br><span class="line">		int openRcvOptions = MQConstants.MQOO_INPUT_AS_Q_DEF | MQConstants.MQOO_FAIL_IF_QUIESCING;</span><br><span class="line">		try&#123;</span><br><span class="line">			rQueue = qMgr.accessQueue(revQueueName, openRcvOptions);</span><br><span class="line">		&#125;catch(MQException e)&#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			return null;</span><br><span class="line">		&#125;</span><br><span class="line">		return rQueue;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    public static void sendMsg(MQMsgEntity entity,String queueName) &#123;</span><br><span class="line">		MQQueue sendQ = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            MQMessage qMsg = new MQMessage();</span><br><span class="line">            byte[] qByte = entity.getMsgStr().getBytes(&quot;UTF-8&quot;);</span><br><span class="line">//            String message = entity.getMsgStr();</span><br><span class="line">            qMsg.messageId = MQConstants.MQMI_NONE;</span><br><span class="line">            //TODO send and receive</span><br><span class="line">            if(entity.getCorrelId()!=null)&#123;</span><br><span class="line">            	qMsg.correlationId = entity.getCorrelId();</span><br><span class="line">            &#125;</span><br><span class="line">            qMsg.format = MQConstants.MQFMT_STRING;</span><br><span class="line">            qMsg.write(qByte);</span><br><span class="line">            MQPutMessageOptions pmo = new MQPutMessageOptions();</span><br><span class="line">            pmo.options = pmo.options + MQConstants.MQPMO_NEW_MSG_ID;</span><br><span class="line">            pmo.options = pmo.options + MQConstants.MQPMO_NO_SYNCPOINT;</span><br><span class="line">            pmo.options = pmo.options + MQConstants.MQPMO_SET_IDENTITY_CONTEXT;</span><br><span class="line">            sendQ = getSendQueue(queueName);</span><br><span class="line">            sendQ.put(qMsg, pmo);</span><br><span class="line">            qMgr.commit();</span><br><span class="line">            //logger.info(&quot;The send message is: &quot; +new String(qByte,&quot;UTF-8&quot;));</span><br><span class="line">        &#125; catch (MQException e) &#123;</span><br><span class="line">            logger.info(&quot;A WebSphere MQ error occurred : Completion code &quot;</span><br><span class="line">                            + e.completionCode + &quot; Reason Code is &quot;</span><br><span class="line">                            + e.reasonCode);</span><br><span class="line">        &#125; catch (java.io.IOException e) &#123;</span><br><span class="line">        	logger.info(&quot;An error occurred whilst to the message buffer &quot;</span><br><span class="line">                            + e);</span><br><span class="line">        &#125;finally&#123;</span><br><span class="line">        	try&#123;</span><br><span class="line">        		if(sendQ!=null)&#123;</span><br><span class="line">        			sendQ.close();</span><br><span class="line">        		&#125;</span><br><span class="line">			&#125;catch(MQException e)&#123;</span><br><span class="line">				// TODO Auto-generated catch block</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">				logger.info(&quot;Error for MQ connection:&quot;+e.getMessage());</span><br><span class="line">			&#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">//    public static void messageHandlerByQueueName(MQMsgEntity entity,String queueName) &#123;</span><br><span class="line">//    	try &#123;</span><br><span class="line">//    		if(queueName.equalsIgnoreCase(&quot;sap_OrdersQueue&quot;))&#123;</span><br><span class="line">//        		ECOrder order = new ECOrder();</span><br><span class="line">//        		order.CallOrderCURFC(entity, &quot;ZECI001&quot;);</span><br><span class="line">//        	&#125;else if(queueName.equalsIgnoreCase(&quot;sap_OrderPendReqQueue&quot;))&#123;</span><br><span class="line">//        		ECOrderPending orderPending = new ECOrderPending();</span><br><span class="line">//        		orderPending.CallOrderPendRFC(entity, &quot;ZECI005&quot;);</span><br><span class="line">//        	&#125;else if(queueName.equalsIgnoreCase(&quot;sap_OrderPendCancelQueue&quot;))&#123;</span><br><span class="line">//        		ECOrderPending orderPending = new ECOrderPending();</span><br><span class="line">//        		orderPending.CallCancelOrderPendRFC(entity, &quot;ZECI006&quot;);</span><br><span class="line">//        	&#125;else if(queueName.equalsIgnoreCase(&quot;sap_ECReturnsQueue&quot;))&#123;</span><br><span class="line">//        		ECOrder order = new ECOrder();</span><br><span class="line">//        		order.callOrderCancelRFC(entity, &quot;ZECI001&quot;);</span><br><span class="line">//        	&#125;else if(queueName.equalsIgnoreCase(&quot;sap_downpaymentQueue&quot;))&#123;</span><br><span class="line">//        		ECDownPayment downPayment = new ECDownPayment();</span><br><span class="line">//        		downPayment.callDownPaymentRFC(entity, &quot;ZECI007&quot;);</span><br><span class="line">//        	&#125;else if(queueName.equalsIgnoreCase(&quot;sap_360LBPQueue&quot;))&#123;</span><br><span class="line">//        		EC360LBP lbp = new EC360LBP();</span><br><span class="line">//        		lbp.generateHtmlFromQueue(entity.getMsgStr());</span><br><span class="line">//        	&#125;</span><br><span class="line">//		&#125; catch (Exception e) &#123;</span><br><span class="line">//			e.printStackTrace();</span><br><span class="line">//			logger.error(e.getMessage());</span><br><span class="line">//		&#125;</span><br><span class="line">//    	</span><br><span class="line">//    &#125;</span><br><span class="line">    </span><br><span class="line">    public MQQueueManager generateNewMQQM()&#123;</span><br><span class="line">		MQQueueManager qMgr = null;</span><br><span class="line">		try&#123;</span><br><span class="line">			  </span><br><span class="line">	        MQEnvironment.hostname=ConfigManager.getValue(&quot;MQ_MQHost&quot;);</span><br><span class="line">	        MQEnvironment.channel=ConfigManager.getValue(&quot;MQ_Server_Channel&quot;);</span><br><span class="line">	        MQEnvironment.CCSID=Integer.parseInt(ConfigManager.getValue(&quot;MQ_CCSID&quot;));</span><br><span class="line">	        MQEnvironment.port=Integer.parseInt(ConfigManager.getValue(&quot;MQ_port&quot;));   </span><br><span class="line">	        String qmName = ConfigManager.getValue(&quot;MQ_QMname&quot;);</span><br><span class="line">	        MQEnvironment.properties.put(MQConstants.TRANSPORT_PROPERTY,MQConstants.TRANSPORT_MQSERIES_CLIENT);</span><br><span class="line">	        qMgr = new MQQueueManager(qmName);</span><br><span class="line">	        </span><br><span class="line">		&#125;catch(MQException e)&#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			logger.info(&quot;qManager failed: Completion code &quot; + e.completionCode + &quot; Reason Code is &quot;</span><br><span class="line">					+ e.reasonCode);</span><br><span class="line">		&#125;</span><br><span class="line">		return qMgr;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    public void MultiThreadGetMqMessage(MQQueueManager qMgr,String queueName)&#123;</span><br><span class="line">    	MQQueue revQ = null;</span><br><span class="line">        String mqString = null;</span><br><span class="line">        MQMsgEntity entity = new MQMsgEntity();</span><br><span class="line">        </span><br><span class="line">        int openRcvOptions = MQConstants.MQOO_INPUT_AS_Q_DEF | MQConstants.MQOO_FAIL_IF_QUIESCING;</span><br><span class="line">        try &#123;</span><br><span class="line">        	MQMessage retrievedMessage = new MQMessage();</span><br><span class="line">            MQGetMessageOptions gmo = new MQGetMessageOptions();</span><br><span class="line">            gmo.options += MQConstants.MQPMO_NO_SYNCPOINT;// </span><br><span class="line">            gmo.options = gmo.options + MQConstants.MQGMO_WAIT;//</span><br><span class="line">            gmo.options = gmo.options + MQConstants.MQGMO_FAIL_IF_QUIESCING;// </span><br><span class="line">            gmo.waitInterval = MQConstants.MQWI_UNLIMITED;// </span><br><span class="line">            gmo.matchOptions = MQConstants.MQMO_MATCH_MSG_ID;</span><br><span class="line">            retrievedMessage.format=MQConstants.MQFMT_STRING;</span><br><span class="line">            //  MQC.MQWI_UNLIMITED;</span><br><span class="line">            revQ = qMgr.accessQueue(queueName, openRcvOptions);</span><br><span class="line">            revQ.get(retrievedMessage, gmo);</span><br><span class="line">            qMgr.commit();</span><br><span class="line">            int length = retrievedMessage.getDataLength();</span><br><span class="line">            if(length &gt;0)&#123;</span><br><span class="line">            	long startTime = System.currentTimeMillis();</span><br><span class="line">	            byte[] msg = new byte[length];</span><br><span class="line">	            retrievedMessage.readFully(msg);</span><br><span class="line">	            mqString = new String(msg, &quot;UTF-8&quot;);</span><br><span class="line">	            if(queueName.equalsIgnoreCase(&quot;sap_360LBPQueue&quot;))&#123;</span><br><span class="line">	            	mqString = mqString.replace(&quot;&apos;&quot;, &quot;\&quot;&quot;);</span><br><span class="line">	            &#125;</span><br><span class="line">	            long timeuse = System.currentTimeMillis() - startTime;</span><br><span class="line">	            Date currentDate = new Date();</span><br><span class="line">    			Timestamp receiveTimestamp = new Timestamp(currentDate.getTime());</span><br><span class="line">	            logger.info(&quot;=========mqString from &quot;+queueName+&quot; :&quot;+mqString);</span><br><span class="line">	            DBUtil.insertIntoMQLog(&quot;Receive&quot;,queueName, mqString, timeuse, &quot;success&quot;, &quot;&quot;, null, receiveTimestamp);</span><br><span class="line">	            entity.setMsgStr(mqString);</span><br><span class="line">	            //messageHandlerByQueueName(entity,queueName);</span><br><span class="line">	            </span><br><span class="line">    			</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">            	logger.info(&quot;Error MQ string Sent!&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        catch (MQException e) &#123;</span><br><span class="line">        	e.printStackTrace();</span><br><span class="line">            if (e.reasonCode != 2033) </span><br><span class="line">            &#123;</span><br><span class="line">            	logger.info(e.getMessage());</span><br><span class="line">                logger.info(&quot;Completion code &quot;</span><br><span class="line">                        + e.completionCode + &quot; Reason Code is &quot; + e.reasonCode);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            logger.info(&quot;IO error:&quot; + e.getMessage());</span><br><span class="line">        &#125; finally&#123;</span><br><span class="line">        	try&#123;</span><br><span class="line">        		if(revQ!=null)&#123;</span><br><span class="line">        			revQ.close();</span><br><span class="line">        		&#125;</span><br><span class="line">			&#125;catch(MQException mqEx)&#123;</span><br><span class="line">				int rc = mqEx.reasonCode;</span><br><span class="line">				if (rc != MQException.MQRC_NO_MSG_AVAILABLE)</span><br><span class="line">				&#123;</span><br><span class="line">					logger.info(&quot; PUT Message failed with rc = &quot; </span><br><span class="line">				+ rc);</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public static String getMQMessage(String queueName) throws ParseException &#123;</span><br><span class="line">        MQQueue revQ = null;</span><br><span class="line">        String mqString = null;</span><br><span class="line">        MQMsgEntity entity = new MQMsgEntity();</span><br><span class="line">        try &#123;</span><br><span class="line">        	MQMessage retrievedMessage = new MQMessage();</span><br><span class="line">            MQGetMessageOptions gmo = new MQGetMessageOptions();</span><br><span class="line">            gmo.options += MQConstants.MQPMO_NO_SYNCPOINT;// </span><br><span class="line">            gmo.options = gmo.options + MQConstants.MQGMO_WAIT;//</span><br><span class="line">            gmo.options = gmo.options + MQConstants.MQGMO_FAIL_IF_QUIESCING;// </span><br><span class="line">            gmo.waitInterval = MQConstants.MQWI_UNLIMITED;// </span><br><span class="line">            gmo.matchOptions = MQConstants.MQMO_MATCH_MSG_ID;</span><br><span class="line">            retrievedMessage.format=MQConstants.MQFMT_STRING;</span><br><span class="line">            //  MQC.MQWI_UNLIMITED;</span><br><span class="line">            revQ = getReceiveQueue(queueName);</span><br><span class="line">            revQ.get(retrievedMessage, gmo);</span><br><span class="line">            qMgr.commit();</span><br><span class="line">            int length = retrievedMessage.getDataLength();</span><br><span class="line">            if(length &gt;0)&#123;</span><br><span class="line">	            byte[] msg = new byte[length];</span><br><span class="line">	            retrievedMessage.readFully(msg);</span><br><span class="line">	            mqString = new String(msg, &quot;UTF-8&quot;);</span><br><span class="line">	            logger.info(&quot;=========getMQMessage===mqString from &quot;+queueName+&quot; :&quot;+mqString);</span><br><span class="line">	            entity.setMsgStr(mqString);</span><br><span class="line">	            //messageHandlerByQueueName(entity,queueName);</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">            	logger.info(&quot;Error MQ string Sent!&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        catch (MQException e) &#123;</span><br><span class="line">        	e.printStackTrace();</span><br><span class="line">            if (e.reasonCode != 2033) </span><br><span class="line">            &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">                logger.info(&quot;Completion code &quot;</span><br><span class="line">                        + e.completionCode + &quot; Reason Code is &quot; + e.reasonCode);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (java.io.IOException e) &#123;</span><br><span class="line">            System.out.println(&quot;error&quot; + e.getMessage());</span><br><span class="line">        &#125;finally&#123;</span><br><span class="line">        	try&#123;</span><br><span class="line">        		if(revQ!=null)&#123;</span><br><span class="line">        			revQ.close();</span><br><span class="line">        		&#125;</span><br><span class="line">			&#125;catch(MQException mqEx)&#123;</span><br><span class="line">				int rc = mqEx.reasonCode;</span><br><span class="line">				if (rc != MQException.MQRC_NO_MSG_AVAILABLE)</span><br><span class="line">				&#123;</span><br><span class="line">				System.out.println(&quot; PUT Message failed with rc = &quot; </span><br><span class="line">				+ rc);</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return mqString;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	public void revAndSend(MQMsgEntity entity,String queueName)&#123;</span><br><span class="line">		//</span><br><span class="line">		sendMsg(entity,queueName);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public void subscribeMessage() throws ParseException&#123;</span><br><span class="line">		while(true)&#123;</span><br><span class="line">			logger.info(&quot;waiting to get message.....&quot;);</span><br><span class="line">			getMQMessage(&quot;sap_OrdersQueue&quot;);</span><br><span class="line">			</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public void subscribeOrderPendMessage() throws ParseException&#123;</span><br><span class="line">		while(true)&#123;</span><br><span class="line">			logger.info(&quot;waiting to get message.....&quot;);</span><br><span class="line">			getMQMessage(&quot;sap_ECReturnsQueue&quot;);</span><br><span class="line">			</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	public  static void main(String[] args) throws IOException, ParseException &#123;</span><br><span class="line">		MQMsgEntity entity = new MQMsgEntity();</span><br><span class="line">		String sendMsg = XMLBeanUtil.readFileToString(new File(&quot;D://batchXML0108.txt&quot;));</span><br><span class="line">		int intPktCtlNbr = 1;</span><br><span class="line">		String StrPkt = null;</span><br><span class="line">		String newPktCtlNbr =null;</span><br><span class="line">		for (int i = 0; i &lt; 20000; i++) &#123;</span><br><span class="line">			newPktCtlNbr = String.format(&quot;%09d&quot;, intPktCtlNbr+i);  </span><br><span class="line">			StrPkt=&quot;&lt;PktCtlNbr&gt;&quot;+&quot;V&quot;+newPktCtlNbr+&quot;&lt;/PktCtlNbr&gt;&quot;;</span><br><span class="line">			String changeSendMsg = sendMsg.replaceAll(&quot;&lt;PktCtlNbr&gt;6001996171&lt;/PktCtlNbr&gt;&quot;, StrPkt);</span><br><span class="line">			System.out.println(StrPkt);</span><br><span class="line">			entity.setMsgStr(changeSendMsg);</span><br><span class="line">			sendMsg(entity,&quot;wms_SAPOrderQueue&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">//		MQUtil util = new MQUtil();</span><br><span class="line">//		util.subscribeMessage();</span><br><span class="line">//		util.subscribeOrderPendMessage();</span><br><span class="line">//		util.messageHandlerByQueueName(entity, &quot;sap_360LBPQueue&quot;);</span><br><span class="line">//		getMQMessage(&quot;sap_OrderPendCancelQueue&quot;);</span><br><span class="line">//		System.out.println(&quot;rev message is:&quot;+message);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/01/16/中间件技术入门教程/"></a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
+        <p><span>发布时间:</span>2018-01-16, 17:29:40</p>
+        <p><span>最后更新:</span>2018-01-16, 17:37:33</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/16/中间件技术入门教程/" title="">http://blog.ittrading.cn/2018/01/16/中间件技术入门教程/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/中间件技术入门教程/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2018/01/16/Swagger UI教程 API 文档神器/">
+                    
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/01/16/Spring Boot使用Druid进行维度的统计和监控/">
+                    
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"　| Nicky's blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2018/01/16/中间件技术入门教程/" data-title="" data-url="http://blog.ittrading.cn/2018/01/16/中间件技术入门教程/"></div>
+    <script>
+        var duoshuoQuery = {short_name:""};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2018/01/16/Swagger UI教程 API 文档神器/" title="上一篇: ">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/01/16/Spring Boot使用Druid进行维度的统计和监控/" title="下一篇: ">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/Swagger UI教程 API 文档神器/">Swagger UI教程 API 文档神器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/中间件技术入门教程/">中间件技术入门教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/Spring Boot使用Druid进行维度的统计和监控/">Spring Boot使用Druid进行维度的统计和监控</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/分布式文件存储的数据库MongoDB教程整理/">分布式文件存储的数据库MongoDB教程整理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/Spring框架之IOC(控制反转)/">Spring框架之IOC(控制反转)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/IBM WebSphere ESB入门指南/">IBM WebSphere ESB入门指南</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/企业服务总线ESB简介/">企业服务总线ESB简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/分布式消息队列kafka原理简介/">分布式消息队列kafka原理简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/设计模式之代理模式简介/">设计模式之代理模式简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/JDK动态代理源码学习/">JDK动态代理源码学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/分布式消息中间件RocketMQ学习教程①/">分布式消息中间件RocketMQ学习教程①</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/">SpringBoot集成Redis实现缓存处理(Spring AOP技术)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/MySQL数据库的锁机制/">MySQL数据库的锁机制</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2013-2018 Nicky
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

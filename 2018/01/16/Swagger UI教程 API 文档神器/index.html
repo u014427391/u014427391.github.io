@@ -15,17 +15,19 @@
 
 
 
-<meta name="description" content="title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 ###">
+<meta name="description" content="目录[TOC] 前言在一些接口项目中，API的使用很频繁，所以一款API在线文档生成和测试工具非常有必要。而Swagger UI就是这么一款很实用的在线工具本博客介绍如何在公司或者自己的电脑上按照Swagger UI，注意因为公司的测试服务器是Linux系统的，所以本博客也只介绍基于Linux系统的Swagger环境搭建过程 +">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nicky&#39;s blog">
-<meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/index.html">
+<meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/Swagger UI教程 API 文档神器/index.html">
 <meta property="og:site_name" content="Nicky&#39;s blog">
-<meta property="og:description" content="title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 ###">
+<meta property="og:description" content="目录[TOC] 前言在一些接口项目中，API的使用很频繁，所以一款API在线文档生成和测试工具非常有必要。而Swagger UI就是这么一款很实用的在线工具本博客介绍如何在公司或者自己的电脑上按照Swagger UI，注意因为公司的测试服务器是Linux系统的，所以本博客也只介绍基于Linux系统的Swagger环境搭建过程 +">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-16T08:54:57.767Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20170420172247957?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-01-16T09:36:46.962Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nicky&#39;s blog">
-<meta name="twitter:description" content="title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 ###">
+<meta name="twitter:description" content="目录[TOC] 前言在一些接口项目中，API的使用很频繁，所以一款API在线文档生成和测试工具非常有必要。而Swagger UI就是这么一款很实用的在线工具本博客介绍如何在公司或者自己的电脑上按照Swagger UI，注意因为公司的测试服务器是Linux系统的，所以本博客也只介绍基于Linux系统的Swagger环境搭建过程 +">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20170420172247957?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -261,11 +263,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-MySQL数据库的锁机制" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Swagger UI教程 API 文档神器" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/01/16/MySQL数据库的锁机制/" class="article-date">
-      <time datetime="2018-01-16T07:26:58.605Z" itemprop="datePublished">2018-01-16</time>
+      <a href="/2018/01/16/Swagger UI教程 API 文档神器/" class="article-date">
+      <time datetime="2018-01-16T09:29:48.700Z" itemprop="datePublished">2018-01-16</time>
 </a>
 
 
@@ -279,43 +281,54 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="title-MySQL数据库的锁机制"><a href="#title-MySQL数据库的锁机制" class="headerlink" title="title:MySQL数据库的锁机制"></a>title:MySQL数据库的锁机制</h2><p>在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。</p>
-<p>###锁分类<br>①、按操作划分：DML锁，DDL锁<br>②、按锁的粒度划分：表级锁、行级锁、页级锁<br>③、按锁级别划分：共享锁、排他锁<br>④、按加锁方式划分：自动锁、显示锁<br>⑤、按使用方式划分：乐观锁、悲观锁</p>
-<p>###乐观锁和悲观锁</p>
-<p>乐观并发控制和悲观并发控制是并发控制采用的主要方法。乐观锁和悲观锁不仅在关系数据库里应用，在Hibernate、Memcache等等也有相关概念。</p>
-<p>悲观锁：也即悲观并发控制，Pessimistic Concurrency Controller，缩写PCC。悲观锁是指在数据处理过程，使数据处于锁定状态，一般使用数据库的锁机制实现。<br>备注，在MySQL中使用悲观锁，必须关闭MySQL的自动提交，set autocommit=0。MySQL默认使用自动提交autocommit模式，也即你执行一个更新操作，MySQL会自动将结果提交。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//0.开始事务</span><br><span class="line">begin;/begin work;/start transaction; (三者选一就可</span><br><span class="line">//1.查询出商品信息</span><br><span class="line">select status from t_goods where id=1 for update;</span><br><span class="line">//2.根据商品信息生成订单</span><br><span class="line">insert into t_orders (id,goods_id) values (null,1);</span><br><span class="line">//3.修改商品status为2</span><br><span class="line">update t_goods set status=2;</span><br><span class="line">//4.提交事务</span><br><span class="line">commit;/commit work;</span><br></pre></td></tr></table></figure>
-<p>本例子使用select…for update方式将数据锁住，也就是开启了排他锁</p>
+        <h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><p>[TOC]</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在一些接口项目中，API的使用很频繁，所以一款API在线文档生成和测试工具非常有必要。而Swagger UI就是这么一款很实用的在线工具<br>本博客介绍如何在公司或者自己的电脑上按照Swagger UI，注意因为公司的测试服务器是Linux系统的，所以本博客也只介绍基于Linux系统的Swagger环境搭建过程</p>
 <p><excerpt in="" index="" |="" 首页摘要=""><br>+<a id="more"></a></excerpt></p>
-<the rest="" of="" contents="" |="" 余下全文="">
+<p><the rest="" of="" contents="" |="" 余下全文=""></the></p>
+<p>##服务器环境安装##</p>
+<p>###NodeJS下载部署###<br>首先需要下载NodeJS，到nodejs官网<a href="http://nodejs.org/dist/v0.10.26，下载node-v0.10.26-linux-x64.tar.gz，因为这个是已经编译好的，所以我们先使用软件将文件上传到Linux服务器，可以使用WinSCP" target="_blank" rel="noopener">http://nodejs.org/dist/v0.10.26，下载node-v0.10.26-linux-x64.tar.gz，因为这个是已经编译好的，所以我们先使用软件将文件上传到Linux服务器，可以使用WinSCP</a><br>然后用Linux的cd命令进入到你nodejs压缩文件的位置<br>解压命令如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xvf node-v0.10.26-linux-x64.tar.gz</span><br></pre></td></tr></table></figure></p>
+<p>然后进入文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd node-v0.10.26-linux-x64/bin</span><br></pre></td></tr></table></figure>
+<p>执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./node</span><br></pre></td></tr></table></figure>
+<p>设置node全局</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /root/Swagger/node-v0.10.26-linux-x64/bin/node /usr/local/bin/node</span><br></pre></td></tr></table></figure>
+<p>设置npm全局<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /root/Swagger/node-v0.10.26-linux-x64/bin/npm /usr/local/bin/npm</span><br></pre></td></tr></table></figure></p>
+<p>检测nodejs和npm是否安装成功</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+<p>可以看到版本号，什么安装成功</p>
+<p>###express下载部署####<br>安装好NodeJS和NPM之后，我们就可以安装express了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install express --save</span><br></pre></td></tr></table></figure></p>
+<p>以下几个重要的模块是需要与 express 框架一起安装的：<br>body-parser - node.js 中间件，用于处理 JSON, Raw, Text 和 URL 编码的数据。<br>cookie-parser - 这就是一个解析Cookie的工具。通过req.cookies可以取到传过来的cookie，并把它们转成对象。<br>multer - node.js 中间件，用于处理 enctype=”multipart/form-data”（设置表单的MIME编码）的表单数据。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install body-parser --save</span><br><span class="line">npm install cookie-parser --save</span><br><span class="line">npm install multer --save</span><br></pre></td></tr></table></figure></p>
+<p>检测是否安装成功<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm list express</span><br></pre></td></tr></table></figure></p>
+<p>###NodeJS开机启动####<br>然后设置NodeJS开机启动<br>安装forever<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install forever -g</span><br></pre></td></tr></table></figure></p>
+<p>设置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">forever start test.js</span><br><span class="line">forever stop test.js</span><br><span class="line">forever restart test.js</span><br></pre></td></tr></table></figure></p>
+<p>##Swagger UI安装部署##<br>github上clone：<a href="https://github.com/swagger-api/swagger-ui" target="_blank" rel="noopener">https://github.com/swagger-api/swagger-ui</a><br>如果有下载Git，就是用git下载，获取访问github，直接下载</p>
+<p>之后可以根据公司需要，在Linux上mkdir，我是先在root路径，创建一个node_app文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir node_app</span><br></pre></td></tr></table></figure></p>
+<p>进入node_app<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd node_app</span><br></pre></td></tr></table></figure></p>
+<p>环境配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init</span><br></pre></td></tr></table></figure>
+<p>下面的提示可以根据自己需要填写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">name: (node_app) node_app</span><br><span class="line">version: (1.0.0)</span><br><span class="line">description:</span><br><span class="line">entry point: (index.js)</span><br><span class="line">test command:</span><br><span class="line">git repository:</span><br><span class="line">keywords:</span><br><span class="line">author:</span><br><span class="line">license: (ISC)</span><br></pre></td></tr></table></figure>
+<p>VI编辑器使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim index.js</span><br></pre></td></tr></table></figure>
+<p>加入代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">var express = require(&apos;express&apos;);</span><br><span class="line">var app = express();</span><br><span class="line"> </span><br><span class="line">app.get(&apos;/&apos;, function (req, res) &#123;</span><br><span class="line">   res.send(&apos;Hello World&apos;);</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">var server = app.listen(3000, function () &#123;</span><br><span class="line"> </span><br><span class="line">  var host = server.address().address</span><br><span class="line">  var port = server.address().port</span><br><span class="line"> </span><br><span class="line">  console.log(&quot;应用实例，访问地址为 http://%s:%s&quot;, host, port)</span><br><span class="line"> </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>启用服务器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node index.js</span><br></pre></td></tr></table></figure>
+<p>访问，输入<a href="http://公司服务器IP:3000" target="_blank" rel="noopener">http://公司服务器IP:3000</a><br>可以看到Helloworld，当然我们是要部署Swagger<br>在node_app下面创建一个public文件夹</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir public</span><br><span class="line">cd public</span><br></pre></td></tr></table></figure>
+<p>然后将下载到的swagger ui里的dist文件夹里的文件复制到public文件夹里</p>
+<p>修改index.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">var express = require(&apos;express&apos;);</span><br><span class="line">var app = express();</span><br><span class="line"> </span><br><span class="line">app.use(&apos;/swagger&apos;,express.static(&apos;public&apos;));</span><br><span class="line"> </span><br><span class="line">app.get(&apos;/&apos;, function (req, res) &#123;</span><br><span class="line">   res.send(&apos;Hello World&apos;);</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">var server = app.listen(3000, function () &#123;</span><br><span class="line"> </span><br><span class="line">  var host = server.address().address</span><br><span class="line">  var port = server.address().port</span><br><span class="line"> </span><br><span class="line">  console.log(&quot;swagger start&quot;, host, port)</span><br><span class="line"> </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>然后输入<a href="http://ip:3000/swapper，是可以看到类似page" target="_blank" rel="noopener">http://ip:3000/swapper，是可以看到类似page</a><br><img src="http://img.blog.csdn.net/20170420172247957?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>##Swagger Editor使用##<br>Swagger Editor是Swagger UI的在线编辑器，我们可以自己搭建一个，也可以使用官方的，下面给出官方的URL:<a href="http://editor.swagger.io/#/" target="_blank" rel="noopener">http://editor.swagger.io/#/</a></p>
+<p>github上Clone：<a href="https://github.com/swagger-api/swagger-editor" target="_blank" rel="noopener">https://github.com/swagger-api/swagger-editor</a><br>之后将swagger editor文件放在公司Linux服务器上</p>
+<p>###Http server安装###</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g http-server</span><br></pre></td></tr></table></figure>
+<p>启动该项目http-server swagger-editor，默认为8080端口<br>设置port并启动swagger editor<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http-server –p 2017 swagger-editor</span><br></pre></td></tr></table></figure></p>
+<p>输入<a href="http://ip:2017/#/可以访问到自己搭建的Swagger" target="_blank" rel="noopener">http://ip:2017/#/可以访问到自己搭建的Swagger</a> Editor编辑器</p>
+<p>参考教程<br><a href="http://www.linuxidc.com/Linux/2014-07/104489.htm" target="_blank" rel="noopener">http://www.linuxidc.com/Linux/2014-07/104489.htm</a><br><a href="http://www.linuxidc.com/Linux/2014-06/103372.htm" target="_blank" rel="noopener">http://www.linuxidc.com/Linux/2014-06/103372.htm</a><br><a href="http://blog.csdn.net/ron03129596/article/details/53559803" target="_blank" rel="noopener">http://blog.csdn.net/ron03129596/article/details/53559803</a><br><a href="http://www.open-open.com/lib/view/open1453452052745.html" target="_blank" rel="noopener">http://www.open-open.com/lib/view/open1453452052745.html</a></p>
 
-<blockquote>
-<p>悲观锁优缺点：<br>悲观并发控制(悲观锁)采用”先取锁再分”的保守策略，为数据处理提供了安全的保证。但在效率方面，加锁机制会产生额外的开销，增加产生死锁的机会。</p>
-</blockquote>
-<p>乐观锁：相对悲观锁来说，乐观锁是通过记录数据版本的方式实现乐观锁。为数据增加一个版本标识，读取数据时，将版本标识一起读出，数据没更新一次，就对版本标识进行更新。</p>
-<blockquote>
-<p>乐观锁优缺点：<br>乐观锁认为事务直接竞争的概率是很小的，在提交的时候才锁定，所以不会产生死锁。但是如果两个事务同时读取数据库的某一行，这时，就会发现乐观锁的弊端。</p>
-</blockquote>
-<p>###MySQL常用存储引擎的锁机制</p>
-<blockquote>
-<p>BDB：支持页级锁和表级锁，默认是页级锁<br>InnoDB：支持行级锁和表级锁，默认是行级锁<br>MyISAM &amp;Memory：这两个存储引擎都是采用表级锁</p>
-</blockquote>
-<p>###MySQL中排它锁和共享锁<br>排它锁(exclusive locck)<br>排它锁又叫写锁，如果事务T对A加上排它锁，则其它事务都不能对A加任何类型的锁。获准排它锁的事务既能读数据，又能写数据。</p>
-<blockquote>
-<p>用法：SELECT … FOR UPDATE</p>
-</blockquote>
-<p>共享锁(share lock)<br>共享锁又叫读锁，如果事务T对A加上共享锁，则其它事务只能对A再加共享锁，不能加其它锁。获准共享锁的事务只能读数据，不能写数据。</p>
-<blockquote>
-<p>用法：SELECT … LOCK IN SHARE MODE;</p>
-</blockquote>
-<p>###MySQL中的行级锁、表级锁和页级锁</p>
-<blockquote>
-<p>行级锁：行级锁分为共享锁和排它锁。行级锁是Mysql中锁定粒度最细的锁。InnoDB引擎支持行级锁和表级锁，只有在通过索引条件检索数据的时候，才使用行级锁，否就使用表级锁。行级锁开销大，加锁慢，锁定粒度最小，发生锁冲突概率最低，并发度最高</p>
-<p>表级锁：表级锁分为表共享锁和表独占锁。表级锁开销小，加锁快，锁定粒度大、发生锁冲突最高，并发度最低</p>
-<p>页级锁：页级锁是MySQL中锁定粒度介于行级锁和表级锁中间的一种锁。表级锁速度快，但冲突多，行级冲突少，但速度慢。所以取了折衷的页级，一次锁定相邻的一组记录。BDB支持页级锁。<br>开销和加锁时间界于表锁和行锁之间；会出现死锁；锁定粒度界于表锁和行锁之间，并发度一般</p>
-</blockquote>
-<p><a href="http://www.hollischuang.com/archives/934" target="_blank" rel="noopener">http://www.hollischuang.com/archives/934</a><br><a href="https://crossoverjie.top/2017/07/09/SSM15/" target="_blank" rel="noopener">https://crossoverjie.top/2017/07/09/SSM15/</a></p>
-</the>
       
     </div>
     
@@ -323,13 +336,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/01/16/MySQL数据库的锁机制/"></a></p>
+        <p><span>本文标题:</span><a href="/2018/01/16/Swagger UI教程 API 文档神器/"></a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
-        <p><span>发布时间:</span>2018-01-16, 15:26:58</p>
-        <p><span>最后更新:</span>2018-01-16, 16:54:57</p>
+        <p><span>发布时间:</span>2018-01-16, 17:29:48</p>
+        <p><span>最后更新:</span>2018-01-16, 17:36:46</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/01/16/MySQL数据库的锁机制/" title="">http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/16/Swagger UI教程 API 文档神器/" title="">http://blog.ittrading.cn/2018/01/16/Swagger UI教程 API 文档神器/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/Swagger UI教程 API 文档神器/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -341,12 +354,12 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/">
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/01/16/中间件技术入门教程/">
                     
                 </a>
             </div>
-        
         
     </nav>
 
@@ -356,7 +369,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title-MySQL数据库的锁机制"><span class="toc-number">1.</span> <span class="toc-text">title:MySQL数据库的锁机制</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#目录"><span class="toc-number">1.</span> <span class="toc-text">目录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number"></span> <span class="toc-text">前言</span></a>
         
     </div>
     <style>
@@ -408,7 +421,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2018/01/16/MySQL数据库的锁机制/" data-title="" data-url="http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2018/01/16/Swagger UI教程 API 文档神器/" data-title="" data-url="http://blog.ittrading.cn/2018/01/16/Swagger UI教程 API 文档神器/"></div>
     <script>
         var duoshuoQuery = {short_name:""};
         var loadComment = function(){
@@ -431,15 +444,15 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/" title="上一篇: ">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+            <a href="/2018/01/16/中间件技术入门教程/" title="下一篇: ">
+                <i class="fa fa-angle-right"></i>
+            </a>
         
     </div>
 

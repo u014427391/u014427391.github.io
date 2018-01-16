@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Nicky" />
+
+
+
+<meta name="description" content="[TOC] ##第一章Spring框架简介IOC(控制反转)和AOP(面向方面编程)作为Spring框架的两个核心，很好地实现了解耦合。所以，简单来说，Spring是一个轻量级的控制反转（IoC）和面向切面（AOP）的容器框架。 spring的基本框架主要包含六大模块：DAO、ORM、AOP、JEE、WEB、CORE +">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nicky&#39;s blog">
+<meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/Spring框架之IOC(控制反转)/index.html">
+<meta property="og:site_name" content="Nicky&#39;s blog">
+<meta property="og:description" content="[TOC] ##第一章Spring框架简介IOC(控制反转)和AOP(面向方面编程)作为Spring框架的两个核心，很好地实现了解耦合。所以，简单来说，Spring是一个轻量级的控制反转（IoC）和面向切面（AOP）的容器框架。 spring的基本框架主要包含六大模块：DAO、ORM、AOP、JEE、WEB、CORE +">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.blog.csdn.net/20170525210328978?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170525211519400?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170525211902580?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170525212335988?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-01-16T09:36:40.747Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nicky&#39;s blog">
+<meta name="twitter:description" content="[TOC] ##第一章Spring框架简介IOC(控制反转)和AOP(面向方面编程)作为Spring框架的两个核心，很好地实现了解耦合。所以，简单来说，Spring是一个轻量级的控制反转（IoC）和面向切面（AOP）的容器框架。 spring的基本框架主要包含六大模块：DAO、ORM、AOP、JEE、WEB、CORE +">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20170525210328978?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Nicky&#39;s blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Nicky&#39;s blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Nicky</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/2284087296@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" href="https://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于JavaEE</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Nicky</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Nicky</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/2284087296@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="https://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-Spring框架之IOC(控制反转)" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/01/16/Spring框架之IOC(控制反转)/" class="article-date">
+      <time datetime="2018-01-16T09:29:05.220Z" itemprop="datePublished">2018-01-16</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>[TOC]</p>
+<p>##第一章Spring框架简介<br>IOC(控制反转)和AOP(面向方面编程)作为Spring框架的两个核心，很好地实现了解耦合。所以，简单来说，Spring是一个轻量级的控制反转（IoC）和面向切面（AOP）的容器框架。</p>
+<p>spring的基本框架主要包含六大模块：DAO、ORM、AOP、JEE、WEB、CORE</p>
+<p><excerpt in="" index="" |="" 首页摘要=""><br>+<a id="more"></a></excerpt></p>
+<p><the rest="" of="" contents="" |="" 余下全文=""><br><img src="http://img.blog.csdn.net/20170525210328978?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></the></p>
+<blockquote>
+<p>Spring DAO：Spring提供了对JDBC的操作支持：JdbcTemplate模板工具类 。</p>
+<p>Spring ORM：Spring可以与ORM框架整合。例如Spring整合Hibernate框架，其中Spring还提供HibernateDaoSupport工具类，简化了Hibernate的操作 。</p>
+<p>Spring WEB：Spring提供了对Struts、Springmvc的支持，支持WEB开发。与此同时Spring自身也提供了基于MVC的解决方案 。</p>
+<p>Spring  AOP：Spring提供面向切面的编程，可以给某一层提供事务管理，例如在Service层添加事物控制 。</p>
+<p>Spring   JEE：J2EE开发规范的支持，例如EJB 。</p>
+<p>Spring Core：提供IOC容器对象的创建和处理依赖对象关系 。</p>
+</blockquote>
+<p>##第二章IOC(控制反转)和DI(依赖注入)<br><strong>IOC：也即控制反转，DI即依赖注入，控制反转IOC和依赖注入DI其实就是同个概念的两个不同角度的解释。</strong><br><strong>控制反转可以理解为获取依赖对象的控制反转过来。</strong>有反转的概念自然就有正转的概念。</p>
+<p>若有两个类，类A和类B，若类A依赖与类B，则类A要获取类B的方法，这时我们可以按照传统的JavaSE思想，在A类里，写代码<code>B b = new B();</code>，通过new关键字获取A类的依赖对象，或者通过工厂模式进行获取，当然还有等等其它方法。这些方法，就属于正转的方法，因为A类获取B类就是通过主动的方法进行获取的，统称为正转的方法。</p>
+<p>然后，什么是反转呢？既然正转是主动的方式，那么反转就是被动的方式。也即我们要获取某个类的依赖对象，不需要类主动去获取。然后在Spring框架里是怎么实现的呢？在Spring框架里，实现IOC，<strong>是通过IOC容器实现的，由IOC容器负责创建和获取依赖对象，对象只是被动地接受依赖对象。</strong></p>
+<p>比如我们要在一个客户端类里获取用户信息类，下图给出正转的方式</p>
+<p><img src="http://img.blog.csdn.net/20170525211519400?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>有了IOC容器之后，获取依赖对象的方式就变成如图所示了</p>
+<p><img src="http://img.blog.csdn.net/20170525211902580?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>IOC是一种很好的解耦合思想，在软件开发中有很好的作用，不仅被应用在JavaEE里，在其它语言里同样适用。</p>
+<p><img src="http://img.blog.csdn.net/20170525212335988?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>##第三章IOC控制反转实现的方式<br>在Spring框架中实现IOC主要有三种方法。</p>
+<ul>
+<li>XML配置方式</li>
+<li>注解方式</li>
+<li><p>自动装配方式</p>
+<p>###3.1XML配置方式</p>
+</li>
+</ul>
+<p>现在基于传统XML配置方式实现的例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">package com.test;</span><br><span class="line"> </span><br><span class="line">public interface IUserDAO &#123;</span><br><span class="line"> ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">package com.test;</span><br><span class="line"> </span><br><span class="line">public class UserDAOImpl implements IUserDAO &#123;</span><br><span class="line"> ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Service类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import org.springframework.context.ApplicationContext;</span><br><span class="line">import org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"> </span><br><span class="line">public class UserService &#123;</span><br><span class="line"> IUserDAO userDAO;</span><br><span class="line">  </span><br><span class="line"> public UserService() &#123;</span><br><span class="line">  //加载xml配置</span><br><span class="line">  ApplicationContext ctx=new   ClassPathXmlApplicationContext(&quot;application.xml&quot;);</span><br><span class="line">  //从容器中获得id为userdao的bean</span><br><span class="line">  userDAO=(IUserDAO)ctx.getBean(&quot;userdao&quot;);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Bean配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line"> xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line"> xmlns:p=&quot;http://www.springframework.org/schema/p&quot;</span><br><span class="line"> xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</span><br><span class="line">  http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;</span><br><span class="line"> &lt;bean id=&quot;userdao&quot; class=&quot;com.test.UserDAO&quot;&gt;&lt;/bean&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure></p>
+<p>###3.2注解方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">package com.test;</span><br><span class="line"> </span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line">import org.springframework.stereotype.Repository;</span><br><span class="line"> </span><br><span class="line">@Component(&quot;userDao&quot;)</span><br><span class="line">public class UserDAO implements IUserDAO &#123;</span><br><span class="line"> ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Service类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">package com.test;</span><br><span class="line"> </span><br><span class="line">import org.springframework.context.ApplicationContext;</span><br><span class="line">import org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line"> </span><br><span class="line">//@Component</span><br><span class="line">@Service</span><br><span class="line">public class UserService &#123;</span><br><span class="line"> IUserDAO userDAO;</span><br><span class="line"> ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在Application.xml里开启注解扫描</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line"> xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line"> xmlns:p=&quot;http://www.springframework.org/schema/p&quot;</span><br><span class="line"> xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line"> xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</span><br><span class="line">  http://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">  http://www.springframework.org/schema/context</span><br><span class="line">  http://www.springframework.org/schema/context/spring-context-4.3.xsd&quot;&gt;</span><br><span class="line">  &lt;context:component-scan base-package=&quot;com.test&quot;&gt;&lt;/context:component-scan&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+<p>采用注解的方式，比起xml配置方式更加简洁，不然也要注意耦合方面</p>
+<blockquote>
+<p>除了@Component外，Spring提供了3个功能基本和@Component等效的注解，分别对应于用于对DAO，Service，和Controller进行注解。<br>1：@Repository 用于对DAO实现类进行注解。<br>2：@Service 用于对业务层注解，但是目前该功能与 @Component 相同。<br>3：@Constroller用于对控制层注解，但是目前该功能与 @Component 相同。</p>
+</blockquote>
+<p>###3.3自动装配方式<br>下面介绍IOC实现的另外一种方式，自动装配方式，这种方式也是用的比较多的。也即注解方式和XML方式的混合使用。</p>
+<p>实现自动转配需要两个步骤：<br>•    组件扫描（component scanning）:Spring会自动发现应用上下文中所创建的bean<br>•    自动装配（autowiring）：Spring自动满足bean之间的依赖</p>
+<p>在xml里配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 自动扫描的包名 --&gt;</span><br><span class="line">&lt;context:component-scan base-package=&quot;com.test&quot; /&gt;</span><br><span class="line">&lt;!-- 默认的注解映射的支持 --&gt;</span><br><span class="line">&lt;mvc:annotation-driven /&gt;</span><br></pre></td></tr></table></figure>
+<p>对于开启注解的方式， <code>&lt;context:componetn-scan&gt;</code>和<code>&lt;context:annotation-config&gt;</code>的异同，可以参考我的博客,<a href="http://blog.csdn.net/u014427391/article/details/72722797" target="_blank" rel="noopener">http://blog.csdn.net/u014427391/article/details/72722797</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface UserService &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Service(&quot;userService&quot;)</span><br><span class="line">public class UserServiceImpl implements UserService&#123;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>控制类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line">public class UserController&#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    UserService userService;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>@Autowired，该注解的作用是：可以对成员变量、方法和构造函数进行注解，来完成自动装配的工作，通俗来说就是会根据类型从容器中自动查到到一个Bean给bookDAO字段。@Autowired是根据类型进行自动装配的，如果需要按名称进行装配，则需要配合@Qualifier。另外可以使用其它注解，</p>
+<p>@ Resource ：等同于@Qualifier</p>
+<p>@Inject：等同于@ Autowired。</p>
+<p>@Service用于注解业务层组件（我们通常定义的service层就用这个）</p>
+<p>@Controller用于注解控制层组件（如struts中的action）</p>
+<p>@Repository用于注解数据访问组件，即DAO组件</p>
+<p>@Component泛指组件，当组件不好归类的时候，我们可以使用这个注解进行注解。</p>
+</blockquote>
+<p>引用自:<a href="http://www.52codes.net/article/40150.html" target="_blank" rel="noopener">http://www.52codes.net/article/40150.html</a></p>
+<blockquote>
+<p>装配注解主要有：@Autowired、@Qualifier、@Resource，它们的特点是：</p>
+<p>1、@Resource默认是按照名称来装配注入的，只有当找不到与名称匹配的bean才会按照类型来装配注入；</p>
+<p>2、@Autowired默认是按照类型装配注入的，如果想按照名称来转配注入，则需要结合@Qualifier一起使用；</p>
+<p>3、@Resource注解是又J2EE提供，而@Autowired是由spring提供，故减少系统对spring的依赖建议使用@Resource的方式；如果Maven项目是1.5的JRE则需换成更高版本的。</p>
+<p>4、@Resource和@Autowired都可以书写注解在字段或者该字段的setter方法之上</p>
+<p>5、@Autowired 可以对成员变量、方法以及构造函数进行注释，而 @Qualifier 的注解对象是成员变量、方法入参、构造函数入参。</p>
+<p>6、@Qualifier(“XXX”) 中的 XX是 Bean 的名称，所以 @Autowired 和 @Qualifier 结合使用时，自动注入的策略就从 byType 转变成 byName 了。</p>
+<p>7、@Autowired 注释进行自动注入时，Spring 容器中匹配的候选 Bean 数目必须有且仅有一个，通过属性required可以设置非必要。</p>
+<p>8、@Resource装配顺序<br>　　8.1. 如果同时指定了name和type，则从Spring上下文中找到唯一匹配的bean进行装配，找不到则抛出异常<br>　　8.2. 如果指定了name，则从上下文中查找名称（id）匹配的bean进行装配，找不到则抛出异常<br>　　8.3. 如果指定了type，则从上下文中找到类型匹配的唯一bean进行装配，找不到或者找到多个，都会抛出异常<br>　　8.4. 如果既没有指定name，又没有指定type，则自动按照byName方式进行装配；如果没有匹配，则回退为一个原始类型进行匹配，如果匹配则自动装配；</p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/01/16/Spring框架之IOC(控制反转)/"></a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
+        <p><span>发布时间:</span>2018-01-16, 17:29:05</p>
+        <p><span>最后更新:</span>2018-01-16, 17:36:40</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/16/Spring框架之IOC(控制反转)/" title="">http://blog.ittrading.cn/2018/01/16/Spring框架之IOC(控制反转)/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/Spring框架之IOC(控制反转)/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2018/01/16/分布式文件存储的数据库MongoDB教程整理/">
+                    
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/01/16/IBM WebSphere ESB入门指南/">
+                    
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"　| Nicky's blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2018/01/16/Spring框架之IOC(控制反转)/" data-title="" data-url="http://blog.ittrading.cn/2018/01/16/Spring框架之IOC(控制反转)/"></div>
+    <script>
+        var duoshuoQuery = {short_name:""};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2018/01/16/分布式文件存储的数据库MongoDB教程整理/" title="上一篇: ">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/01/16/IBM WebSphere ESB入门指南/" title="下一篇: ">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/Swagger UI教程 API 文档神器/">Swagger UI教程 API 文档神器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/中间件技术入门教程/">中间件技术入门教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/Spring Boot使用Druid进行维度的统计和监控/">Spring Boot使用Druid进行维度的统计和监控</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/分布式文件存储的数据库MongoDB教程整理/">分布式文件存储的数据库MongoDB教程整理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/Spring框架之IOC(控制反转)/">Spring框架之IOC(控制反转)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/IBM WebSphere ESB入门指南/">IBM WebSphere ESB入门指南</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/企业服务总线ESB简介/">企业服务总线ESB简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/分布式消息队列kafka原理简介/">分布式消息队列kafka原理简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/设计模式之代理模式简介/">设计模式之代理模式简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/JDK动态代理源码学习/">JDK动态代理源码学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/分布式消息中间件RocketMQ学习教程①/">分布式消息中间件RocketMQ学习教程①</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/">SpringBoot集成Redis实现缓存处理(Spring AOP技术)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/MySQL数据库的锁机制/">MySQL数据库的锁机制</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2013-2018 Nicky
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -15,17 +15,19 @@
 
 
 
-<meta name="description" content="title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 ###">
+<meta name="description" content="[TOC] 第一章 前言在某些情况下，一个客户不想或者不能直接引用一个对象，此时可以通过一个称之为“代理”的第三者来实现间接引用。代理对象可以在客户端和目标对象之间起到中介的作用，并且可以通过代理对象去掉客户不能看到的内容和服务或者添加客户需要的额外服务。代理模式的角色分为：主题接口： 即代理类的所实现的行为接口。目标对象： 也就是被代理的对象。代理对象： 用来封装真是主题类的代理类客户端：即用来">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nicky&#39;s blog">
-<meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/index.html">
+<meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/设计模式之代理模式简介/index.html">
 <meta property="og:site_name" content="Nicky&#39;s blog">
-<meta property="og:description" content="title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 ###">
+<meta property="og:description" content="[TOC] 第一章 前言在某些情况下，一个客户不想或者不能直接引用一个对象，此时可以通过一个称之为“代理”的第三者来实现间接引用。代理对象可以在客户端和目标对象之间起到中介的作用，并且可以通过代理对象去掉客户不能看到的内容和服务或者添加客户需要的额外服务。代理模式的角色分为：主题接口： 即代理类的所实现的行为接口。目标对象： 也就是被代理的对象。代理对象： 用来封装真是主题类的代理类客户端：即用来">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-16T08:54:57.767Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20170715110926663?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-01-16T09:37:24.792Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nicky&#39;s blog">
-<meta name="twitter:description" content="title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 ###">
+<meta name="twitter:description" content="[TOC] 第一章 前言在某些情况下，一个客户不想或者不能直接引用一个对象，此时可以通过一个称之为“代理”的第三者来实现间接引用。代理对象可以在客户端和目标对象之间起到中介的作用，并且可以通过代理对象去掉客户不能看到的内容和服务或者添加客户需要的额外服务。代理模式的角色分为：主题接口： 即代理类的所实现的行为接口。目标对象： 也就是被代理的对象。代理对象： 用来封装真是主题类的代理类客户端：即用来">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20170715110926663?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -261,11 +263,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-MySQL数据库的锁机制" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-设计模式之代理模式简介" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/01/16/MySQL数据库的锁机制/" class="article-date">
-      <time datetime="2018-01-16T07:26:58.605Z" itemprop="datePublished">2018-01-16</time>
+      <a href="/2018/01/16/设计模式之代理模式简介/" class="article-date">
+      <time datetime="2018-01-16T09:28:29.542Z" itemprop="datePublished">2018-01-16</time>
 </a>
 
 
@@ -279,43 +281,29 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="title-MySQL数据库的锁机制"><a href="#title-MySQL数据库的锁机制" class="headerlink" title="title:MySQL数据库的锁机制"></a>title:MySQL数据库的锁机制</h2><p>在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。</p>
-<p>###锁分类<br>①、按操作划分：DML锁，DDL锁<br>②、按锁的粒度划分：表级锁、行级锁、页级锁<br>③、按锁级别划分：共享锁、排他锁<br>④、按加锁方式划分：自动锁、显示锁<br>⑤、按使用方式划分：乐观锁、悲观锁</p>
-<p>###乐观锁和悲观锁</p>
-<p>乐观并发控制和悲观并发控制是并发控制采用的主要方法。乐观锁和悲观锁不仅在关系数据库里应用，在Hibernate、Memcache等等也有相关概念。</p>
-<p>悲观锁：也即悲观并发控制，Pessimistic Concurrency Controller，缩写PCC。悲观锁是指在数据处理过程，使数据处于锁定状态，一般使用数据库的锁机制实现。<br>备注，在MySQL中使用悲观锁，必须关闭MySQL的自动提交，set autocommit=0。MySQL默认使用自动提交autocommit模式，也即你执行一个更新操作，MySQL会自动将结果提交。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//0.开始事务</span><br><span class="line">begin;/begin work;/start transaction; (三者选一就可</span><br><span class="line">//1.查询出商品信息</span><br><span class="line">select status from t_goods where id=1 for update;</span><br><span class="line">//2.根据商品信息生成订单</span><br><span class="line">insert into t_orders (id,goods_id) values (null,1);</span><br><span class="line">//3.修改商品status为2</span><br><span class="line">update t_goods set status=2;</span><br><span class="line">//4.提交事务</span><br><span class="line">commit;/commit work;</span><br></pre></td></tr></table></figure>
-<p>本例子使用select…for update方式将数据锁住，也就是开启了排他锁</p>
+        <p>[TOC]</p>
+<h2 id="第一章-前言"><a href="#第一章-前言" class="headerlink" title="第一章 前言"></a>第一章 前言</h2><p>在某些情况下，一个客户不想或者不能直接引用一个对象，此时可以通过一个称之为“代理”的第三者来实现间接引用。代理对象可以在客户端和目标对象之间起到中介的作用，并且可以通过代理对象去掉客户不能看到的内容和服务或者添加客户需要的额外服务。<br>代理模式的角色分为：<br>主题接口： 即代理类的所实现的行为接口。<br>目标对象： 也就是被代理的对象。<br>代理对象： 用来封装真是主题类的代理类<br>客户端：即用来实现的类</p>
 <p><excerpt in="" index="" |="" 首页摘要=""><br>+<a id="more"></a></excerpt></p>
-<the rest="" of="" contents="" |="" 余下全文="">
-
+<p><the rest="" of="" contents="" |="" 余下全文=""><br><img src="http://img.blog.csdn.net/20170715110926663?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></the></p>
 <blockquote>
-<p>悲观锁优缺点：<br>悲观并发控制(悲观锁)采用”先取锁再分”的保守策略，为数据处理提供了安全的保证。但在效率方面，加锁机制会产生额外的开销，增加产生死锁的机会。</p>
+<p>代理模式分为静态代理和动态代理 •    静态代理:静态代理就是<strong>编译阶段就生成代理类</strong>来完成对代理对象的一系列操作。<br>•    动态代理:动态代理是指在<strong>运行时动态生成代理类</strong>。即，代理类的字节码将在运行时生成并载入当前代理的 ClassLoader。</p>
 </blockquote>
-<p>乐观锁：相对悲观锁来说，乐观锁是通过记录数据版本的方式实现乐观锁。为数据增加一个版本标识，读取数据时，将版本标识一起读出，数据没更新一次，就对版本标识进行更新。</p>
+<h2 id="第二章-静态代理"><a href="#第二章-静态代理" class="headerlink" title="第二章 静态代理"></a>第二章 静态代理</h2><p>静态代理：静态代理就是<strong>编译阶段就生成代理类</strong>来完成对代理对象的一系列操作。<br>主题接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public   interface Subject  &#123;    </span><br><span class="line">	abstract   public   void  request(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>目标对象：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public   class  RealSubject  implements Subject  &#123;    		  	       </span><br><span class="line">   public   void  request()  &#123;         </span><br><span class="line">	   System.out.println( &quot; From real subject. &quot; );     </span><br><span class="line">   &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代理对象：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public   class  StaticProxySubject  implements Subject  &#123; </span><br><span class="line">    private  RealSubject  realSubject;  // 以真实角色作为代理角色的属性  </span><br><span class="line">    public  ProxySubject()  &#123; &#125;  </span><br><span class="line">    public  void  request()  &#123;  // 该方法封装了真实对象的request方法        </span><br><span class="line">    //懒加载，用的时候才加载</span><br><span class="line">	if ( realSubject  ==   null  )  &#123; </span><br><span class="line">		realSubject  =   new  RealSubject();        </span><br><span class="line">	&#125;   </span><br><span class="line">	realSubject.request();  // 此处执行真实对象的request方法   </span><br><span class="line">   &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编写客户端类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public class Client&#123;</span><br><span class="line">	StaticProxySubject sps = new StaticProxySubject();</span><br><span class="line">	sps.request();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="第三章-动态代理"><a href="#第三章-动态代理" class="headerlink" title="第三章 动态代理"></a>第三章 动态代理</h2><p>动态代理：动态代理是指在<strong>运行时动态生成代理类</strong>。即，代理类的字节码将在运行时生成并载入当前代理的 ClassLoader。<br>生成动态代理的方法有很多： JDK中自带动态代理，CGlib, javassist等。</p>
+<h3 id="3-1-JDK动态代理"><a href="#3-1-JDK动态代理" class="headerlink" title="3.1 JDK动态代理"></a>3.1 JDK动态代理</h3><p>Proxy类。该类即为动态代理类，该类最常用的方法为：<code>public static Object newProxyInstance(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler h) throws IllegalArgumentException</code>。</p>
 <blockquote>
-<p>乐观锁优缺点：<br>乐观锁认为事务直接竞争的概率是很小的，在提交的时候才锁定，所以不会产生死锁。但是如果两个事务同时读取数据库的某一行，这时，就会发现乐观锁的弊端。</p>
+<p>newProxyInstance()方法用于根据传入的接口类型interfaces返回一个动态创建的代理类的实例，方法中第一个参数loader表示代理类的类加载器，第二个参数interfaces表示被代理类实现的接口列表，第三个参数h表示所指派的调用处理程序类。</p>
 </blockquote>
-<p>###MySQL常用存储引擎的锁机制</p>
-<blockquote>
-<p>BDB：支持页级锁和表级锁，默认是页级锁<br>InnoDB：支持行级锁和表级锁，默认是行级锁<br>MyISAM &amp;Memory：这两个存储引擎都是采用表级锁</p>
-</blockquote>
-<p>###MySQL中排它锁和共享锁<br>排它锁(exclusive locck)<br>排它锁又叫写锁，如果事务T对A加上排它锁，则其它事务都不能对A加任何类型的锁。获准排它锁的事务既能读数据，又能写数据。</p>
-<blockquote>
-<p>用法：SELECT … FOR UPDATE</p>
-</blockquote>
-<p>共享锁(share lock)<br>共享锁又叫读锁，如果事务T对A加上共享锁，则其它事务只能对A再加共享锁，不能加其它锁。获准共享锁的事务只能读数据，不能写数据。</p>
-<blockquote>
-<p>用法：SELECT … LOCK IN SHARE MODE;</p>
-</blockquote>
-<p>###MySQL中的行级锁、表级锁和页级锁</p>
-<blockquote>
-<p>行级锁：行级锁分为共享锁和排它锁。行级锁是Mysql中锁定粒度最细的锁。InnoDB引擎支持行级锁和表级锁，只有在通过索引条件检索数据的时候，才使用行级锁，否就使用表级锁。行级锁开销大，加锁慢，锁定粒度最小，发生锁冲突概率最低，并发度最高</p>
-<p>表级锁：表级锁分为表共享锁和表独占锁。表级锁开销小，加锁快，锁定粒度大、发生锁冲突最高，并发度最低</p>
-<p>页级锁：页级锁是MySQL中锁定粒度介于行级锁和表级锁中间的一种锁。表级锁速度快，但冲突多，行级冲突少，但速度慢。所以取了折衷的页级，一次锁定相邻的一组记录。BDB支持页级锁。<br>开销和加锁时间界于表锁和行锁之间；会出现死锁；锁定粒度界于表锁和行锁之间，并发度一般</p>
-</blockquote>
-<p><a href="http://www.hollischuang.com/archives/934" target="_blank" rel="noopener">http://www.hollischuang.com/archives/934</a><br><a href="https://crossoverjie.top/2017/07/09/SSM15/" target="_blank" rel="noopener">https://crossoverjie.top/2017/07/09/SSM15/</a></p>
-</the>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">import java.lang.reflect.InvocationHandler;</span><br><span class="line">import java.lang.reflect.Method;</span><br><span class="line">import java.lang.reflect.Proxy;</span><br><span class="line"></span><br><span class="line">public class MyInvocationHandler implements InvocationHandler &#123;</span><br><span class="line">    private Class&lt;?&gt; target;//委托类</span><br><span class="line">    public MyInvocationHandler(Class&lt;?&gt; target)&#123;</span><br><span class="line">        this.target=target;</span><br><span class="line">    &#125;</span><br><span class="line">	//实际执行类bind</span><br><span class="line">    public  Object bind(Class&lt;?&gt; target)&#123;</span><br><span class="line">        //利用JDK提供的Proxy实现动态代理</span><br><span class="line">        return  Proxy.newProxyInstance(target.getClassLoader(),</span><br><span class="line">        		new Class[]&#123;target&#125;,this);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public Object invoke(Object o, Method method, Object[] args) throws Throwable &#123;</span><br><span class="line">		/**代理环绕**/</span><br><span class="line">        //执行实际的方法</span><br><span class="line">        Object invoke = method.invoke(target, args);</span><br><span class="line">        return invoke;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-2-CGLIB动态代理"><a href="#3-2-CGLIB动态代理" class="headerlink" title="3.2 CGLIB动态代理"></a>3.2 CGLIB动态代理</h3><p>CGLIB动态代理实现相关类需要在项目中导入 cglib-nodep-2.1_3.jar ，主要涉及两个类：<br>MethodInterceptor接口。它是代理实例的调用处理程序实现的接口，该接口中定义了如下方法：<code>public Object intercept(Object proxy, Method method, Object[] arg2,
+   MethodProxy mp);</code></p>
+<p>intercept()方法中第一个参数proxy表示代理类，第二个参数method表示需要代理的方法，第三个参数args表示代理方法的参数数组，第四个参数mp用 来去调用被代理对象方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">package com.demo;</span><br><span class="line"></span><br><span class="line">import java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line">import net.sf.cglib.proxy.Enhancer;</span><br><span class="line">import net.sf.cglib.proxy.MethodInterceptor;</span><br><span class="line">import net.sf.cglib.proxy.MethodProxy;</span><br><span class="line"></span><br><span class="line">public class MyInterceptor implements MethodInterceptor&#123;	</span><br><span class="line">    private Object target; ;//代理的目标对象</span><br><span class="line">    public MyInterceptor(Object target) &#123;</span><br><span class="line">        this.target = target;</span><br><span class="line">    &#125; </span><br><span class="line">//proxy 在其上调用方法的代理实例    method拦截的方法    args  拦截的参数</span><br><span class="line"> //invocation 用来去调用被代理对象方法</span><br><span class="line">    @Override</span><br><span class="line">    public Object intercept(Object proxy, Method method, Object[] args, </span><br><span class="line">                                         MethodProxy invocation) throws Throwable &#123;</span><br><span class="line">        //1.记录日志 2.时间统计开始   3.安全检查</span><br><span class="line">        Object retVal = invocation.invoke(target, args);  </span><br><span class="line">        //4.时间统计结束</span><br><span class="line">        return retVal;   </span><br><span class="line">    &#125;</span><br><span class="line">//创建代理对象的方法</span><br><span class="line">    public Object proxy(Object target) &#123;</span><br><span class="line">		this.target = target;</span><br><span class="line">		Enhancer enhancer = new Enhancer();//该类用于生成代理类		</span><br><span class="line">		enhancer.setSuperclass(this.target.getClass());//设置父类</span><br><span class="line">		enhancer.setCallback(this);//设置回调用对象为本身</span><br><span class="line">		return enhancer.create();</span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -323,13 +311,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/01/16/MySQL数据库的锁机制/"></a></p>
+        <p><span>本文标题:</span><a href="/2018/01/16/设计模式之代理模式简介/"></a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
-        <p><span>发布时间:</span>2018-01-16, 15:26:58</p>
-        <p><span>最后更新:</span>2018-01-16, 16:54:57</p>
+        <p><span>发布时间:</span>2018-01-16, 17:28:29</p>
+        <p><span>最后更新:</span>2018-01-16, 17:37:24</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/01/16/MySQL数据库的锁机制/" title="">http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/16/设计模式之代理模式简介/" title="">http://blog.ittrading.cn/2018/01/16/设计模式之代理模式简介/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/设计模式之代理模式简介/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -342,11 +330,17 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/">
+                <a href="/2018/01/16/分布式消息队列kafka原理简介/">
                     
                 </a>
             </div>
         
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/01/16/JDK动态代理源码学习/">
+                    
+                </a>
+            </div>
         
     </nav>
 
@@ -356,7 +350,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title-MySQL数据库的锁机制"><span class="toc-number">1.</span> <span class="toc-text">title:MySQL数据库的锁机制</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第一章-前言"><span class="toc-number">1.</span> <span class="toc-text">第一章 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二章-静态代理"><span class="toc-number">2.</span> <span class="toc-text">第二章 静态代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三章-动态代理"><span class="toc-number">3.</span> <span class="toc-text">第三章 动态代理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-JDK动态代理"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 JDK动态代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-CGLIB动态代理"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 CGLIB动态代理</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -408,7 +402,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2018/01/16/MySQL数据库的锁机制/" data-title="" data-url="http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2018/01/16/设计模式之代理模式简介/" data-title="" data-url="http://blog.ittrading.cn/2018/01/16/设计模式之代理模式简介/"></div>
     <script>
         var duoshuoQuery = {short_name:""};
         var loadComment = function(){
@@ -431,7 +425,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/" title="上一篇: ">
+            <a href="/2018/01/16/分布式消息队列kafka原理简介/" title="上一篇: ">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -439,7 +433,9 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+            <a href="/2018/01/16/JDK动态代理源码学习/" title="下一篇: ">
+                <i class="fa fa-angle-right"></i>
+            </a>
         
     </div>
 

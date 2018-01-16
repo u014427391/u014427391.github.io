@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Nicky" />
+
+
+
+<meta name="description" content="[TOC] 第一章MongoDB简介MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。MongoDB 官网地址：https://www.mongodb.com/MongoDB 官方英文文档：https://doc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nicky&#39;s blog">
+<meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/分布式文件存储的数据库MongoDB教程整理/index.html">
+<meta property="og:site_name" content="Nicky&#39;s blog">
+<meta property="og:description" content="[TOC] 第一章MongoDB简介MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。MongoDB 官网地址：https://www.mongodb.com/MongoDB 官方英文文档：https://doc">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-16T09:36:53.489Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nicky&#39;s blog">
+<meta name="twitter:description" content="[TOC] 第一章MongoDB简介MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。MongoDB 官网地址：https://www.mongodb.com/MongoDB 官方英文文档：https://doc">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Nicky&#39;s blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Nicky&#39;s blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Nicky</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/2284087296@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" href="https://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于JavaEE</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Nicky</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Nicky</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/2284087296@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="https://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-分布式文件存储的数据库MongoDB教程整理" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/01/16/分布式文件存储的数据库MongoDB教程整理/" class="article-date">
+      <time datetime="2018-01-16T09:29:16.180Z" itemprop="datePublished">2018-01-16</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>[TOC]</p>
+<h2 id="第一章MongoDB简介"><a href="#第一章MongoDB简介" class="headerlink" title="第一章MongoDB简介"></a>第一章MongoDB简介</h2><p>MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。<br>MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。<br>MongoDB 官网地址：<a href="https://www.mongodb.com/" target="_blank" rel="noopener">https://www.mongodb.com/</a><br>MongoDB 官方英文文档：<a href="https://docs.mongodb.com/manual/" target="_blank" rel="noopener">https://docs.mongodb.com/manual/</a><br>MongoDB 各平台下载地址：<a href="https://www.mongodb.com/download-center#community" target="_blank" rel="noopener">https://www.mongodb.com/download-center#community</a></p>
+<p><excerpt in="" index="" |="" 首页摘要=""><br>+<a id="more"></a></excerpt></p>
+<p><the rest="" of="" contents="" |="" 余下全文=""></the></p>
+<h2 id="第二章MongoDB安装"><a href="#第二章MongoDB安装" class="headerlink" title="第二章MongoDB安装"></a>第二章MongoDB安装</h2><p>###2.1 关闭SELINUX<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/selinux/config</span><br></pre></td></tr></table></figure></p>
+<p>对配置文件进行修改，然后按ESC键，:wq保存退出<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#SELINUX=enforcing </span><br><span class="line"></span><br><span class="line">#SELINUXTYPE=targeted</span><br><span class="line"></span><br><span class="line">SELINUX=disabled #增加</span><br></pre></td></tr></table></figure></p>
+<p>:wq! #保存退出</p>
+<p>###2.2 配置防火墙</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysconfig/iptables</span><br></pre></td></tr></table></figure>
+<p>可以看到配置文件，然后按I键，insert如下数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -m state --state NEW -m tcp -p tcp --dport 9092 -j ACCEPT</span><br></pre></td></tr></table></figure></p>
+<p>然后按ESC键，:wq保存退出，配置文件代码如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"># Firewall configuration written by system-config-firewall</span><br><span class="line"></span><br><span class="line"># Manual customization of this file is not recommended.</span><br><span class="line"></span><br><span class="line">*filter</span><br><span class="line"></span><br><span class="line">:INPUT ACCEPT [0:0]</span><br><span class="line"></span><br><span class="line">:FORWARD ACCEPT [0:0]</span><br><span class="line"></span><br><span class="line">:OUTPUT ACCEPT [0:0]</span><br><span class="line"></span><br><span class="line">-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line"></span><br><span class="line">-A INPUT -p icmp -j ACCEPT</span><br><span class="line"></span><br><span class="line">-A INPUT -i lo -j ACCEPT</span><br><span class="line"></span><br><span class="line">-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT</span><br><span class="line"></span><br><span class="line">-A INPUT -m state --state NEW -m tcp -p tcp --dport 9092 -j ACCEPT</span><br><span class="line"></span><br><span class="line">-A INPUT -j REJECT --reject-with icmp-host-prohibited</span><br><span class="line"></span><br><span class="line">-A FORWARD -j REJECT --reject-with icmp-host-prohibited</span><br><span class="line"></span><br><span class="line">COMMIT</span><br></pre></td></tr></table></figure></p>
+<p>:wq保存退出</p>
+<p>###2.3 下载安装Mongodb<br>cd进入/usr/local/src<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br></pre></td></tr></table></figure></p>
+<p>wget下载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.6.0.tgz</span><br></pre></td></tr></table></figure></p>
+<p>tar解压<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf mongodb-linux-x86_64-2.6.0.tgz</span><br></pre></td></tr></table></figure></p>
+<p>将解压文件移动到安装目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv mongodb-linux-x86_64-2.6.0  /usr/local/mongodb</span><br></pre></td></tr></table></figure></p>
+<p>创建mongodb存放路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir  -p  /usr/local/mongodb/data/</span><br></pre></td></tr></table></figure></p>
+<p>创建mongodb日志文件存放文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/local/mongodb/logs/mongodb.log</span><br></pre></td></tr></table></figure></p>
+<p>###2.4 启动mongodb<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/mongodb/bin/mongod --port 27017 --fork --dbpath=/usr/local/mongodb/data/ --logpath=/usr/local/mongodb/logs/mongodb.log --logappend&amp;</span><br></pre></td></tr></table></figure></p>
+<p>检查</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -lanp | grep &quot;27017&quot;</span><br></pre></td></tr></table></figure>
+<p>进入mongodb数据库控制台<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./mongo</span><br></pre></td></tr></table></figure></p>
+<p>设置mongodb全局</p>
+<p>添加环境变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/profile</span><br></pre></td></tr></table></figure>
+<p>同样使用VI编辑器，加入如下配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$PATH:/usr/local/mongodb/bin</span><br></pre></td></tr></table></figure></p>
+<p>按ESC，然后:wq保存退出</p>
+<p>使配置文件立即生效</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+<p>然后就可以全局使用mongodb命令了<br>进入mongodb控制台<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mongo  #进入MongoDB控制台</span><br><span class="line"></span><br><span class="line">show dbs #查看默认数据库</span><br><span class="line"></span><br><span class="line">use admin  #切换到admin数据库</span><br><span class="line"></span><br><span class="line">exit #退出MongoDB控制台</span><br></pre></td></tr></table></figure></p>
+<h2 id="第三章MongoDB基本操作"><a href="#第三章MongoDB基本操作" class="headerlink" title="第三章MongoDB基本操作"></a>第三章MongoDB基本操作</h2><p>###3.1MongoDB连接<br>MongoDB连接，使用“username:password@hostname/dbname’”的形式进行连接。<br>连接本地数据库服务器，端口是默认的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongodb://localhost</span><br></pre></td></tr></table></figure></p>
+<p>###3.2创建数据库<br>MongoDB创建数据库语法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use DATABASE_NAME</span><br></pre></td></tr></table></figure></p>
+<p>demo：创建test数据库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use test</span><br></pre></td></tr></table></figure></p>
+<p>如果没有数据库，就创建数据库，否就连接到指定数据库<br>查看所有的数据库，使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show dbs</span><br></pre></td></tr></table></figure></p>
+<p>不过这时我们使用show dbs的话，还是看不到我们创建的数据库，其实是需要我们向数据库里添加数据才可以看得到的<br>demo：向test数据库里插入一行数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.test.insert(&#123;&quot;name&quot;:&quot;test&quot;&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>###3.3创建数据库<br>MongoDB删除数据库语法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.dropDatabase()</span><br></pre></td></tr></table></figure></p>
+<p>不过一般要先使用use连接数据库，然后再删除指导数据库<br>demo：删除test数据库<br>连接test数据库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use test</span><br></pre></td></tr></table></figure></p>
+<p>删除test数据库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.dropDatabase()</span><br></pre></td></tr></table></figure></p>
+<p><strong>删除集合</strong><br>demo：删除test数据库的coll集合<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; use test</span><br><span class="line">switched to db runoob</span><br><span class="line">&gt; show tables</span><br><span class="line">coll</span><br><span class="line">&gt; db.coll.drop()</span><br><span class="line">true</span><br><span class="line">&gt; show tables</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
+<p>###3.4插入文档<br>MongoDB插入文档语法大致如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.COLLECTION_NAME.insert(document)</span><br></pre></td></tr></table></figure></p>
+<p>demo：向test数据库的col集合中插入文档<br><strong>方法一</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;use test</span><br><span class="line">&gt;db.col.insert(&#123;title: &apos;MongoDB&apos;, </span><br><span class="line">    description: &apos;MongoDB NOSQL&apos;,</span><br><span class="line">    by: &apos;test&apos;,</span><br><span class="line">    url: &apos;https:&apos;,</span><br><span class="line">    tags: [&apos;mongodb&apos;, &apos;database&apos;, &apos;NoSQL&apos;],</span><br><span class="line">    likes: 100</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>查看已经写入数据的col集合<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.find()</span><br></pre></td></tr></table></figure></p>
+<p><strong>方法二</strong><br>定义一个document对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">document=(&#123;title: &apos;MongoDB&apos;, </span><br><span class="line">     description: &apos;MongoDB NOSQL&apos;,</span><br><span class="line">    by: &apos;test&apos;,</span><br><span class="line">    url: &apos;https:&apos;,</span><br><span class="line">    tags: [&apos;mongodb&apos;, &apos;database&apos;, &apos;NoSQL&apos;],</span><br><span class="line">    likes: 100</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>执行，将定义好的document对象写入数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.insert(document)</span><br></pre></td></tr></table></figure></p>
+<p>###3.5更新文档<br>更新文档操作语法大概如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">db.collection.update(</span><br><span class="line">   &lt;query&gt;,</span><br><span class="line">   &lt;update&gt;,</span><br><span class="line">   &#123;</span><br><span class="line">     upsert: &lt;boolean&gt;,</span><br><span class="line">     multi: &lt;boolean&gt;,</span><br><span class="line">     writeConcern: &lt;document&gt;</span><br><span class="line">   &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>参数意义：</p>
+<ul>
+<li>query : update的查询条件，类似sql update查询内where后面的。 </li>
+<li>update :  update的对象和一些更新的操作符（如$,$inc…）等，也可以理解为sql update查询内set后面的 </li>
+<li>upsert :   可选，这个参数的意思是，如果不存在update的记录，是否插入objNew,true为插入，默认是false，不插入。 </li>
+<li>multi :  可选，mongodb 默认是false,只更新找到的第一条记录，如果这个参数为true,就把按条件查出来多条记录全部更新。      </li>
+<li>writeConcern :可选，抛出异常的级别。</li>
+</ul>
+<p>demo:更新test数据库的文档<br>使用test数据库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use test</span><br></pre></td></tr></table></figure></p>
+<p>更新文档操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.update(&#123;&apos;title&apos;:&apos;MongoDB&apos;&#125;,&#123;$set:&#123;&apos;title&apos;:&apos;MongoDB test&apos;&#125;&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>然后查看文档是否更新<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.find()</span><br></pre></td></tr></table></figure></p>
+<p><strong>修改多条相同的文档</strong><br>上诉情况是修改一条文档的，若修改多条相同的文档，则需要设置 multi 参数为 true。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.update(&#123;&apos;title&apos;:&apos;MongoDB&apos;&#125;,&#123;$set:&#123;&apos;title&apos;:&apos;MongoDB test&apos;&#125;&#125;,&#123;multi:true&#125;)</span><br></pre></td></tr></table></figure></p>
+<p><strong>save()方法</strong><br>语法大概如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">db.collection.save(</span><br><span class="line">   &lt;document&gt;,</span><br><span class="line">   &#123;</span><br><span class="line">     writeConcern: &lt;document&gt;</span><br><span class="line">   &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>参数意义</p>
+<ol>
+<li>document : 文档数据。</li>
+<li>writeConcern :可选，抛出异常的级别。<br>demo：替换了 _id 为 56064f89ade2f21f36b03136 的文档数据<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">db.col.save(&#123;</span><br><span class="line">	&quot;_id&quot; : ObjectId(&quot;56064f89ade2f21f36b03136&quot;),</span><br><span class="line">    &quot;title&quot; : &quot;MongoDB&quot;,</span><br><span class="line">    &quot;description&quot;: &apos;MongoDB NOSQL&apos;,</span><br><span class="line">    &quot;by&quot;: &apos;test&apos;,</span><br><span class="line">    &quot;url&quot;: &apos;https:&apos;,</span><br><span class="line">    &quot;tags&quot;: [&apos;mongodb&apos;, &apos;database&apos;, &apos;NoSQL&apos;],</span><br><span class="line">    &quot;likes&quot;: 100</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">只更新第一条记录：</span><br><span class="line">db.col.update( &#123; &quot;count&quot; : &#123; $gt : 1 &#125; &#125; , &#123; $set : &#123; &quot;test2&quot; : &quot;OK&quot;&#125; &#125; );</span><br><span class="line">全部更新：</span><br><span class="line">db.col.update( &#123; &quot;count&quot; : &#123; $gt : 3 &#125; &#125; , &#123; $set : &#123; &quot;test2&quot; : &quot;OK&quot;&#125; &#125;,false,true );</span><br><span class="line">只添加第一条：</span><br><span class="line">db.col.update( &#123; &quot;count&quot; : &#123; $gt : 4 &#125; &#125; , &#123; $set : &#123; &quot;test5&quot; : &quot;OK&quot;&#125; &#125;,true,false );</span><br><span class="line">全部添加加进去:</span><br><span class="line">db.col.update( &#123; &quot;count&quot; : &#123; $gt : 5 &#125; &#125; , &#123; $set : &#123; &quot;test5&quot; : &quot;OK&quot;&#125; &#125;,true,true );</span><br><span class="line">全部更新：</span><br><span class="line">db.col.update( &#123; &quot;count&quot; : &#123; $gt : 15 &#125; &#125; , &#123; $inc : &#123; &quot;count&quot; : 1&#125; &#125;,false,true );</span><br><span class="line">只更新第一条记录：</span><br><span class="line">db.col.update( &#123; &quot;count&quot; : &#123; $gt : 10 &#125; &#125; , &#123; $inc : &#123; &quot;count&quot; : 1&#125; &#125;,false,false );</span><br></pre></td></tr></table></figure>
+<p>###3.6删除文档<br>MongoDB删除文档操作为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">db.collection.remove(</span><br><span class="line">   &lt;query&gt;,</span><br><span class="line">   &lt;justOne&gt;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>MongoDB2.6以后版本的操作为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">db.collection.remove(</span><br><span class="line">   &lt;query&gt;,</span><br><span class="line">   &#123;</span><br><span class="line">     justOne: &lt;boolean&gt;,</span><br><span class="line">     writeConcern: &lt;document&gt;</span><br><span class="line">   &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>query :（可选）删除的文档的条件。</li>
+<li>justOne : （可选）如果设为 true 或 1，则只删除一个文档。</li>
+<li>writeConcern :（可选）抛出异常的级别。</li>
+</ul>
+<p>demo:删除title为MongoDB的数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.remove(&#123;&apos;title&apos;:&apos;MongoDB&apos;&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>删除集合所有数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.remove(&#123;&#125;)</span><br></pre></td></tr></table></figure>
+<p>###3.7MongoDB查询<br>MongoDB查询语法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.collection.find(query, projection)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>query ：可选，使用查询操作符指定查询条件</li>
+<li>projection ：可选，使用投影操作符指定返回的键。查询时返回文档中所有键值， 只需省略该参数即可（默认省略）。<br>易读方式查询<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.find().pretty()</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong>除了 find() 方法之外，还有一个 findOne() 方法，它只返回一个文档。</strong></p>
+<p>###3.8MongoDB条件操作<br><strong>MongoDB AND条件</strong>，可以传入多个键(key)，每个键(key)以逗号隔开<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.find(&#123;key1:value1, key2:value2&#125;).pretty()</span><br></pre></td></tr></table></figure></p>
+<p><strong>MongoDB OR条件</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">db.col.find(</span><br><span class="line">   &#123;</span><br><span class="line">      $or: [</span><br><span class="line">	     &#123;key1: value1&#125;, &#123;key2:value2&#125;</span><br><span class="line">      ]</span><br><span class="line">   &#125;</span><br><span class="line">).pretty()</span><br></pre></td></tr></table></figure>
+<p><strong>MongoDB AND和OR联合查询</strong><br> AND 和 OR 联合使用，类似常规 SQL 语句为： ‘where likes&gt;50 AND (by = ‘教程’ OR title = ‘MongoDB 教程’)’</p>
+<p><strong>MongoDB条件操作符</strong></p>
+<ul>
+<li>(&gt;) 大于 ： $gt</li>
+<li>(&lt;) 小于 ： $lt</li>
+<li>(&gt;=) 大于等于 ： $gte</li>
+<li>(&lt;= ) 小于等于 ： $lte<br>Demo：<br>获取 “col” 集合中 “likes” 大于 100 的数据，可以使用以下命令：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.find(&#123;&quot;likes&quot; : &#123;$gt : 100&#125;&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>获取”col”集合中 “likes” 大于等于 100 的数据，可以使用以下命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.find(&#123;likes : &#123;$gte : 100&#125;&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>获取”col”集合中 “likes” 小于 150 的数据，可以使用以下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.find(&#123;likes : &#123;$lt : 150&#125;&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>获取”col”集合中 “likes” 小于等于 150 的数据，可以使用以下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.find(&#123;likes : &#123;$lte : 150&#125;&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>获取”col”集合中 “likes” 大于100，小于 200 的数据，可以使用以下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.find(&#123;likes : &#123;$lt :200, $gt : 100&#125;&#125;)</span><br></pre></td></tr></table></figure></p>
+<p><strong>MongoDB Limit和Skip操作符</strong><br>Limit操作符,Number表示读取的记录数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.COLLECTION_NAME.find().limit(NUMBER)</span><br></pre></td></tr></table></figure></p>
+<p><strong>MongoDB skip()方法</strong><br>Number表示要跳过的记录数，默认从0开始<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.COLLECTION_NAME.find().limit(NUMBER).skip(NUMBER)</span><br></pre></td></tr></table></figure></p>
+<p>###3.9MongoDB $type操作符<br>MongoDB $type操作符表<br>| 类型        | 数字           | 备注  |<br>| ————- |:————-:| —–:|<br>| Double        | 1             |       |<br>| Object        | 2             |       |<br>| Array         | 4             |       |<br>| Binary data   | 5             |       |<br>| Undefined     | 6             | 已废弃 |<br>| Object id     | 7             |       |<br>| Boolean       | 8             |       |<br>| Date          | 9             |       |<br>| Null          | 10            |       |<br>|Regular Expression | 11        |       |<br>| JavaScript    | 13            |       |<br>| Symbol        | 14            |       |<br>| JavaScript (with scope) | 15  |       |<br>| 32-bit integer| 16            |       |<br>| Timestamp     | 17            |       |<br>| 64-bit integer| 18            |       |<br>| Min key       | 255           | Query with -1      |<br>| Max key       | 127           |       |</p>
+<p>获取 “col” 集合中 title 为 String 的数据，可以使用以下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.find(&#123;&quot;title&quot; : &#123;$type : 2&#125;&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>###3.10MongoDB排序<br>使用sort()方法对数据进行排序，sort()方法可以通过参数指定排序的字段，并使用 1 和 -1 来指定排序的方式，其中 1 为升序排列，而-1是用于降序排列。<br>这是对集合进行排序的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.COLLECTION_NAME.find().sort(&#123;KEY:1&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>###3.11MongoDB索引</p>
+<p>索引是特殊的数据结构，索引存储在一个易于遍历读取的数据集合中，索引是对数据库表中一列或多列的值进行排序的一种结构。建立索引可以提高查询速度。如果没有索引，MongoDB在读取数据时必须扫描集合中的每个文件并选取那些符合查询条件的记录。<br>demo：查询col集合，“title”为索引字段，1为指定按升序创建索引，如果你想按降序来创建索引指定为-1即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.col.ensureIndex(&#123;&quot;title&quot;:1&#125;)</span><br></pre></td></tr></table></figure></p>
+<p><strong>在后台创建索引</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.values.ensureIndex(&#123;open: 1, close: 1&#125;, &#123;background: true&#125;)</span><br></pre></td></tr></table></figure>
+<p>###3.12MongoDB聚合<br>MongoDB中聚合(aggregate)主要用于处理数据(诸如统计平均值,求和等)，并返回计算后的数据结果。有点类似sql语句中的 count(*)。<br>基本语法如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.COLLECTION_NAME.aggregate(AGGREGATE_OPERATION)</span><br></pre></td></tr></table></figure>
+<p>demo：通过集合计算每个作者所写的文章数，使用aggregate()计算结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.mycol.aggregate([&#123;$group : &#123;_id : &quot;$by_user&quot;, num_tutorial : &#123;$sum : 1&#125;&#125;&#125;])</span><br></pre></td></tr></table></figure>
+<p>以上实例类似sql语句：<br> <code>select by_user, count(*) from mycol group by by_user</code></p>
+<p>###附录<br>Mongodb Java demo<br>附录demo：<br>去<a href="http://mongodb.github.io/mongo-java-driver/下载相应的jar，放在libs文件夹里" target="_blank" rel="noopener">http://mongodb.github.io/mongo-java-driver/下载相应的jar，放在libs文件夹里</a></p>
+<p>pom配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- bson start --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.bson&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;bson&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;3.4.2&lt;/version&gt;</span><br><span class="line">            &lt;scope&gt;system&lt;/scope&gt;</span><br><span class="line">            &lt;systemPath&gt;$&#123;basedir&#125;/src/main/webapp/WEB-INF/lib/bson-3.4.2.jar&lt;/systemPath&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- bson end--&gt;</span><br><span class="line">        &lt;!-- mongodb driver start --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.mongodb&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mongodb-driver&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;3.4.2&lt;/version&gt;</span><br><span class="line">            &lt;scope&gt;system&lt;/scope&gt;</span><br><span class="line">            &lt;systemPath&gt;$&#123;basedir&#125;/src/main/webapp/WEB-INF/lib/mongodb-driver-3.4.2.jar&lt;/systemPath&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- mongodb driver end --&gt;</span><br><span class="line">        &lt;!-- mongodb driver core start --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.mongodb&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mongodb-driver-core&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;3.4.2&lt;/version&gt;</span><br><span class="line">            &lt;scope&gt;system&lt;/scope&gt;</span><br><span class="line">            &lt;systemPath&gt;$&#123;basedir&#125;/src/main/webapp/WEB-INF/lib/mongodb-driver-core-3.4.2.jar&lt;/systemPath&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- mongodb driver core end --&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import com.mongodb.MongoClient;</span><br><span class="line">import com.mongodb.client.MongoDatabase;</span><br><span class="line"></span><br><span class="line">public class MongoDBJDBC&#123;</span><br><span class="line">   public static void main( String args[] )&#123;</span><br><span class="line">      try&#123;   </span><br><span class="line">      // 连接到 mongodb 服务</span><br><span class="line">      MongoClient mongoClient = new MongoClient( &quot;10.10.1.1&quot; , 27017 );</span><br><span class="line"></span><br><span class="line">      // 连接到数据库</span><br><span class="line">      MongoDatabase mongoDatabase = mongoClient.getDatabase(&quot;test&quot;);</span><br><span class="line">      System.out.println(&quot;Connect to database successfully&quot;);</span><br><span class="line">      mongoDatabase.createCollection(&quot;colll&quot;);</span><br><span class="line">      System.out.println(&quot;集合创建成功&quot;);</span><br><span class="line">        </span><br><span class="line">      &#125;catch(Exception e)&#123;</span><br><span class="line">        System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/01/16/分布式文件存储的数据库MongoDB教程整理/"></a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
+        <p><span>发布时间:</span>2018-01-16, 17:29:16</p>
+        <p><span>最后更新:</span>2018-01-16, 17:36:53</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/16/分布式文件存储的数据库MongoDB教程整理/" title="">http://blog.ittrading.cn/2018/01/16/分布式文件存储的数据库MongoDB教程整理/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/分布式文件存储的数据库MongoDB教程整理/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2018/01/16/Spring Boot使用Druid进行维度的统计和监控/">
+                    
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/01/16/Spring框架之IOC(控制反转)/">
+                    
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第一章MongoDB简介"><span class="toc-number">1.</span> <span class="toc-text">第一章MongoDB简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二章MongoDB安装"><span class="toc-number">2.</span> <span class="toc-text">第二章MongoDB安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三章MongoDB基本操作"><span class="toc-number">3.</span> <span class="toc-text">第三章MongoDB基本操作</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"　| Nicky's blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2018/01/16/分布式文件存储的数据库MongoDB教程整理/" data-title="" data-url="http://blog.ittrading.cn/2018/01/16/分布式文件存储的数据库MongoDB教程整理/"></div>
+    <script>
+        var duoshuoQuery = {short_name:""};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2018/01/16/Spring Boot使用Druid进行维度的统计和监控/" title="上一篇: ">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/01/16/Spring框架之IOC(控制反转)/" title="下一篇: ">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/Swagger UI教程 API 文档神器/">Swagger UI教程 API 文档神器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/中间件技术入门教程/">中间件技术入门教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/Spring Boot使用Druid进行维度的统计和监控/">Spring Boot使用Druid进行维度的统计和监控</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/分布式文件存储的数据库MongoDB教程整理/">分布式文件存储的数据库MongoDB教程整理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/Spring框架之IOC(控制反转)/">Spring框架之IOC(控制反转)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/IBM WebSphere ESB入门指南/">IBM WebSphere ESB入门指南</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/企业服务总线ESB简介/">企业服务总线ESB简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/分布式消息队列kafka原理简介/">分布式消息队列kafka原理简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/设计模式之代理模式简介/">设计模式之代理模式简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/JDK动态代理源码学习/">JDK动态代理源码学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/分布式消息中间件RocketMQ学习教程①/">分布式消息中间件RocketMQ学习教程①</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/">SpringBoot集成Redis实现缓存处理(Spring AOP技术)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/MySQL数据库的锁机制/">MySQL数据库的锁机制</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2013-2018 Nicky
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

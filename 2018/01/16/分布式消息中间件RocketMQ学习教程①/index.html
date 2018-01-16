@@ -15,17 +15,20 @@
 
 
 
-<meta name="description" content="title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 ###">
+<meta name="description" content="[TOC] 消息中间件简介消息队列(Message Queue，简称MQ)。消息中间件作为实现分布式消息系统可拓展、可伸缩性的关键组件，具有高吞吐量、高可用等等优点。 常用消息队列对比常用的消息队列有RocketMQ、kafka、ActiveMQ、RabbitMQ、ZeroMQ等等activemq rabbitmq 与 kafka、rocketmq有很大的区别就是前2个只支持主从模式，后2个是分布">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nicky&#39;s blog">
-<meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/index.html">
+<meta property="og:url" content="http://blog.ittrading.cn/2018/01/16/分布式消息中间件RocketMQ学习教程①/index.html">
 <meta property="og:site_name" content="Nicky&#39;s blog">
-<meta property="og:description" content="title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 ###">
+<meta property="og:description" content="[TOC] 消息中间件简介消息队列(Message Queue，简称MQ)。消息中间件作为实现分布式消息系统可拓展、可伸缩性的关键组件，具有高吞吐量、高可用等等优点。 常用消息队列对比常用的消息队列有RocketMQ、kafka、ActiveMQ、RabbitMQ、ZeroMQ等等activemq rabbitmq 与 kafka、rocketmq有很大的区别就是前2个只支持主从模式，后2个是分布">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-16T08:54:57.767Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20171106110449702?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171025170915316?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-01-16T09:37:11.676Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nicky&#39;s blog">
-<meta name="twitter:description" content="title:MySQL数据库的锁机制在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。 ###锁分类①、按操作划分：DML锁，DDL锁②、按锁的粒度划分：表级锁、行级锁、页级锁③、按锁级别划分：共享锁、排他锁④、按加锁方式划分：自动锁、显示锁⑤、按使用方式划分：乐观锁、悲观锁 ###">
+<meta name="twitter:description" content="[TOC] 消息中间件简介消息队列(Message Queue，简称MQ)。消息中间件作为实现分布式消息系统可拓展、可伸缩性的关键组件，具有高吞吐量、高可用等等优点。 常用消息队列对比常用的消息队列有RocketMQ、kafka、ActiveMQ、RabbitMQ、ZeroMQ等等activemq rabbitmq 与 kafka、rocketmq有很大的区别就是前2个只支持主从模式，后2个是分布">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20171106110449702?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -261,11 +264,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-MySQL数据库的锁机制" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-分布式消息中间件RocketMQ学习教程①" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/01/16/MySQL数据库的锁机制/" class="article-date">
-      <time datetime="2018-01-16T07:26:58.605Z" itemprop="datePublished">2018-01-16</time>
+      <a href="/2018/01/16/分布式消息中间件RocketMQ学习教程①/" class="article-date">
+      <time datetime="2018-01-16T09:27:55.431Z" itemprop="datePublished">2018-01-16</time>
 </a>
 
 
@@ -279,43 +282,72 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="title-MySQL数据库的锁机制"><a href="#title-MySQL数据库的锁机制" class="headerlink" title="title:MySQL数据库的锁机制"></a>title:MySQL数据库的锁机制</h2><p>在并发访问情况下，很有可能出现不可重复读等等读现象。为了更好的应对高并发，封锁、时间戳、乐观并发控制(乐观锁)、悲观并发控制(悲观锁)都是并发控制采用的主要技术方式。</p>
-<p>###锁分类<br>①、按操作划分：DML锁，DDL锁<br>②、按锁的粒度划分：表级锁、行级锁、页级锁<br>③、按锁级别划分：共享锁、排他锁<br>④、按加锁方式划分：自动锁、显示锁<br>⑤、按使用方式划分：乐观锁、悲观锁</p>
-<p>###乐观锁和悲观锁</p>
-<p>乐观并发控制和悲观并发控制是并发控制采用的主要方法。乐观锁和悲观锁不仅在关系数据库里应用，在Hibernate、Memcache等等也有相关概念。</p>
-<p>悲观锁：也即悲观并发控制，Pessimistic Concurrency Controller，缩写PCC。悲观锁是指在数据处理过程，使数据处于锁定状态，一般使用数据库的锁机制实现。<br>备注，在MySQL中使用悲观锁，必须关闭MySQL的自动提交，set autocommit=0。MySQL默认使用自动提交autocommit模式，也即你执行一个更新操作，MySQL会自动将结果提交。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//0.开始事务</span><br><span class="line">begin;/begin work;/start transaction; (三者选一就可</span><br><span class="line">//1.查询出商品信息</span><br><span class="line">select status from t_goods where id=1 for update;</span><br><span class="line">//2.根据商品信息生成订单</span><br><span class="line">insert into t_orders (id,goods_id) values (null,1);</span><br><span class="line">//3.修改商品status为2</span><br><span class="line">update t_goods set status=2;</span><br><span class="line">//4.提交事务</span><br><span class="line">commit;/commit work;</span><br></pre></td></tr></table></figure>
-<p>本例子使用select…for update方式将数据锁住，也就是开启了排他锁</p>
+        <p>[TOC]</p>
+<h1 id="消息中间件简介"><a href="#消息中间件简介" class="headerlink" title="消息中间件简介"></a>消息中间件简介</h1><p>消息队列(Message Queue，简称MQ)。消息中间件作为实现分布式消息系统可拓展、可伸缩性的关键组件，具有高吞吐量、高可用等等优点。</p>
+<h1 id="常用消息队列对比"><a href="#常用消息队列对比" class="headerlink" title="常用消息队列对比"></a>常用消息队列对比</h1><p>常用的消息队列有RocketMQ、kafka、ActiveMQ、RabbitMQ、ZeroMQ等等<br>activemq rabbitmq 与 kafka、rocketmq有很大的区别就是前2个只支持主从模式，后2个是分布式消息系统，支持分布式。<br>持久化消息比较： zeroMq不支持，activeMq和rabbitMq都支持。</p>
 <p><excerpt in="" index="" |="" 首页摘要=""><br>+<a id="more"></a></excerpt></p>
-<the rest="" of="" contents="" |="" 余下全文="">
+<p><the rest="" of="" contents="" |="" 余下全文=""></the></p>
+<h2 id="RocketMQ"><a href="#RocketMQ" class="headerlink" title="RocketMQ"></a>RocketMQ</h2><p>RocketMQ 是一款开源的分布式消息系统，基于高可用分布式集群技术，提供低延时的、高可靠的消息发布与订阅服务。</p>
+<h2 id="Kafka"><a href="#Kafka" class="headerlink" title="Kafka"></a>Kafka</h2><p>Kafka是没有重发机制的消息队列。它以可水平扩展和高吞吐率而被广泛使用。目前越来越多的开源分布式处理系统如Cloudera、Apache Storm、Spark都支持与Kafka集成。kafka不完全符合jms规范，注重吞吐量，类似udp 和 tcp。kafka吞吐量大 ，对数据不是百分之百保证的，会有数据丢失，不是百分百送达。所以kafka适合大数据量流转， 比如日志数据 比如用作统计的数据</p>
+<h2 id="ActiveMQ"><a href="#ActiveMQ" class="headerlink" title="ActiveMQ"></a>ActiveMQ</h2><p>ActiveMQ类似于ZemoMQ，它可以部署于代理模式和P2P模式。类似于RabbitMQ，它易于实现高级场景，而且只需付出低消耗。</p>
+<h2 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h2><p>RabbitMQ是AMQP协议领先的一个实现，它实现了代理(Broker)架构，意味着消息在发送到客户端之前可以在中央节点上排队。此特性使得RabbitMQ易于使用和部署，适宜于很多场景如路由、负载均衡或消息持久化等，用消息队列只需几行代码即可搞定。但是，这使得它的可扩展性差，速度较慢，因为中央节点增加了延迟，消息封装后也比较大。</p>
+<h2 id="ZeroMQ"><a href="#ZeroMQ" class="headerlink" title="ZeroMQ"></a>ZeroMQ</h2><p>ZeroMQ是一个非常轻量级的消息系统，专门为高吞吐量/低延迟的场景开发，在金融界的应用中经常可以发现它。</p>
+<h1 id="RocketMQ简介"><a href="#RocketMQ简介" class="headerlink" title="RocketMQ简介"></a>RocketMQ简介</h1><p>RocketMQ 是一款分布式、队列模型的消息中间件。RocketMQ是由Metaq发展而来，Metaq3.0的时候，改名RocketMQ。<br>RocketMQ 是一款开源的分布式消息系统，基于高可用分布式集群技术，提供低延时的、高可靠的消息发布与订阅服务。</p>
+<p>##RocketMQ主要组成：<br>RocketMQ主要组成：NameServer、Broker（代理）、Producer（消<br>息生产者）、Cosumer（消息消费者）</p>
+<h3 id="NameServer"><a href="#NameServer" class="headerlink" title="NameServer"></a>NameServer</h3><p>NameServer：  rocketmq名称服务器，大致相当于 jndi技术，更新和发现 broker服务。一个几乎无状态节点，可集群部署，节点之间无任何信息同步</p>
+<h3 id="Producer"><a href="#Producer" class="headerlink" title="Producer"></a>Producer</h3><p>Producer：  消息生产者。</p>
+<blockquote>
+<p>Producer与Name Server其中一个节点建立连接。定期从Name Server取Topic信息。并与提供该Topic信息的Master建立长连接。Producer也可以集群部署。</p>
+</blockquote>
+<h3 id="Consumer"><a href="#Consumer" class="headerlink" title="Consumer"></a>Consumer</h3><p>Consumer： 消息消费者。</p>
+<blockquote>
+<p>Consumer 与Name Server 集群中的其中一个节点（随机选择）建立长连接，定期从Name Server 取Topic 路由信息，并向提供Topic服务的Master、Slave建立长连接，且定时向Master、Slave发送心跳。Consumer既可以从Master订阅消息，也可以从Slave订阅消息，订阅规则由Broker配置决定。</p>
+</blockquote>
+<h3 id="Broker"><a href="#Broker" class="headerlink" title="Broker"></a>Broker</h3><p>Broker：消息中转角色，负责存储和转发消息。Broker分为Master和Slave。</p>
+<blockquote>
+<p>一个Master可以对应多个Slave，但是一个Slave只能对应一个Master。Master和Slave的对应关系通过指定相同的BrokerName，不同的BrokerId来定义。BrokerId为0表示Master，BrokerId非0表示Slave。然后所有的Broker和Name Server上的节点建立长连接,定时注册Topic信息到所有Name Server。</p>
+</blockquote>
+<p>Broker-Master：broker 消息主机服务器</p>
+<p>Broker-Slave：  broker 消息从机服务器</p>
+<p><img src="http://img.blog.csdn.net/20171106110449702?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="RocketMQ存储特点"><a href="#RocketMQ存储特点" class="headerlink" title="RocketMQ存储特点"></a>RocketMQ存储特点</h1><p>Consumer消费消息过程，使用了零拷贝，零拷贝包含以下两种方式：</p>
+<ol>
+<li>使用mmap + write方式</li>
+</ol>
+<p>优点：即使频繁调用，使用小块文件传输，效率也很高 </p>
+<p>缺点：不能很好的利用DMA方式，会比sendfile多消耗CPU，内存安全性控制复杂，需要避免JVM Crash问题。</p>
+<ol>
+<li>使用sendfile方式 </li>
+</ol>
+<p>优点：可以利用DMA方式，消耗CPU较少，大块文件传输效率高，无内存安全新问题。 </p>
+<p>缺点：小块文件效率低于mmap方式，只能是BIO方式传输，不能使用NIO。</p>
+<p>RocketMQ选择了第一种方式，mmap+write方式，因为有小块数据传输的需求，效果会比sendfile更好。</p>
+<h1 id="RocketMQ集群配置"><a href="#RocketMQ集群配置" class="headerlink" title="RocketMQ集群配置"></a>RocketMQ集群配置</h1><p>RocketMQ集群配置<br><img src="http://img.blog.csdn.net/20171025170915316?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="附录：安装教程"><a href="#附录：安装教程" class="headerlink" title="附录：安装教程"></a>附录：安装教程</h1><p><a href="http://www.linuxidc.com/Linux/2016-09/134941.htm" target="_blank" rel="noopener">http://www.linuxidc.com/Linux/2016-09/134941.htm</a></p>
+<p>##【JDK安装】<br>因为RocketMQ是基于Java开发的，所以安装RocketMQ之前，我们需要先安装JDK，因为服务器一般采用Linux，所以本博客只介绍基于Linux系统的教程</p>
+<p>###1.在/usr/目录下创建java目录<br>mkdir /usr/java </p>
+<p>###进入java目录<br>cd /usr/java</p>
+<p>###2.下载jdk到/usr/java目录，然后tar解压(可以使用xftp在本地下载jdk，或者使用命令curl -O url下载)<br>tar -zxvf jdk-8u102-linux-x64.tar.gz</p>
+<p>###3.设置环境变量</p>
+<p>###vi编辑<br>vi /etc/profile </p>
+<p>###profile文件加入如下配置，如何按esc退出，:wq!保持<br>export JAVA_HOME=/usr/java/jdk1.8.0_102<br>export PATH=$PATH:$JAVA_HOME/bin<br>export CLASSPATH=.:$JAVA_HOME/lib</p>
+<p>###让修改生效<br>source /etc/profile</p>
+<p>###验证jdk有效性<br>java -version<br>假如系统有安装yum，就可以直接使用yum install java-1.7.0-openjdk下载jdk</p>
+<p>###设置环境变量，其它操作同上<br>export JAVA_HOME=/usr/java/jdk1.8.0_102<br>export PATH=$PATH:$JAVA_HOME/bin<br>export CLASSPATH=.:$JAVA_HOME/lib</p>
+<p>##【RocketMQ安装】<br><a href="http://www.linuxidc.com/Linux/2015-10/124112.htm" target="_blank" rel="noopener">http://www.linuxidc.com/Linux/2015-10/124112.htm</a></p>
+<p>###解压并复制到/usr/local目录<br>tar zxf alibaba-rocketmq-3.2.2.tar.gz -C /usr/local/</p>
+<p>###进入/usr/local目录<br>cd /usr/local/</p>
+<p>###建立一个同步的链接,使用ln命令<br>ln -s /usr/local/alibaba-rocketmq /usr/local/rocketmq</p>
+<p>###进入同步的文件夹<br>cd rocketmq/</p>
+<p>###vim编辑配置文件<br>vim conf/2m-noslave/broker-a.properties<br>参考配置文件<br>brokerClusterName=FusionCluster<br>brokerName=broker-a<br>brokerId=0<br>namesrvAddr=dbTest249:9876;webTest251:9876<br>deleteWhen=04<br>fileReservedTime=120<br>brokerRole=ASYNC_MASTER<br>flushDiskType=ASYNC_FLUSH<br>sstorePathRootDir=/data/rocketmq/store<br>storePathCommitLog=/data/rocketmq/store/commitlog</p>
+<p>###编辑JAVA内存块<br>vim bin/runbroker.sh<br>JAVA_OPT_1=”-server -Xms512m -Xmx1g -XX:PermSize=128m -XX:MaxPermSize=320m”</p>
+<p>###创建数据目录<br>mkdir -p /data/rocketmq/store/commitlog<br>mkdir /data/logs<br>cd conf/<br>sed -i ‘s#${user.home}#/data#g’ *.xml　　　　　　<br>//将conf目录下所有xml文件中的${user.home}替换成/data,进入rocketmq/conf目录下执行该命令</p>
+<p>###启动RocketMQ<br>cd ../bin/<br>nohup sh mqnamesrv &gt;/var/log/ns.log 2&gt;&amp;1 &amp;<br>nohup sh mqbroker -c ../conf/2m-noslave/broker-a.properties &gt; /var/log/mq.log 2&gt;&amp;1 &amp;</p>
+<p>###查看启动日志<br>tail -f /var/log/ns.log<br>tail -f /var/log/mq.log</p>
+<p>###查看启动端口<br>netstat -tunpl<br>jps</p>
+<p>###关闭RocketMQ<br>sh mqshutdown<br>sh mqshutdown broker<br>sh mqshutdown namesrv</p>
+<p>###再次启动<br>nohup sh mqnamesrv &gt;/var/log/ns.log 2&gt;&amp;1 &amp;<br>nohup sh mqbroker -c ../conf/2m-noslave/broker-a.properties &gt; /var/log/mq.log 2&gt;&amp;1 &amp;</p>
 
-<blockquote>
-<p>悲观锁优缺点：<br>悲观并发控制(悲观锁)采用”先取锁再分”的保守策略，为数据处理提供了安全的保证。但在效率方面，加锁机制会产生额外的开销，增加产生死锁的机会。</p>
-</blockquote>
-<p>乐观锁：相对悲观锁来说，乐观锁是通过记录数据版本的方式实现乐观锁。为数据增加一个版本标识，读取数据时，将版本标识一起读出，数据没更新一次，就对版本标识进行更新。</p>
-<blockquote>
-<p>乐观锁优缺点：<br>乐观锁认为事务直接竞争的概率是很小的，在提交的时候才锁定，所以不会产生死锁。但是如果两个事务同时读取数据库的某一行，这时，就会发现乐观锁的弊端。</p>
-</blockquote>
-<p>###MySQL常用存储引擎的锁机制</p>
-<blockquote>
-<p>BDB：支持页级锁和表级锁，默认是页级锁<br>InnoDB：支持行级锁和表级锁，默认是行级锁<br>MyISAM &amp;Memory：这两个存储引擎都是采用表级锁</p>
-</blockquote>
-<p>###MySQL中排它锁和共享锁<br>排它锁(exclusive locck)<br>排它锁又叫写锁，如果事务T对A加上排它锁，则其它事务都不能对A加任何类型的锁。获准排它锁的事务既能读数据，又能写数据。</p>
-<blockquote>
-<p>用法：SELECT … FOR UPDATE</p>
-</blockquote>
-<p>共享锁(share lock)<br>共享锁又叫读锁，如果事务T对A加上共享锁，则其它事务只能对A再加共享锁，不能加其它锁。获准共享锁的事务只能读数据，不能写数据。</p>
-<blockquote>
-<p>用法：SELECT … LOCK IN SHARE MODE;</p>
-</blockquote>
-<p>###MySQL中的行级锁、表级锁和页级锁</p>
-<blockquote>
-<p>行级锁：行级锁分为共享锁和排它锁。行级锁是Mysql中锁定粒度最细的锁。InnoDB引擎支持行级锁和表级锁，只有在通过索引条件检索数据的时候，才使用行级锁，否就使用表级锁。行级锁开销大，加锁慢，锁定粒度最小，发生锁冲突概率最低，并发度最高</p>
-<p>表级锁：表级锁分为表共享锁和表独占锁。表级锁开销小，加锁快，锁定粒度大、发生锁冲突最高，并发度最低</p>
-<p>页级锁：页级锁是MySQL中锁定粒度介于行级锁和表级锁中间的一种锁。表级锁速度快，但冲突多，行级冲突少，但速度慢。所以取了折衷的页级，一次锁定相邻的一组记录。BDB支持页级锁。<br>开销和加锁时间界于表锁和行锁之间；会出现死锁；锁定粒度界于表锁和行锁之间，并发度一般</p>
-</blockquote>
-<p><a href="http://www.hollischuang.com/archives/934" target="_blank" rel="noopener">http://www.hollischuang.com/archives/934</a><br><a href="https://crossoverjie.top/2017/07/09/SSM15/" target="_blank" rel="noopener">https://crossoverjie.top/2017/07/09/SSM15/</a></p>
-</the>
       
     </div>
     
@@ -323,13 +355,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/01/16/MySQL数据库的锁机制/"></a></p>
+        <p><span>本文标题:</span><a href="/2018/01/16/分布式消息中间件RocketMQ学习教程①/"></a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
-        <p><span>发布时间:</span>2018-01-16, 15:26:58</p>
-        <p><span>最后更新:</span>2018-01-16, 16:54:57</p>
+        <p><span>发布时间:</span>2018-01-16, 17:27:55</p>
+        <p><span>最后更新:</span>2018-01-16, 17:37:11</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/01/16/MySQL数据库的锁机制/" title="">http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/16/分布式消息中间件RocketMQ学习教程①/" title="">http://blog.ittrading.cn/2018/01/16/分布式消息中间件RocketMQ学习教程①/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/16/分布式消息中间件RocketMQ学习教程①/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -342,11 +374,17 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/">
+                <a href="/2018/01/16/JDK动态代理源码学习/">
                     
                 </a>
             </div>
         
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/">
+                    
+                </a>
+            </div>
         
     </nav>
 
@@ -356,7 +394,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title-MySQL数据库的锁机制"><span class="toc-number">1.</span> <span class="toc-text">title:MySQL数据库的锁机制</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#消息中间件简介"><span class="toc-number">1.</span> <span class="toc-text">消息中间件简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#常用消息队列对比"><span class="toc-number">2.</span> <span class="toc-text">常用消息队列对比</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RocketMQ"><span class="toc-number">2.1.</span> <span class="toc-text">RocketMQ</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka"><span class="toc-number">2.2.</span> <span class="toc-text">Kafka</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ActiveMQ"><span class="toc-number">2.3.</span> <span class="toc-text">ActiveMQ</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RabbitMQ"><span class="toc-number">2.4.</span> <span class="toc-text">RabbitMQ</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ZeroMQ"><span class="toc-number">2.5.</span> <span class="toc-text">ZeroMQ</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RocketMQ简介"><span class="toc-number">3.</span> <span class="toc-text">RocketMQ简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#NameServer"><span class="toc-number">3.0.1.</span> <span class="toc-text">NameServer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Producer"><span class="toc-number">3.0.2.</span> <span class="toc-text">Producer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Consumer"><span class="toc-number">3.0.3.</span> <span class="toc-text">Consumer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Broker"><span class="toc-number">3.0.4.</span> <span class="toc-text">Broker</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RocketMQ存储特点"><span class="toc-number">4.</span> <span class="toc-text">RocketMQ存储特点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RocketMQ集群配置"><span class="toc-number">5.</span> <span class="toc-text">RocketMQ集群配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#附录：安装教程"><span class="toc-number">6.</span> <span class="toc-text">附录：安装教程</span></a></li></ol>
         
     </div>
     <style>
@@ -408,7 +446,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2018/01/16/MySQL数据库的锁机制/" data-title="" data-url="http://blog.ittrading.cn/2018/01/16/MySQL数据库的锁机制/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2018/01/16/分布式消息中间件RocketMQ学习教程①/" data-title="" data-url="http://blog.ittrading.cn/2018/01/16/分布式消息中间件RocketMQ学习教程①/"></div>
     <script>
         var duoshuoQuery = {short_name:""};
         var loadComment = function(){
@@ -431,7 +469,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/" title="上一篇: ">
+            <a href="/2018/01/16/JDK动态代理源码学习/" title="上一篇: ">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -439,7 +477,9 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+            <a href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/" title="下一篇: ">
+                <i class="fa fa-angle-right"></i>
+            </a>
         
     </div>
 
