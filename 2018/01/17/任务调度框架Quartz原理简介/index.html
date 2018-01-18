@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Nicky" />
+
+
+
+<meta name="description" content="title : 任务调度框架Quartz原理简介[TOC] 第一章 Quartz1.1 Quartz概念Quartz是OpenSymphony开源组织的一个Java开源项目， 在2009被Terracotta收购。Quartz官网 1.2 Quartz任务调度主要元素Quartz任务调度的主要元素有：: Trigger(触发器): Scheduler(任务调度器): Job(任务) +">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nicky&#39;s blog">
+<meta property="og:url" content="http://blog.ittrading.cn/2018/01/17/任务调度框架Quartz原理简介/index.html">
+<meta property="og:site_name" content="Nicky&#39;s blog">
+<meta property="og:description" content="title : 任务调度框架Quartz原理简介[TOC] 第一章 Quartz1.1 Quartz概念Quartz是OpenSymphony开源组织的一个Java开源项目， 在2009被Terracotta收购。Quartz官网 1.2 Quartz任务调度主要元素Quartz任务调度的主要元素有：: Trigger(触发器): Scheduler(任务调度器): Job(任务) +">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.blog.csdn.net/20180117103617370?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-01-17T10:11:42.669Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nicky&#39;s blog">
+<meta name="twitter:description" content="title : 任务调度框架Quartz原理简介[TOC] 第一章 Quartz1.1 Quartz概念Quartz是OpenSymphony开源组织的一个Java开源项目， 在2009被Terracotta收购。Quartz官网 1.2 Quartz任务调度主要元素Quartz任务调度的主要元素有：: Trigger(触发器): Scheduler(任务调度器): Job(任务) +">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20180117103617370?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Nicky&#39;s blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Nicky&#39;s blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Nicky</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/2284087296@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" href="https://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于JavaEE</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Nicky</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Nicky</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/2284087296@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="https://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-任务调度框架Quartz原理简介" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/01/17/任务调度框架Quartz原理简介/" class="article-date">
+      <time datetime="2018-01-17T10:09:46.565Z" itemprop="datePublished">2018-01-17</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="title-任务调度框架Quartz原理简介"><a href="#title-任务调度框架Quartz原理简介" class="headerlink" title="title : 任务调度框架Quartz原理简介"></a>title : 任务调度框架Quartz原理简介</h2><p>[TOC]</p>
+<h3 id="第一章-Quartz"><a href="#第一章-Quartz" class="headerlink" title="第一章 Quartz"></a>第一章 Quartz</h3><h4 id="1-1-Quartz概念"><a href="#1-1-Quartz概念" class="headerlink" title="1.1 Quartz概念"></a>1.1 Quartz概念</h4><p>Quartz是OpenSymphony开源组织的一个Java开源项目， 在2009被Terracotta收购。<a href="http://www.quartz-scheduler.org/" target="_blank" rel="noopener">Quartz官网</a></p>
+<h4 id="1-2-Quartz任务调度主要元素"><a href="#1-2-Quartz任务调度主要元素" class="headerlink" title="1.2 Quartz任务调度主要元素"></a>1.2 Quartz任务调度主要元素</h4><p>Quartz任务调度的主要元素有：<br>: Trigger(触发器)<br>: Scheduler(任务调度器)<br>: Job(任务)</p>
+<p><excerpt in="" index="" |="" 首页摘要=""><br>+<a id="more"></a></excerpt></p>
+<p><the rest="" of="" contents="" |="" 余下全文=""><br>其中Trigger，Job是元数据，Scheduler才是任务调度的控制器。</the></p>
+<h4 id="1-3-Quartz特点"><a href="#1-3-Quartz特点" class="headerlink" title="1.3 Quartz特点"></a>1.3 Quartz特点</h4><blockquote>
+<ol>
+<li>强大的调度功能，例如支持多样的调度方式</li>
+<li>灵活的应用方式，例如支持任务和调度的多种组合方式</li>
+<li>分布式和集群功能，在被Terracotta收购后，在Quartz的基础上的拓展</li>
+</ol>
+</blockquote>
+<h4 id="1-4-Quartz基本元素关系图"><a href="#1-4-Quartz基本元素关系图" class="headerlink" title="1.4 Quartz基本元素关系图"></a>1.4 Quartz基本元素关系图</h4><p><img src="http://img.blog.csdn.net/20180117103617370?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="Quartz基本元素关系图"></p>
+<h3 id="第二章-Trigger-触发器"><a href="#第二章-Trigger-触发器" class="headerlink" title="第二章 Trigger(触发器)"></a>第二章 Trigger(触发器)</h3><h4 id="2-1-Trigger定义"><a href="#2-1-Trigger定义" class="headerlink" title="2.1 Trigger定义"></a>2.1 Trigger定义</h4><p>Trigger也即触发器，用于定义任务调度时间规则</p>
+<h4 id="2-2-Trigger属性"><a href="#2-2-Trigger属性" class="headerlink" title="2.2 Trigger属性"></a>2.2 Trigger属性</h4><ol>
+<li>startTime和endTime<br>所有的Trigger都包含startTime、endTime这两个属性</li>
+<li>优先级(Priority)<br>触发器的优先级值默认为5，不过注意优先级是针对同一时刻来说的，在同一时刻优先级高的先触发。假如一个触发器被执行时间为3:00，另外一个为3:01，那么肯定是先执行时间为3:00的触发器。</li>
+<li>错失触发(Misfire)策略<br>在任务调度中，并不能保证所有的触发器都会在指定时间被触发，假如Scheduler资源不足或者服务器重启的情况，就好发生错失触发的情况。</li>
+</ol>
+<h4 id="2-3-Trigger类型"><a href="#2-3-Trigger类型" class="headerlink" title="2.3 Trigger类型"></a>2.3 Trigger类型</h4><p>在任务调度Quartz中，Trigger主要的触发器有：SimpleTrigger，CalendarIntervelTrigger，DailyTimeIntervalTrigger，CronTrigger，注意，本博客所介绍的触发器都是基于Quartz2.2.x版本的，不同版本，触发器类型略有不同。</p>
+<h5 id="2-3-1-SimpleTrigger"><a href="#2-3-1-SimpleTrigger" class="headerlink" title="2.3.1 SimpleTrigger"></a>2.3.1 SimpleTrigger</h5><p>SimpleTrigger是一种最基本的触发器，指定从某一个时间开始，以一定的时间间隔执行的任务。</p>
+<p>SimpleTrigger的属性有：<br>: repeatInterval重复间隔<br>: repeatCount重复次数，实际执行次数是repeatCount+1。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">simpleSchedule()</span><br><span class="line">    //.withIntervalInHours(1) //每小时执行一次</span><br><span class="line">	.withIntervalInMinutes(1) //每分钟执行一次</span><br><span class="line">	//.repeatForever() //次数不限</span><br><span class="line">    .withRepeatCount(10) //次数为10次</span><br><span class="line">    .build();//构建</span><br></pre></td></tr></table></figure>
+<h5 id="2-3-2-CalendarIntervalTrigger"><a href="#2-3-2-CalendarIntervalTrigger" class="headerlink" title="2.3.2 CalendarIntervalTrigger"></a>2.3.2 CalendarIntervalTrigger</h5><p>CalendarIntervalTrigger和SimpleTrigger不同的是指定的时间间隔为毫秒，CalendarIntervalTrigger支持的间隔单位有秒，分钟，小时，天，月，年，星期。</p>
+<p>CalendarIntervalTrigger的属性有：<br>: interval 执行间隔<br>: intervalUnit 执行间隔的单位（秒，分钟，小时，天，月，年，星期）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">calendarIntervalSchedule()</span><br><span class="line">    .withIntervalInDays(1) //每天执行一次</span><br><span class="line">	//.withIntervalInWeeks(1) //每周执行一次</span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
+<h5 id="2-3-3-DailyTimeIntervalTrigger"><a href="#2-3-3-DailyTimeIntervalTrigger" class="headerlink" title="2.3.3 DailyTimeIntervalTrigger"></a>2.3.3 DailyTimeIntervalTrigger</h5><p>DailyTimeIntervalTrigger和SimpleTrigger不同的是不仅可以支持SimpleTrigger支持时间间隔类型，而且还支持指定星期。</p>
+<p>DailyTimeIntervalTrigger的属性有：<br>: startTimeOfDay 每天开始时间<br>: endTimeOfDay 每天结束时间<br>: daysOfWeek 需要执行的星期<br>: interval 执行间隔<br>: intervalUnit 执行间隔的单位（秒，分钟，小时，天，月，年，星期）<br>: repeatCount 重复次数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dailyTimeIntervalSchedule()</span><br><span class="line">    .startingDailyAt(TimeOfDay.hourAndMinuteOfDay(9, 0)) //第天9：00开始</span><br><span class="line">    .endingDailyAt(TimeOfDay.hourAndMinuteOfDay(15, 0)) //15：00 结束 </span><br><span class="line">    .onDaysOfTheWeek(MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY) //周一至周五执行</span><br><span class="line">    .withIntervalInHours(1) //每间隔1小时执行一次</span><br><span class="line">    .withRepeatCount(100) //最多重复100次（实际执行100+1次）</span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
+<h5 id="2-3-4-CronTrigge"><a href="#2-3-4-CronTrigge" class="headerlink" title="2.3.4 CronTrigge"></a>2.3.4 CronTrigge</h5><p>CronTrigger适合于更复杂的任务，它支持Linux Cron的语法。CronTrigger覆盖了以上三种Trigger的大部分功能。</p>
+<p>CronTrigger的属性只有;<br>： Cron表达式，Cron表达式需要程序员自己编写，比较复杂</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cronSchedule(&quot;0 0/3 9-15 * * ?&quot;) // 每天9:00-15:00，每隔3分钟执行一次</span><br><span class="line">    .build();</span><br><span class="line"></span><br><span class="line">cronSchedule(&quot;0 30 9 ? * MON&quot;) // 每周一，9:30执行一次</span><br><span class="line">.build();</span><br><span class="line"></span><br><span class="line">weeklyOnDayAndHourAndMinute(MONDAY,9, 30) //等同于 0 30 9 ? * MON </span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
+<p>Cron表达式</p>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>时间域</th>
+<th>允许值</th>
+<th>特殊值 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>秒</td>
+<td>0-59</td>
+<td>,- * /</td>
+</tr>
+<tr>
+<td>2</td>
+<td>分钟</td>
+<td>0-59</td>
+<td>,- * /</td>
+</tr>
+<tr>
+<td>3</td>
+<td>小时</td>
+<td>0-23</td>
+<td>,- * /</td>
+</tr>
+<tr>
+<td>4</td>
+<td>日期</td>
+<td>1-31</td>
+<td>,- * ? / L W C</td>
+</tr>
+<tr>
+<td>5</td>
+<td>月份</td>
+<td>1-12</td>
+<td>,- * /</td>
+</tr>
+<tr>
+<td>6</td>
+<td>星期</td>
+<td>1-7</td>
+<td>,- * ? / L C #</td>
+</tr>
+<tr>
+<td>7</td>
+<td>年份(可选)</td>
+<td>1-31</td>
+<td>,- * /</td>
+</tr>
+</tbody>
+</table>
+<p>星号()：可用在所有字段中，表示对应时间域的每一个时刻，例如， 在分钟字段时，表示“每分钟”；</p>
+<p>问号（?）：该字符只在日期和星期字段中使用，它通常指定为“无意义的值”，相当于点位符；</p>
+<p>减号(-)：表达一个范围，如在小时字段中使用“10-12”，则表示从10到12点，即10,11,12；</p>
+<p>逗号(,)：表达一个列表值，如在星期字段中使用“MON,WED,FRI”，则表示星期一，星期三和星期五；</p>
+<p>斜杠(/)：x/y表达一个等步长序列，x为起始值，y为增量步长值。如在分钟字段中使用0/15，则表示为0,15,30和45秒，而5/15在分钟字段中表示5,20,35,50，你也可以使用*/y，它等同于0/y；</p>
+<p>L：该字符只在日期和星期字段中使用，代表“Last”的意思，但它在两个字段中意思不同。L在日期字段中，表示这个月份的最后一天，如一月的31号，非闰年二月的28号；如果L用在星期中，则表示星期六，等同于7。但是，如果L出现在星期字段里，而且在前面有一个数值X，则表示“这个月的最后X天”，例如，6L表示该月的最后星期五；</p>
+<p>W：该字符只能出现在日期字段里，是对前导日期的修饰，表示离该日期最近的工作日。例如15W表示离该月15号最近的工作日，如果该月15号是星期六，则匹配14号星期五；如果15日是星期日，则匹配16号星期一；如果15号是星期二，那结果就是15号星期二。但必须注意关联的匹配日期不能够跨月，如你指定1W，如果1号是星期六，结果匹配的是3号星期一，而非上个月最后的那天。W字符串只能指定单一日期，而不能指定日期范围；</p>
+<p>LW组合：在日期字段可以组合使用LW，它的意思是当月的最后一个工作日；</p>
+<p>井号(#)：该字符只能在星期字段中使用，表示当月某个工作日。如6#3表示当月的第三个星期五(6表示星期五，#3表示当前的第三个)，而4#5表示当月的第五个星期三，假设当月没有第五个星期三，忽略不触发；</p>
+<p>C：该字符只在日期和星期字段中使用，代表“Calendar”的意思。它的意思是计划所关联的日期，如果日期没有被关联，则相当于日历中所有日期。例如5C在日期字段中就相当于日历5日以后的第一天。1C在星期字段中相当于星期日后的第一天。</p>
+<p>Cron表达式对特殊字符的大小写不敏感，对代表星期的缩写英文大小写也不敏感。</p>
+<h3 id="第三章-Scheduler-任务调度器"><a href="#第三章-Scheduler-任务调度器" class="headerlink" title="第三章 Scheduler(任务调度器)"></a>第三章 Scheduler(任务调度器)</h3><h4 id="3-1Scheduler定义"><a href="#3-1Scheduler定义" class="headerlink" title="3.1Scheduler定义"></a>3.1Scheduler定义</h4><p>Scheduler就是任务调度控制器，Scheduler有两个重要组件：ThreadPool和JobStore。</p>
+<p>注意：Job和Trigger需要存储下来才可以被使用。</p>
+<p>ThreadPool就是线程池，所有的任务都会被线程池执行</p>
+<p>JobStore是来存储运行时信息的，包括Trigger，Scheduler，JobDetail，业务锁等等。JobStore实现有RAMJob(内存实现)，JobStoreTX(JDBC，事务由Quartz管理），JobStoreCMT(JDBC，使用容器事务)，ClusteredJobStore(集群实现)等等</p>
+<p>注意：Job和Trigger需要存储下来才可以被使用。</p>
+<h4 id="3-2-Schedule种类"><a href="#3-2-Schedule种类" class="headerlink" title="3.2 Schedule种类"></a>3.2 Schedule种类</h4><p>Schedule有三种：<br>: StdScheduler<br>: RemoteMBeanScheduler<br>: RemoteScheduler</p>
+<p>其中StdScheduler最常用。</p>
+<h4 id="3-3-Schedule工厂"><a href="#3-3-Schedule工厂" class="headerlink" title="3.3 Schedule工厂"></a>3.3 Schedule工厂</h4><p>Schedule是由Schedule工厂创建的，有DirectSchedulerFactory或者StdSchedulerFactory，StdSchedulerFactory使用比较多</p>
+<h3 id="第四章-Job-任务"><a href="#第四章-Job-任务" class="headerlink" title="第四章 Job(任务)"></a>第四章 Job(任务)</h3><h4 id="4-1-Job定义"><a href="#4-1-Job定义" class="headerlink" title="4.1 Job定义"></a>4.1 Job定义</h4><p>Job：也就是表示被调度的任务.JobDetail是任务的定义，而Job是任务的执行逻辑。在JobDetail里会引用一个Job Class定义</p>
+<h4 id="4-2-Job类型"><a href="#4-2-Job类型" class="headerlink" title="4.2 Job类型"></a>4.2 Job类型</h4><p>Job有两种类型：无状态的(stateless)和有状态的(stateful)</p>
+<blockquote>
+<p>区别在于：对于同一个Trigger来说，有状态的Job不能异步执行，也就是说需要等上一个任务Job执行完成后，才可以触发下一次执行。</p>
+</blockquote>
+<h4 id="4-3-Job属性"><a href="#4-3-Job属性" class="headerlink" title="4.3 Job属性"></a>4.3 Job属性</h4><p>Job的属性有两种：volatility和durability</p>
+<blockquote>
+<p>volatility表示任务是否持久化到数据库存储;<br>durability表示在没有Trigger关联的条件下是否保留。<br>volatility和durability都是boolean类型。</p>
+</blockquote>
+<h3 id="第五章-Quartz线程"><a href="#第五章-Quartz线程" class="headerlink" title="第五章 Quartz线程"></a>第五章 Quartz线程</h3><h4 id="5-1-Quartz线程分类"><a href="#5-1-Quartz线程分类" class="headerlink" title="5.1 Quartz线程分类"></a>5.1 Quartz线程分类</h4><p>在Quartz中，线程分为Scheduler调度线程和任务执行线程。<br>Scheduler调度线程主要有：执行常规调度的线程和执行misfired trigger的线程。</p>
+<blockquote>
+<p>执行常规调度的线程(Regular Scheduler Thread)：轮询查询存储的所有触发器，到达触发时间，就从线程池获取一个空闲的线程，执行与触发器关联的任务。<br>执行错失调度的线程(Misfire Scheduler Thread)：Misfire线程扫描所有的触发器，检查是否有misfired的线程，也就是没有被执行错过的线程，有的话根据misfire的策略分别处理。</p>
+</blockquote>
+<h3 id="附录：参考资料"><a href="#附录：参考资料" class="headerlink" title="附录：参考资料"></a>附录：参考资料</h3><p><a href="http://www.xuxueli.com/xxl-job/#/" target="_blank" rel="noopener">http://www.xuxueli.com/xxl-job/#/</a></p>
+<p><a href="https://www.cnblogs.com/drift-ice/p/3817269.html" target="_blank" rel="noopener">https://www.cnblogs.com/drift-ice/p/3817269.html</a></p>
+<p><a href="https://www.ibm.com/developerworks/cn/opensource/os-cn-quartz/" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/opensource/os-cn-quartz/</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/01/17/任务调度框架Quartz原理简介/"></a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
+        <p><span>发布时间:</span>2018-01-17, 18:09:46</p>
+        <p><span>最后更新:</span>2018-01-17, 18:11:42</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/17/任务调度框架Quartz原理简介/" title="">http://blog.ittrading.cn/2018/01/17/任务调度框架Quartz原理简介/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://blog.ittrading.cn/2018/01/17/任务调度框架Quartz原理简介/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/01/16/Swagger UI教程 API 文档神器/">
+                    
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title-任务调度框架Quartz原理简介"><span class="toc-number">1.</span> <span class="toc-text">title : 任务调度框架Quartz原理简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一章-Quartz"><span class="toc-number">1.1.</span> <span class="toc-text">第一章 Quartz</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-Quartz概念"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 Quartz概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-Quartz任务调度主要元素"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 Quartz任务调度主要元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-Quartz特点"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3 Quartz特点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-Quartz基本元素关系图"><span class="toc-number">1.1.4.</span> <span class="toc-text">1.4 Quartz基本元素关系图</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二章-Trigger-触发器"><span class="toc-number">1.2.</span> <span class="toc-text">第二章 Trigger(触发器)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-Trigger定义"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 Trigger定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-Trigger属性"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 Trigger属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-Trigger类型"><span class="toc-number">1.2.3.</span> <span class="toc-text">2.3 Trigger类型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-3-1-SimpleTrigger"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">2.3.1 SimpleTrigger</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-3-2-CalendarIntervalTrigger"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">2.3.2 CalendarIntervalTrigger</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-3-3-DailyTimeIntervalTrigger"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">2.3.3 DailyTimeIntervalTrigger</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-3-4-CronTrigge"><span class="toc-number">1.2.3.4.</span> <span class="toc-text">2.3.4 CronTrigge</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第三章-Scheduler-任务调度器"><span class="toc-number">1.3.</span> <span class="toc-text">第三章 Scheduler(任务调度器)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1Scheduler定义"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1Scheduler定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-Schedule种类"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 Schedule种类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-Schedule工厂"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.3 Schedule工厂</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第四章-Job-任务"><span class="toc-number">1.4.</span> <span class="toc-text">第四章 Job(任务)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-Job定义"><span class="toc-number">1.4.1.</span> <span class="toc-text">4.1 Job定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-Job类型"><span class="toc-number">1.4.2.</span> <span class="toc-text">4.2 Job类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-Job属性"><span class="toc-number">1.4.3.</span> <span class="toc-text">4.3 Job属性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第五章-Quartz线程"><span class="toc-number">1.5.</span> <span class="toc-text">第五章 Quartz线程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-Quartz线程分类"><span class="toc-number">1.5.1.</span> <span class="toc-text">5.1 Quartz线程分类</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#附录：参考资料"><span class="toc-number">1.6.</span> <span class="toc-text">附录：参考资料</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"　| Nicky's blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2018/01/17/任务调度框架Quartz原理简介/" data-title="" data-url="http://blog.ittrading.cn/2018/01/17/任务调度框架Quartz原理简介/"></div>
+    <script>
+        var duoshuoQuery = {short_name:""};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/01/16/Swagger UI教程 API 文档神器/" title="下一篇: ">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/01/17/任务调度框架Quartz原理简介/">任务调度框架Quartz原理简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/Swagger UI教程 API 文档神器/">Swagger UI教程 API 文档神器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/中间件技术入门教程/">中间件技术入门教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/Spring Boot使用Druid进行维度的统计和监控/">Spring Boot使用Druid进行维度的统计和监控</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/分布式文件存储的数据库MongoDB教程整理/">分布式文件存储的数据库MongoDB教程整理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/Spring框架之IOC(控制反转)/">Spring框架之IOC(控制反转)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/IBM WebSphere ESB入门指南/">IBM WebSphere ESB入门指南</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/企业服务总线ESB简介/">企业服务总线ESB简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/分布式消息队列kafka原理简介/">分布式消息队列kafka原理简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/设计模式之代理模式简介/">设计模式之代理模式简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/JDK动态代理源码学习/">JDK动态代理源码学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/分布式消息中间件RocketMQ学习教程①/">分布式消息中间件RocketMQ学习教程①</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/SpringBoot集成Redis实现缓存处理(Spring AOP技术)/">SpringBoot集成Redis实现缓存处理(Spring AOP技术)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/MySQL数据库的锁机制/">MySQL数据库的锁机制</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2013-2018 Nicky
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
