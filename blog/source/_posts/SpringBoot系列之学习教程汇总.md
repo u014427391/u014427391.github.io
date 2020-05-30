@@ -1,4 +1,12 @@
-﻿
+﻿title: SpringBoot系列博客专栏
+date: 2017-12-03 00:00:00
+---
+<Excerpt in index | 首页摘要> 
+对应[SpringBoot系列博客专栏](https://blog.csdn.net/u014427391/category_9195353.html)，[例子代码](https://github.com/u014427391/springbootexamples)，本博客不定时更新
+
+<!-- more -->
+<The rest of contents | 余下全文>
+
 
 对应[SpringBoot系列博客专栏](https://blog.csdn.net/u014427391/category_9195353.html)，[例子代码](https://github.com/u014427391/springbootexamples)，本博客不定时更新
 
@@ -60,3 +68,4 @@
 
 
 
+<!--more-->

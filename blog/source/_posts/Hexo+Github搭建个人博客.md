@@ -1,3 +1,16 @@
+title: Hexo+Github搭建个人博客
+date: 2017-12-03 00:00:00
+---
+<Excerpt in index | 首页摘要> 
+
+hexo：是一款基于NodeJS的博客框架，具有快速、简洁且高效的优点；使用Markdown解析文章，可以在几秒内快速生成静态文章博文
+
+补充NodeJS：目前速度最快的Javascript引擎，和2014年出现的AngularJS不同，NodeJS是一款基于后端的语言，有数据库操作，快速、高效的优点，比起PHP来说开发效率更高
+
+Markdown：它允许人们“使用易读易写的纯文本格式编写文档，然后转换成有效的XHTML(或者HTML)文档”。
+<!-- more -->
+<The rest of contents | 余下全文>
+
 
 hexo：是一款基于NodeJS的博客框架，具有快速、简洁且高效的优点；使用Markdown解析文章，可以在几秒内快速生成静态文章博文
 
@@ -92,3 +105,5 @@ hexo  d
 ```
 输入https:你的用户名.github.io，可以看到你的个人博客已经创建好了
 ![这里写图片描述](http://img.blog.csdn.net/20161215154528287?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
+

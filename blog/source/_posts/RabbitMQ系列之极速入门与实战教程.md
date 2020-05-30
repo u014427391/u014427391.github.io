@@ -1,4 +1,17 @@
-﻿SpringBoot系列之RabbitMQ使用实用教程
+﻿title: SpringBoot系列之RabbitMQ使用实用教程
+date: 2017-12-03 00:00:00
+---
+<Excerpt in index | 首页摘要> 
+
+消息队列（Message Queue，简称MQ），其本质是个队列，FIFO（First In First OUT，先入先出），MQ主要用于不同线程之间的线程通信。大多应用中，可通过消息服务中间件来提升系统异步通信、扩展解耦能力
+
+两个重要概念：
+* 消息代理（message broker）和目的地（destination）
+（消息发送者发送消息以后，将由消息代理broker接管，然后再传递到指定目的地）
+<!-- more -->
+<The rest of contents | 余下全文>
+
+SpringBoot系列之RabbitMQ使用实用教程
 @[toc]
 ## 1. 消息队列概述
 ### 1.1 MQ的概述
@@ -675,3 +688,4 @@ public class DirectReceiver {
 代码下载：[github下载链接](https://github.com/u014427391/springbootexamples/tree/master/springboot-rabbitmq)
 
 
+<!--more-->

@@ -1,3 +1,17 @@
+
+title: 基于SMTP协议的邮件发送功能JavaEE实现
+date: 2017-12-03 00:00:00
+---
+<Excerpt in index | 首页摘要> 
+本博客介绍基于SSM框架(Spring4.0+SpringMVC+Mybatis)组合的Javamail应用，邮箱的话基于腾讯的QQ邮箱，其实也是Foxmail邮箱
+
+先要了解一下SMTP协议和SSL加密
+SMTP：称为简单邮件传输协议（Simple Mail Transfer Protocal），目标是向用户提供高效、可靠的邮件传输。SMTP是一种请求响应的协议，也就是客户机向远程服务器发送请求，服务器响应，监听端口是25，所以其工作模式有两种：发送SMTP，接收SMTP
+
+<!-- more -->
+<The rest of contents | 余下全文>
+
+
 本博客介绍基于SSM框架(Spring4.0+SpringMVC+Mybatis)组合的Javamail应用，邮箱的话基于腾讯的QQ邮箱，其实也是Foxmail邮箱
 
 先要了解一下SMTP协议和SSL加密

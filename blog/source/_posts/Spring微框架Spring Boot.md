@@ -1,3 +1,13 @@
+title: Spring微框架SpringBoot
+date: 2017-12-03 00:00:00
+---
+<Excerpt in index | 首页摘要> 
+Spring框架作为JavaEE框架领域的一款重要的开源框架，在企业应用开发中有着很重要的作用，同时Spring框架及其子框架很多，所以知识量很广。
+Spring Boot：一款Spring框架的子框架，也可以叫微框架，是2014年推出的一款使Spring框架开发变得容易的框架。学过Spring框架的都知识，Spring框架难以避免地需要配置不少XMl，而使用Spring Boot框架的话，就可以使用注解开发，极大地简化基于Spring框架的开发。Spring Boot充分利用了JavaConfig的配置模式以及“约定优于配置”的理念，能够极大的简化基于Spring MVC的Web应用和REST服务开发。
+然后本博客介绍基于IDEA编辑器的Spring Boot项目创建和部署。
+<!-- more -->
+<The rest of contents | 余下全文>
+
 [TOC]
 ##前言##
 Spring框架作为JavaEE框架领域的一款重要的开源框架，在企业应用开发中有着很重要的作用，同时Spring框架及其子框架很多，所以知识量很广。
@@ -174,6 +184,7 @@ public class DemoController {
 
 
  
+
 
 
 

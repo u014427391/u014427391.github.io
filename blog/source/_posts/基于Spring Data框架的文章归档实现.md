@@ -1,3 +1,13 @@
+title: 基于Spring Data框架的文章归档实现
+date: 2017-12-03 00:00:00
+---
+<Excerpt in index | 首页摘要> 
+最近在写自己的个人博客系统，框架采用SpringMVC、Spring4.0、Spring Data/JPA组合，本博客就文档归档功能在Spring Data JPA框架下是如何实现的进行记录。
+现在可以star(收藏)，watch(关注)，但是还在开发中，所以还是还在先别下载
+项目github：https://github.com/u014427391/myblog
+<!-- more -->
+<The rest of contents | 余下全文>
+
 ### 目录
 
 [TOC]
