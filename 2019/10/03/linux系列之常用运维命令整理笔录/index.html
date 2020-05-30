@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Nicky" />
+
+
+
+<meta name="description" content="本博客记录工作中需要的linux运维命令，大学时候开始接触linux，会一些基本操作，可是都没有整理起来，加上是做开发，不做运维，有些命令忘记了，所以现在整理成博客，当然vi，文件操作等就不介绍了，慢慢积累一些其它拓展的命令，博客不定时更新">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux系列之常用运维命令整理笔录">
+<meta property="og:url" content="http://yoursite.com/2019/10/03/linux系列之常用运维命令整理笔录/index.html">
+<meta property="og:site_name" content="Nicky's blog">
+<meta property="og:description" content="本博客记录工作中需要的linux运维命令，大学时候开始接触linux，会一些基本操作，可是都没有整理起来，加上是做开发，不做运维，有些命令忘记了，所以现在整理成博客，当然vi，文件操作等就不介绍了，慢慢积累一些其它拓展的命令，博客不定时更新">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191028191938222.png">
+<meta property="og:updated_time" content="2020-05-30T10:52:34.829Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux系列之常用运维命令整理笔录">
+<meta name="twitter:description" content="本博客记录工作中需要的linux运维命令，大学时候开始接触linux，会一些基本操作，可是都没有整理起来，加上是做开发，不做运维，有些命令忘记了，所以现在整理成博客，当然vi，文件操作等就不介绍了，慢慢积累一些其它拓展的命令，博客不定时更新">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20191028191938222.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Nicky&#39;s blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>linux系列之常用运维命令整理笔录 | Nicky&#39;s blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Nicky</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/nickypm@foxmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" href="http://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Nicky</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Nicky</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/nickypm@foxmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="http://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-linux系列之常用运维命令整理笔录" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/10/03/linux系列之常用运维命令整理笔录/" class="article-date">
+      <time datetime="2019-10-02T16:00:00.000Z" itemprop="datePublished">2019-10-03</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      linux系列之常用运维命令整理笔录
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><excerpt in="" index="" |="" 首页摘要=""><br>本博客记录工作中需要的linux运维命令，大学时候开始接触linux，会一些基本操作，可是都没有整理起来，加上是做开发，不做运维，有些命令忘记了，所以现在整理成博客，当然vi，文件操作等就不介绍了，慢慢积累一些其它拓展的命令，博客不定时更新<br><a id="more"></a></excerpt></p>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<p>@[toc]</p>
+<h3 id="一、系统监控"><a href="#一、系统监控" class="headerlink" title="一、系统监控"></a>一、系统监控</h3><h4 id="1、free命令"><a href="#1、free命令" class="headerlink" title="1、free命令"></a>1、free命令</h4><p>free 命令能够显示系统中物理上的空闲和已用内存，还有交换内存，同时，也能显示被内核使用的缓冲和缓存</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">语法：free [param]</div></pre></td></tr></table></figure>
+<p>param可以为：</p>
+<ul>
+<li>-b：以Byte为单位显示内存使用情况；</li>
+<li>-k：以KB为单位显示内存使用情况；</li>
+<li>-m：以MB为单位显示内存使用情况；</li>
+<li>-o：不显示缓冲区调节列；</li>
+<li>-s&lt;间隔秒数&gt;：持续观察内存使用状况；</li>
+<li>-t：显示内存总和列；</li>
+<li>-V：显示版本信息。</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20191028191938222.png" alt="在这里插入图片描述"><br>Mem：表示物理内存统计</p>
+<ul>
+<li>total：表示物理内存总数(total=used+free)</li>
+<li>used：表示系统分配给缓存使用的数量(这里的缓存包括buffer和cache)</li>
+<li>free：表示未分配的物理内存总数</li>
+<li>shared：表示共享内存</li>
+<li>buffers：系统分配但未被使用的buffers 数量。</li>
+<li>cached：系统分配但未被使用的cache 数量。</li>
+</ul>
+<p>-/+ buffers/cache：表示物理内存的缓存统计</p>
+<ul>
+<li>(-buffers/cache) 内存数： (指的第一部分Mem行中的used – buffers – cached)</li>
+<li>(+buffers/cache) 内存数:  (指的第一部分Mem行中的free + buffers + cached)</li>
+</ul>
+<p>(-buffers/cache)表示真正使用的内存数， (+buffers/cache) 表示真正未使用的内存数</p>
+<p>Swap：表示硬盘上交换分区的使用情况</p>
+<h4 id="2、ulimit命令"><a href="#2、ulimit命令" class="headerlink" title="2、ulimit命令"></a>2、ulimit命令</h4><p>ulimit用于显示系统资源限制的信息<br>语法：ulimit [param]<br>param参数可以为：</p>
+<ul>
+<li>-a 　显示目前资源限制的设定。 <ul>
+<li>-c <core文件上限> 　设定core文件的最大值，单位为区块。 </core文件上限></li>
+<li>-d &lt;数据节区大小&gt; 　程序数据节区的最大值，单位为KB。 </li>
+<li>-f &lt;文件大小&gt; 　shell所能建立的最大文件，单位为区块。 </li>
+<li>-H 　设定资源的硬性限制，也就是管理员所设下的限制。 </li>
+<li>-m &lt;内存大小&gt; 　指定可使用内存的上限，单位为KB。 </li>
+<li>-n &lt;文件数目&gt; 　指定同一时间最多可开启的文件数。 </li>
+<li>-p &lt;缓冲区大小&gt; 　指定管道缓冲区的大小，单位512字节。 </li>
+<li>-s &lt;堆叠大小&gt; 　指定堆叠的上限，单位为KB。 </li>
+<li>-S 　设定资源的弹性限制。 </li>
+<li>-t <cpu时间> 　指定CPU使用时间的上限，单位为秒。 </cpu时间></li>
+<li>-u &lt;程序数目&gt; 　用户最多可开启的程序数目。 </li>
+<li>-v &lt;虚拟内存大小&gt; 　指定可使用的虚拟内存上限，单位为KB</li>
+</ul>
+</li>
+</ul>
+<h4 id="3、top命令"><a href="#3、top命令" class="headerlink" title="3、top命令"></a>3、top命令</h4><p>top命令可以实时动态地查看系统的整体运行情况，是一个综合了多方信息监测系统性能和运行信息的实用工具</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">语法：top [param]</div></pre></td></tr></table></figure>
+<p>param为：</p>
+<ul>
+<li>-b：以批处理模式操作；</li>
+<li>-c：显示完整的治命令；</li>
+<li>-d：屏幕刷新间隔时间；</li>
+<li>-I：忽略失效过程；</li>
+<li>-s：保密模式；</li>
+<li>-S：累积模式；</li>
+<li>-u [用户名]：指定用户名；</li>
+<li>-p [进程号]：指定进程；</li>
+<li>-n [次数]：循环显示的次数。</li>
+</ul>
+<h4 id="4、df命令"><a href="#4、df命令" class="headerlink" title="4、df命令"></a>4、df命令</h4><ul>
+<li>df -h查看磁盘使用情况</li>
+<li>df -i 查看inode使用情况</li>
+</ul>
+<h4 id="5、ps命令"><a href="#5、ps命令" class="headerlink" title="5、ps命令"></a>5、ps命令</h4><p>ps命令用于查看进程统计信息</p>
+<p>常用参数：</p>
+<ul>
+<li>a：显示当前终端下的所有进程信息，包括其他用户的进程。</li>
+<li>u：使用以用户为主的格式输出进程信息。</li>
+<li>x：显示当前用户在所有终端下的进程。</li>
+<li>-e：显示系统内的所有进程信息。</li>
+<li>-l：使用长（long）格式显示进程信息。</li>
+<li>-f：使用完整的（full）格式显示进程信息。</li>
+</ul>
+<p>在使用中可以加上grep命令一起使用，也可以单独使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># ps命令单独使用的情况</div><div class="line">ps -elf tomcat</div><div class="line">#结合管道操作和grep命令进行过滤，用于查询某一个进程的信息</div><div class="line">ps -elf | grep tomcat</div></pre></td></tr></table></figure>
+<h3 id="二、文件操作"><a href="#二、文件操作" class="headerlink" title="二、文件操作"></a>二、文件操作</h3><h4 id="1、tail命令"><a href="#1、tail命令" class="headerlink" title="1、tail命令"></a>1、tail命令</h4><p> tail 命令可用于查看文件的内容，语法为</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail [param] [filename]</div></pre></td></tr></table></figure>
+<p>其中param可为：</p>
+<ul>
+<li>-f ：循环读取 </li>
+<li>-q ：不显示处理信息 </li>
+<li>-v ：显示详细的处理信息 </li>
+<li>-c [数目]： 显示的字节数 </li>
+<li>-n [行数]： 显示文件的尾部 n 行内容 </li>
+<li>–pid=PID ：与-f合用,表示在进程ID,PID死掉之后结束 </li>
+<li>-q, –quiet, –silent ：从不输出给出文件名的首部 </li>
+<li>-s, –sleep-interval=S ：与-f合用,表示在每次反复的间隔休眠S秒 </li>
+</ul>
+<h4 id="2、ll-ah"><a href="#2、ll-ah" class="headerlink" title="2、ll -ah"></a>2、ll -ah</h4><p>ll -ah命令，可以用于查看文件情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ll -ah</div></pre></td></tr></table></figure>
+<h3 id="三、网络通信"><a href="#三、网络通信" class="headerlink" title="三、网络通信"></a>三、网络通信</h3><h4 id="1、netstat"><a href="#1、netstat" class="headerlink" title="1、netstat"></a>1、netstat</h4><p>netstat命令是用于监控进出网络的包和网络接口统计的命令行工具</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">语法：netstat [param]</div></pre></td></tr></table></figure>
+<p>param参数可以为：</p>
+<ul>
+<li>-h  :   查看帮助</li>
+<li>-r   :   显示路由表</li>
+<li>-i   :   查看网络接口</li>
+</ul>
+<h4 id="2、重启网络"><a href="#2、重启网络" class="headerlink" title="2、重启网络"></a>2、重启网络</h4><p>设置了linux网络，需要重启网络，可以用命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">service network restart</div></pre></td></tr></table></figure>
+<h4 id="3、SELinux"><a href="#3、SELinux" class="headerlink" title="3、SELinux"></a>3、SELinux</h4><p>SELinux全称是 Security-Enhanced Linux，它是由美国国家安全局（NSA）贡献的，它为 Linux 内核子系统引入了一个健壮的强制控制访问Mandatory Access Control架构。详情可以参考<a href="https://linux.cn/article-7317-1.html" target="_blank" rel="external">SELinux 入门</a>，<a href="https://www.cnblogs.com/gailuo/p/5041034.html" target="_blank" rel="external">SELINUX工作原理</a></p>
+<p>其实SELinux的功能也就是类似于防火墙的功能，不过安全相对比较好，ok，所以本博客介绍一下SELinux的使用命令</p>
+<p>查看selinux状态<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">getenforce</div></pre></td></tr></table></figure></p>
+<p>临时禁用SELINUX(学习用的linux才可以禁用，生产的不建议禁用SELINUX)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">setenforce</div></pre></td></tr></table></figure></p>
+<p>永久禁用SELINUX(学习用的linux才可以禁用，生产的不建议禁用SELINUX)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span> 将SELINUX=enforce改成SELINUX=disabled</div><div class="line">vi /etc/selinux/config</div></pre></td></tr></table></figure>
+<h4 id="4、防火墙"><a href="#4、防火墙" class="headerlink" title="4、防火墙"></a>4、防火墙</h4><p>查询linux系统防火墙开启状态<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --state</div></pre></td></tr></table></figure></p>
+<p>临时关闭防火墙(学习用的linux才可以禁用，生产的不建议禁用SELINUX)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl stop firewalld.service</div></pre></td></tr></table></figure></p>
+<p>永久关闭防火墙(学习用的linux才可以禁用，生产的不建议禁用SELINUX)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl disable firewalld.service</div></pre></td></tr></table></figure></p>
+<h3 id="四、系统管理"><a href="#四、系统管理" class="headerlink" title="四、系统管理"></a>四、系统管理</h3><h4 id="1、uname"><a href="#1、uname" class="headerlink" title="1、uname"></a>1、uname</h4><p>uname命令用于查看内核版本</p>
+<h4 id="2、ip-addr"><a href="#2、ip-addr" class="headerlink" title="2、ip addr"></a>2、ip addr</h4><p>查看linux的ip地址：可以用命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ip addr</div></pre></td></tr></table></figure>
+<p>附录：</p>
+<ul>
+<li><a href="https://www.linuxcool.com/" target="_blank" rel="external">Linux命令大全(手册)</a></li>
+<li><a href="https://blog.csdn.net/u014427391/category_9195352.html" target="_blank" rel="external">我的Docker博客专栏</a></li>
+</ul>
+</the>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2019/10/03/linux系列之常用运维命令整理笔录/">linux系列之常用运维命令整理笔录</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage">Nicky</a></p>
+        <p><span>Created:</span>2019-10-03, 00:00:00</p>
+        <p><span>Updated:</span>2020-05-30, 18:52:34</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2019/10/03/linux系列之常用运维命令整理笔录/" title="linux系列之常用运维命令整理笔录">http://yoursite.com/2019/10/03/linux系列之常用运维命令整理笔录/</a>
+            <span class="copy-path" data-clipboard-text="From http://yoursite.com/2019/10/03/linux系列之常用运维命令整理笔录/　　By Nicky" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/12/03/RabbitMQ系列之极速入门与实战教程/">
+                    SpringBoot系列之RabbitMQ使用实用教程
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2019/10/25/SpringBoot系列之HATEOAS用法简介/">
+                    SpringBoot系列之HATEOAS用法简介
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、系统监控"><span class="toc-number">1.</span> <span class="toc-text">一、系统监控</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、free命令"><span class="toc-number">1.1.</span> <span class="toc-text">1、free命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、ulimit命令"><span class="toc-number">1.2.</span> <span class="toc-text">2、ulimit命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、top命令"><span class="toc-number">1.3.</span> <span class="toc-text">3、top命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、df命令"><span class="toc-number">1.4.</span> <span class="toc-text">4、df命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5、ps命令"><span class="toc-number">1.5.</span> <span class="toc-text">5、ps命令</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、文件操作"><span class="toc-number">2.</span> <span class="toc-text">二、文件操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、tail命令"><span class="toc-number">2.1.</span> <span class="toc-text">1、tail命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、ll-ah"><span class="toc-number">2.2.</span> <span class="toc-text">2、ll -ah</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、网络通信"><span class="toc-number">3.</span> <span class="toc-text">三、网络通信</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、netstat"><span class="toc-number">3.1.</span> <span class="toc-text">1、netstat</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、重启网络"><span class="toc-number">3.2.</span> <span class="toc-text">2、重启网络</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、SELinux"><span class="toc-number">3.3.</span> <span class="toc-text">3、SELinux</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、防火墙"><span class="toc-number">3.4.</span> <span class="toc-text">4、防火墙</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、系统管理"><span class="toc-number">4.</span> <span class="toc-text">四、系统管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、uname"><span class="toc-number">4.1.</span> <span class="toc-text">1、uname</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、ip-addr"><span class="toc-number">4.2.</span> <span class="toc-text">2、ip addr</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"true"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"linux系列之常用运维命令整理笔录　| Nicky's blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+<section id="comments">
+<!--高速版，加载速度快，使用前需测试页面的兼容性-->
+<div id="SOHUCS" sid="linux系列之常用运维命令整理笔录" style="padding: 0px 30px 0px 46px;"></div>
+<script>
+  (function(){
+    var appid = 'cysY1Qh4z',
+    conf = '44ad028ed833bee63e407681b65de68d';
+    var doc = document,
+    s = doc.createElement('script'),
+    h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
+    s.type = 'text/javascript';
+    s.charset = 'utf-8';
+    s.src =  'http://assets.changyan.sohu.com/upload/changyan.js?conf='+ conf +'&appid=' + appid;
+    h.insertBefore(s,h.firstChild);
+    window.SCS_NO_IFRAME = true;
+  })()
+</script>
+</section>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/12/03/RabbitMQ系列之极速入门与实战教程/" title="Pre: SpringBoot系列之RabbitMQ使用实用教程">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2019/10/25/SpringBoot系列之HATEOAS用法简介/" title="Next: SpringBoot系列之HATEOAS用法简介">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/12/03/MySQL基础之事务编程学习笔记/">MySQL基础之事务编程学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/25/SpringBoot系列之HATEOAS用法简介/">SpringBoot系列之HATEOAS用法简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/25/SpringBoot系列之i18n国际化多语言支持教程/">SpringBoot系列之i18n国际化多语言支持教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/03/linux系列之常用运维命令整理笔录/">linux系列之常用运维命令整理笔录</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/基于SMTP协议的邮件发送功能JavaEE实现/">基于SMTP协议的邮件发送功能JavaEE实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/Hexo+Github搭建个人博客/">Hexo+Github搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/基于Spring Data框架的文章归档实现/">基于Spring Data框架的文章归档实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/Spring微框架Spring Boot/">Spring微框架SpringBoot</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/SpringBoot系列之学习教程汇总/">SpringBoot系列博客专栏</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/Java中间件入门教程/">Java中间件入门教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/RabbitMQ系列之极速入门与实战教程/">SpringBoot系列之RabbitMQ使用实用教程</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2020 Nicky
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+             title: "a.article-title, .article-more-link a", 
+            
+             tags: ".article-tag a", 
+             categories: ".article-category a, a.tag-list-link", 
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+            
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

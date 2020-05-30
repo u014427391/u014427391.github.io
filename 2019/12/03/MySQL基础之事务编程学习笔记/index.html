@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Nicky" />
+
+
+
+<meta name="description" content="在学习《MySQL技术内幕：SQL编程》一书，并做了笔记。本博客内容是自己学了《MySQL技术内幕：SQL编程》事务编程一章之后，根据自己的理解做的笔记，内容和书本并不一致，不过书本实验都经过自己验证，基于MySQL5.7版本。做笔记的目的是方便自己复习，同时分享出来或许对其他人或许有点帮助">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL基础之事务编程学习笔记">
+<meta property="og:url" content="http://yoursite.com/2019/12/03/MySQL基础之事务编程学习笔记/index.html">
+<meta property="og:site_name" content="Nicky's blog">
+<meta property="og:description" content="在学习《MySQL技术内幕：SQL编程》一书，并做了笔记。本博客内容是自己学了《MySQL技术内幕：SQL编程》事务编程一章之后，根据自己的理解做的笔记，内容和书本并不一致，不过书本实验都经过自己验证，基于MySQL5.7版本。做笔记的目的是方便自己复习，同时分享出来或许对其他人或许有点帮助">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191218111601113.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9zbWlsZW5pY2t5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191218111639352.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191218112759591.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9zbWlsZW5pY2t5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191218114530216.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9zbWlsZW5pY2t5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200101115850490.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191217191317307.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9zbWlsZW5pY2t5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70">
+<meta property="og:updated_time" content="2020-05-30T10:52:51.198Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL基础之事务编程学习笔记">
+<meta name="twitter:description" content="在学习《MySQL技术内幕：SQL编程》一书，并做了笔记。本博客内容是自己学了《MySQL技术内幕：SQL编程》事务编程一章之后，根据自己的理解做的笔记，内容和书本并不一致，不过书本实验都经过自己验证，基于MySQL5.7版本。做笔记的目的是方便自己复习，同时分享出来或许对其他人或许有点帮助">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20191218111601113.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9zbWlsZW5pY2t5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Nicky&#39;s blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>MySQL基础之事务编程学习笔记 | Nicky&#39;s blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Nicky</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/nickypm@foxmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" href="http://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Nicky</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Nicky</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/nickypm@foxmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="http://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-MySQL基础之事务编程学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/12/03/MySQL基础之事务编程学习笔记/" class="article-date">
+      <time datetime="2019-12-02T16:00:00.000Z" itemprop="datePublished">2019-12-03</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MySQL基础之事务编程学习笔记
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <excerpt in="" index="" |="" 首页摘要=""> 
+
+<p>在学习《MySQL技术内幕：SQL编程》一书，并做了笔记。本博客内容是自己学了《MySQL技术内幕：SQL编程》事务编程一章之后，根据自己的理解做的笔记，内容和书本并不一致，不过书本实验都经过自己验证，基于MySQL5.7版本。做笔记的目的是方便自己复习，同时分享出来或许对其他人或许有点帮助</p>
+<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<p>MySQL基础之事务编程学习笔记</p>
+<p>在学习《MySQL技术内幕：SQL编程》一书，并做了笔记。本博客内容是自己学了《MySQL技术内幕：SQL编程》事务编程一章之后，根据自己的理解做的笔记，内容和书本并不一致，不过书本实验都经过自己验证，基于MySQL5.7版本。做笔记的目的是方便自己复习，同时分享出来或许对其他人或许有点帮助</p>
+<h2 id="1、事务概述"><a href="#1、事务概述" class="headerlink" title="1、事务概述"></a>1、事务概述</h2><p>事务是数据库区别于文件系统的重要特性之一，提到事务肯定会想到事务的4个特性ACID，要保证业务的正常使用，必须保证ACID，ACID表示原子性(atomicity)、一致性(consistency)、隔离性(isolation)、持久性(durability)，一个运行良好的事务系统也是要求具备这些特征</p>
+<ul>
+<li><p>原子性(atomicity)：一个事务必须被视为一个不可分割的最小工作单位，整个事务中的所有操作要么全部提交成功，要么全部失败回滚，不能只执行一部分操作</p>
+</li>
+<li><p>一致性(consistency)：一致性要求数据库总是从一个一致性的状态转换为另外一个一致性的状态，比如银行转账的例子，一个用户转账账号里减了200元，另外一个收账账号必须增加，一个失败数据必须全部回退状态，要保证事务一致性</p>
+</li>
+<li><p>隔离性(isolation)：一般来说，一个事务所做的修改在提交之前对其它事务来说都是不可见的</p>
+</li>
+<li><p>持久性(durability)：事务一旦提交，所做的状态就会永久保存在数据库中，即使系统奔溃，修改的数据也不会丢</p>
+</li>
+</ul>
+<h2 id="2、事务分类"><a href="#2、事务分类" class="headerlink" title="2、事务分类"></a>2、事务分类</h2><p>《MySQL技术内幕：SQL编程》一书中有提到了事务的分类，里面介绍了事务的分类，从理论角度，将事务分为：</p>
+<ul>
+<li>扁平事务(flat transactions)</li>
+<li>带有保存点的扁平事务(flat transactions with savepoints)</li>
+<li>链事务(chained transactions)</li>
+<li>嵌套事务(nested transactions)</li>
+<li>分布式事务(distributed transactions)<br><strong>扁平事务</strong>，这种事务是最基本，也是最简单的一种事务，其特点就是所有的操作都处于同一个层次，所有操作都处于begin work和commit work(or rollback work)之间，具有事务的原子性，不过扁平事务是不能提交或回滚事务的某一部分，或者分几个部分提交，因为扁平事务本来就是一起提交，或者一起回滚<br><strong>带有保存点的扁平事务</strong>，因为扁平事务的局限性，不能支持部分事务回滚，所以就有了带保存点的扁平事务，这种事务能通过savepoint命令保存一个保存点，需要rollback时候，使用命令<code>ROLLBACK TO SAVEPOINT identifier;</code>需要注意的是这种事务保存点并非具有持久性，rollback to savepoint id之后并不表示事务已经真的回滚，需要执行rollback work或者commit work才算真正的提交事务<br><strong>链事务</strong>，前面介绍了，带有保存点的扁平事务保存点不具有事务的持久性，假如系统出现奔溃的情况，那数据不是都没保存？也不能回滚到最近的保存点，所以就有了链事务的出现，链事务能做出现系统奔溃的情况，回滚到最近的保存点，当然在mysql系统中默认是不开启的，链事务是作用是，在提交一个事务时，释放不需要的数据对象，将必要的上下文隐式传给下一个开始的事务，<em>也就是将提交事务操作和开始下一个事务操作合并为一个原子操作</em>，引用书中的图示：<br><img src="https://img-blog.csdnimg.cn/20191218111601113.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9zbWlsZW5pY2t5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20191218111639352.png" alt="在这里插入图片描述"><br>链事务虽然可以避免系统奔溃的情况，数据丢失的情况，但是链事务是不支持回滚到指定保存点的，只能回退数据到上一个事务，不过带保存点事务能做到回滚到指定保存点</p>
+<p><strong>嵌套事务</strong>，嵌套事务从名称就可以理解，这种一种层次结构的嵌套事务，有一个顶级事务(top-level transaction)控制着各个子事务(subtransaction)，这种子事务可以是扁平事务、带保存点的扁平事务、链事务等等<br><img src="https://img-blog.csdnimg.cn/20191218112759591.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9zbWlsZW5pY2t5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>引用书中的嵌套式事务特征<br><img src="https://img-blog.csdnimg.cn/20191218114530216.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9zbWlsZW5pY2t5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>可以归纳重点，这种嵌套事务其实可以理解为一种树形结构，分为顶级事务，子事务，整个事务需要顶级事务提交后才真正算提交，任何一个子事务回滚都会导致所有子事务一起回滚，所有说整个嵌套事务具有原子性、一致性、隔离性，但是不具有事务持久性</p>
+<p><strong>分布式事务</strong>，分布式很容易理解，这种是在分布式环境运行的事务，一般也是扁平事务，不过是分布式环境的</p>
+<h2 id="3、事务控制语句"><a href="#3、事务控制语句" class="headerlink" title="3、事务控制语句"></a>3、事务控制语句</h2><p>有了前面的理解之后，就可以学习事务的控制语句了，实践之后就可以更好地理解前面的理论知识</p>
+<p>mysql默认事务是自动提交的，不过是可以通过命令进行关闭，也可以使用事务控制语句开启一个事务，所以，归纳一下，方法有二<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">## 方法1：通过set autocommit = 0关闭事务自动提交</div><div class="line"># 查询是否开启事务自动提交，1：事务自动提交；2：事务不自动提交</div><div class="line">SELECT @@autocommit;</div><div class="line"># 关闭事务自动提交</div><div class="line">SET autocommit = 0;</div><div class="line">## 方法2：通过BEGIN 或者 START TRANSACTION命令</div><div class="line"># 开启一个事务，使用这个命令之后，事务要使用commit或者commit work命令才会提交</div><div class="line">BEGIN;</div><div class="line"># START TRANSACTION命令和Begin命令效果一样 </div><div class="line">START TRANSACTION;</div></pre></td></tr></table></figure></p>
+<p>事务控制语句语法：</p>
+<ul>
+<li>BEGIN; / START TRANSACTION;<br>这两个命令效果一样，都是用于开启事务</li>
+<li>COMMIT WORK; / COMMIT;<br>Commit和Commit work在默认情况效果是一样的，在链事务里就不一样，Commit还是执行Commit操作，Commit work在链事务里是执行Commit和开启另外一个新的事务，相当于commit+ BEGIN / START TRANSACTION，<strong>这两个操作是原子操作</strong></li>
+<li>ROLLBACK WORK;/ ROLLBACK;<br>ROLLBACK和ROLLBACK WORK效果是一样的，都是回滚事务</li>
+<li>SAVEPOINT identifier(保存点id命名);<br>SAVEPOINT命令用于使用保存点，也就是前面介绍的带保存点的事务<br>eg:<code>savepoint tp1</code></li>
+<li>RELEASE SAVEPOINT identifier;<br>这个命令用于删除保存点</li>
+<li>ROLLBACK TO SAVEPOINT identifier;<br>这个命令用于回滚到对应的保存点</li>
+</ul>
+<p>Mysql completion_type介绍：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># 查询completion_type类型</div><div class="line">SHOW VARIABLES LIKE 'completion_type';</div><div class="line"># 也可以使用@@系统变量方式查询</div><div class="line">SELECT @@completion_type;</div><div class="line">## completion_type默认值为0，它还有1和2两种值，不过在新版mysql5.7测试，发现值为2的情况不起效</div><div class="line">SET @@completion_type = 1;# commit+chain(链事务，提示事务之后还会start transaction)</div><div class="line">SET @@completion_type = 2;# commit+release(经过测试，在新版mysql5.7这个设置不起效，以前版本开启之后是会关闭Session的)</div></pre></td></tr></table></figure></p>
+<p>下面举例实验：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"># 新建一个测试表</div><div class="line">CREATE TABLE t (a INT,PRIMARY KEY(a))ENGINE = INNODB;</div><div class="line"># 开启链事务</div><div class="line">SET @@completion_type = 1;</div><div class="line"># 开启一个事务，如下两个命令皆可</div><div class="line">BEGIN; START TRANSACTION;</div><div class="line"># 新增一条数据</div><div class="line">INSERT INTO t SELECT 1;</div><div class="line"># commit work在@@completion_type = 1的情况相关于commit+start transaction</div><div class="line">COMMIT WORK;</div><div class="line"># 新增一条数据</div><div class="line">INSERT INTO t SELECT 2;</div><div class="line"># 新增一条重复数据，让数据库报错</div><div class="line">INSERT INTO t SELECT 2;</div><div class="line"># 查询，有两条数据</div><div class="line">SELECT * FROM t;</div><div class="line"># 回滚事务</div><div class="line">ROLLBACK;</div><div class="line"># 再次查询，发现只有1这条数据，由此说明COMMIT WORK在commit之后，还开启了一个事务，当然是在autocommit值为1的情况进行验证的</div><div class="line">SELECT * FROM t;</div><div class="line"></div><div class="line"># completion_type=2在旧版估计才有用，我在5.7版本验证，发现并不起作用</div><div class="line">SET @@completion_type=2;</div><div class="line"># 开启事务</div><div class="line">BEGIN;</div><div class="line"># 新增一条数据</div><div class="line">INSERT INTO t SELECT 1;</div><div class="line"># commit work相关于commit+release，这个操作会关闭session</div><div class="line">COMMIT WORK;</div><div class="line"># 使用@@version验证会话是否关闭</div><div class="line">SELECT @@version;</div></pre></td></tr></table></figure></p>
+<p>书中mysql版本是5.1，commit work之后是会关闭会话的，不过在5.7还是可以查询的，5.1版本报错引用书中图片<br><img src="https://img-blog.csdnimg.cn/20200101115850490.png" alt="在这里插入图片描述"></p>
+<h2 id="4、事务隔离级别"><a href="#4、事务隔离级别" class="headerlink" title="4、事务隔离级别"></a>4、事务隔离级别</h2><p>SQL标准中定义四种隔离级别，每种存储引擎实现的隔离级别是不同的</p>
+<ul>
+<li><p>READ UNCOMMITTED(未提交读)<br>在READ UNCOMMITTED级别，事务即使没提交，对其它事务也是可见，允许事务读取未提交的数据，这也被称为脏读(Dirty Read)，所以在实际生产中很少用</p>
+</li>
+<li><p>READ COMMIT(提交读)<br>大部分数据库系统的默认隔离级别都是READ COMMIT，很明显这种隔离级别只能读取到已经提交事务的数据</p>
+</li>
+<li><p>REPEATABLE READ(可重复读)<br>REPEATABLE READ可以解决脏读的问题，不过不能解决幻读问题，所谓幻读是指，在读取某个范围数据时候，另外一个事务又向这个范围写数据了，当之前事务再次读取这个范围数据时候就会产生幻读</p>
+</li>
+<li><p>SERIALIZABLE(可串行化)<br>SERIALIZABLE是最高的隔离级别，SERIALIZABLE强制事务串行执行，可以避免幻读问题，其实保证SERIALIZABLE是常用行锁的方式来保证一致性的，SERIALIZABLE会在每一行的数据上都加上锁，SERIALIZABLE虽然可以保证事务安全性，不过服务器性能不好也会导致锁争用问题</p>
+</li>
+</ul>
+<p>查看当前会话隔离级别<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> @@tx_isolation;</div></pre></td></tr></table></figure></p>
+<p>查看系统全局隔离级别<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> @@global.tx_isolation;</div></pre></td></tr></table></figure></p>
+<p>设置当前会话隔离级别：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SET</span> <span class="keyword">SESSION</span> <span class="keyword">TRANSACTION</span> <span class="keyword">ISOLATION</span> <span class="keyword">LEVEL</span> <span class="keyword">READ</span> COMMITTED;</div></pre></td></tr></table></figure></p>
+<p>设置mysql系统全局隔离级别：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> <span class="keyword">TRANSACTION</span> <span class="keyword">ISOLATION</span> <span class="keyword">LEVEL</span> REPEATABLE <span class="keyword">READ</span>;</div></pre></td></tr></table></figure></p>
+<h2 id="5、分布式事务"><a href="#5、分布式事务" class="headerlink" title="5、分布式事务"></a>5、分布式事务</h2><p>MySQL中的分布式事务是通过XA事务事项的，当然要支持事务的存储引擎才可以，比如InnoDB，MySQL5.7版本，大部分存储引擎比如MyISAM，都是不支持事务的，也显然不支持XA事务，存储引擎不熟悉可以参考我之前博客:<a href="https://blog.csdn.net/u014427391/article/details/100170265" target="_blank" rel="external">MySQL架构之逻辑架构简介</a></p>
+<p>提到分布式事务，比较常见的就是银行转账的例子，对于银行银行转账这种场景就肯定要保证事务一致性，引用《MySQL技术内幕：SQL编程》书中例子，上海用户david向北京用户mariah的存储卡转账1000元，转账过程和到账过程肯定是分开的，首先上海银行的数据库先执行账号金额update操作，接着北京银行的数据库再执行账号金额update，假如没有保证事务一致性，上海银行数据库执行了，事务提交了，然后北京用户数据库没进行事务提交，这种情况是不允许的，所以就要保证事务一致性</p>
+<p>在数据库层面可以使用mysql的XA事务，xa事务可以支持多种数据库，xa事务由一个或多个资源管理器(resource manager)、一个事务管理器(transaction manager)以及一个应用程序组成(application program)</p>
+<ul>
+<li>应用程序：定义事务的边界，指定全局事务中的操作</li>
+<li>资源管理器：提供访问事务资源的方法，通常一个数据库就是一个资源管理器</li>
+<li>事务管理器：协调全局事务，需要和参与到全局事务的资源管理器进行通信<br>引用《MySQL技术内幕：SQL编程》一书的图示：<br><img src="https://img-blog.csdnimg.cn/20191217191317307.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9zbWlsZW5pY2t5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>XA基本用法可以参考<a href="https://dev.mysql.com/doc/refman/5.7/en/xa.html" target="_blank" rel="external">MySQL官方文档</a>，从官网复制的xa用法：<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">XA &#123;START|BEGIN&#125; xid [JOIN|RESUME]</div><div class="line"></div><div class="line">XA END xid [SUSPEND [FOR MIGRATE]]</div><div class="line"></div><div class="line">XA PREPARE xid</div><div class="line"></div><div class="line">XA COMMIT xid [ONE PHASE]</div><div class="line"></div><div class="line">XA ROLLBACK xid</div><div class="line"></div><div class="line">XA RECOVER [CONVERT XID]</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>单机环境XA分布式例子：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt;XA START 'a';</div><div class="line">mysql&gt;INSERT INTO t SELECT 1;</div><div class="line">mysql&gt;XA END 'a';</div><div class="line">mysql&gt;XA PREPARE 'a';</div><div class="line">mysql&gt;XA RECOVER;</div><div class="line">mysql&gt;XA COMMIT 'a';</div></pre></td></tr></table></figure></p>
+<p>当然XA事务肯定是应用于分布式环境，所以上面例子只是练习熟悉一下基本命令，引用书中的例子进行实践，利用JDK的JTA进行分布式事务实现</p>
+<p>建表：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> t (username <span class="built_in">varchar</span>(<span class="number">20</span>),money <span class="built_in">float</span>)<span class="keyword">engine</span>=<span class="keyword">innodb</span>;</div><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> t(username,money) <span class="keyword">values</span>(<span class="string">'david'</span>,<span class="number">40000</span>);</div><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> t(username,money) <span class="keyword">values</span>(<span class="string">'jack'</span>,<span class="number">40000</span>);</div></pre></td></tr></table></figure></p>
+<p>至于分布式事务，一般是通过应用层语言开发实现的，JDK里有提供了JTA(JAVA  Transaction API)，代码例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span> javax.transaction.xa.Xid;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JTAXid</span> <span class="keyword">implements</span> <span class="title">Xid</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> formatId;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">byte</span> gtrid[];</div><div class="line">    <span class="keyword">private</span> <span class="keyword">byte</span> bqual[];</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">JTAXid</span><span class="params">()</span></span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">JTAXid</span><span class="params">(<span class="keyword">int</span> formatId, <span class="keyword">byte</span> gtrid[], <span class="keyword">byte</span> bqual[])</span></span>&#123;</div><div class="line">        <span class="keyword">this</span>.formatId = formatId;</div><div class="line">        <span class="keyword">this</span>.gtrid = gtrid;</div><div class="line">        <span class="keyword">this</span>.bqual = bqual;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getFormatId</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> formatId;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">byte</span>[] getGlobalTransactionId() &#123;</div><div class="line">        <span class="keyword">return</span> gtrid;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">byte</span>[] getBranchQualifier() &#123;</div><div class="line">        <span class="keyword">return</span> bqual;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span> com.mysql.jdbc.jdbc2.optional.MysqlXADataSource;</div><div class="line"></div><div class="line"><span class="keyword">import</span> javax.sql.XAConnection;</div><div class="line"><span class="keyword">import</span> javax.transaction.xa.XAResource;</div><div class="line"><span class="keyword">import</span> javax.transaction.xa.Xid;</div><div class="line"><span class="keyword">import</span> java.sql.Connection;</div><div class="line"><span class="keyword">import</span> java.sql.SQLException;</div><div class="line"><span class="keyword">import</span> java.sql.Statement;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JTADemo</span> </span>&#123;</div><div class="line">	<span class="comment">//数据源设置</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> MysqlXADataSource <span class="title">getDataSource</span><span class="params">(String connString,String user,String pwd)</span></span>&#123;</div><div class="line">        <span class="keyword">try</span>&#123;</div><div class="line">            MysqlXADataSource dataSource = <span class="keyword">new</span> MysqlXADataSource();</div><div class="line">            dataSource.setUrl(connString);</div><div class="line">            dataSource.setUser(user);</div><div class="line">            dataSource.setPassword(pwd);</div><div class="line">            <span class="keyword">return</span> dataSource;</div><div class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</div><div class="line">            e.fillInStackTrace();</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        String connStr1 = <span class="string">"jdbc:mysql://192.168.0.11:3306/bank_shanghai"</span>;</div><div class="line">        String connStr2 = <span class="string">"jdbc:mysql://192.168.0.12:3306/bank_beijing"</span>;</div><div class="line">        XAResource xaResource1=<span class="keyword">null</span>,xaResource2=<span class="keyword">null</span>;</div><div class="line">        Statement statement1 =<span class="keyword">null</span>,statement2 =<span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            MysqlXADataSource dataSource1 = getDataSource(connStr1, <span class="string">"root"</span>, <span class="string">"zaq12wsx"</span>);</div><div class="line">            XAConnection xaConnection1 = dataSource1.getXAConnection();</div><div class="line">            xaResource1 = xaConnection1.getXAResource();</div><div class="line">            Connection connection1 = xaConnection1.getConnection();</div><div class="line">            statement1 = connection1.createStatement();</div><div class="line"></div><div class="line">            MysqlXADataSource dataSource2 = getDataSource(connStr2, <span class="string">"root"</span>, <span class="string">"zaq12wsx"</span>);</div><div class="line">            XAConnection xaConnection2 = dataSource2.getXAConnection();</div><div class="line">            xaResource2 = xaConnection2.getXAResource();</div><div class="line">            Connection connection2 = xaConnection2.getConnection();</div><div class="line">            statement2 = connection2.createStatement();</div><div class="line">        &#125;<span class="keyword">catch</span> (SQLException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">try</span>&#123;</div><div class="line"></div><div class="line">            Xid xid1 = <span class="keyword">new</span> JTAXid(<span class="number">101</span>,<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">0x01</span>&#125;,<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">0x02</span>&#125;);</div><div class="line">            Xid xid2 = <span class="keyword">new</span> JTAXid(<span class="number">101</span>,<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">0x11</span>&#125;,<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">0x12</span>&#125;);</div><div class="line"></div><div class="line">            xaResource1.start(xid1, XAResource.TMNOFLAGS);</div><div class="line">            statement1.execute(<span class="string">"update t set money = money-1000 where user='david'"</span>);</div><div class="line">            xaResource1.end(xid1, XAResource.TMSUCCESS);</div><div class="line"></div><div class="line">            xaResource2.start(xid2, XAResource.TMNOFLAGS);</div><div class="line">            statement2.execute(<span class="string">"update t set money = money+1000 where user='jack'"</span>);</div><div class="line">            xaResource2.end(xid2, XAResource.TMSUCCESS);</div><div class="line"></div><div class="line">            <span class="keyword">int</span> ret1 = xaResource1.prepare(xid1);</div><div class="line">            <span class="keyword">int</span> ret2 = xaResource2.prepare(xid2);</div><div class="line">			<span class="comment">//两个操作都正常运行才提交事务</span></div><div class="line">            <span class="keyword">if</span> (ret1 == XAResource.XA_OK &amp;&amp; ret2 == XAResource.XA_OK) &#123;</div><div class="line">                xaResource1.commit(xid1, <span class="keyword">false</span>);</div><div class="line">                xaResource2.commit(xid2, <span class="keyword">false</span>);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>本博客内容，是拜读《MySQL技术内幕：SQL编程》之后，所有例子都经过自己实验，然后对书中内容进行自己的再次归纳，内容显然和书中内容差别比较大，因为是自己能理解的知识点笔录，不能理解的本博客不做记录，读者需要自行学习书籍，《MySQL技术内幕：SQL编程》一书是国人mysql大师编写的一本经典书籍，书中例子和实例都是网上博客很难搜索到的，佩服作者的高深造就，本人学习之后，虽然只能理解几成，不过也觉得受益匪浅</p>
+</the></excerpt>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2019/12/03/MySQL基础之事务编程学习笔记/">MySQL基础之事务编程学习笔记</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage">Nicky</a></p>
+        <p><span>Created:</span>2019-12-03, 00:00:00</p>
+        <p><span>Updated:</span>2020-05-30, 18:52:51</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2019/12/03/MySQL基础之事务编程学习笔记/" title="MySQL基础之事务编程学习笔记">http://yoursite.com/2019/12/03/MySQL基础之事务编程学习笔记/</a>
+            <span class="copy-path" data-clipboard-text="From http://yoursite.com/2019/12/03/MySQL基础之事务编程学习笔记/　　By Nicky" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2019/10/25/SpringBoot系列之i18n国际化多语言支持教程/">
+                    SpringBoot系列之i18n国际化多语言支持教程
+                </a>
+            </div>
+        
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、事务概述"><span class="toc-number">1.</span> <span class="toc-text">1、事务概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、事务分类"><span class="toc-number">2.</span> <span class="toc-text">2、事务分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、事务控制语句"><span class="toc-number">3.</span> <span class="toc-text">3、事务控制语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、事务隔离级别"><span class="toc-number">4.</span> <span class="toc-text">4、事务隔离级别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、分布式事务"><span class="toc-number">5.</span> <span class="toc-text">5、分布式事务</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"true"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"MySQL基础之事务编程学习笔记　| Nicky's blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+<section id="comments">
+<!--高速版，加载速度快，使用前需测试页面的兼容性-->
+<div id="SOHUCS" sid="MySQL基础之事务编程学习笔记" style="padding: 0px 30px 0px 46px;"></div>
+<script>
+  (function(){
+    var appid = 'cysY1Qh4z',
+    conf = '44ad028ed833bee63e407681b65de68d';
+    var doc = document,
+    s = doc.createElement('script'),
+    h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
+    s.type = 'text/javascript';
+    s.charset = 'utf-8';
+    s.src =  'http://assets.changyan.sohu.com/upload/changyan.js?conf='+ conf +'&appid=' + appid;
+    h.insertBefore(s,h.firstChild);
+    window.SCS_NO_IFRAME = true;
+  })()
+</script>
+</section>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2019/10/25/SpringBoot系列之i18n国际化多语言支持教程/" title="Pre: SpringBoot系列之i18n国际化多语言支持教程">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/" title="Back to Homepage"><i class="fa fa-home"></i></a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/12/03/MySQL基础之事务编程学习笔记/">MySQL基础之事务编程学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/25/SpringBoot系列之HATEOAS用法简介/">SpringBoot系列之HATEOAS用法简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/25/SpringBoot系列之i18n国际化多语言支持教程/">SpringBoot系列之i18n国际化多语言支持教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/03/linux系列之常用运维命令整理笔录/">linux系列之常用运维命令整理笔录</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/基于SMTP协议的邮件发送功能JavaEE实现/">基于SMTP协议的邮件发送功能JavaEE实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/Hexo+Github搭建个人博客/">Hexo+Github搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/基于Spring Data框架的文章归档实现/">基于Spring Data框架的文章归档实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/Spring微框架Spring Boot/">Spring微框架SpringBoot</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/SpringBoot系列之学习教程汇总/">SpringBoot系列博客专栏</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/Java中间件入门教程/">Java中间件入门教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/RabbitMQ系列之极速入门与实战教程/">SpringBoot系列之RabbitMQ使用实用教程</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2020 Nicky
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+             title: "a.article-title, .article-more-link a", 
+            
+             tags: ".article-tag a", 
+             categories: ".article-category a, a.tag-list-link", 
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+            
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

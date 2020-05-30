@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Nicky" />
+
+
+
+<meta name="description" content="本博客介绍基于SSM框架(Spring4.0+SpringMVC+Mybatis)组合的Javamail应用，邮箱的话基于腾讯的QQ邮箱，其实也是Foxmail邮箱 先要了解一下SMTP协议和SSL加密SMTP：称为简单邮件传输协议（Simple Mail Transfer Protocal），目标是向用户提供高效、可靠的邮件传输。SMTP是一种请求响应的协议，也就是客户机向远程服务器发送请求，服">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于SMTP协议的邮件发送功能JavaEE实现">
+<meta property="og:url" content="http://yoursite.com/2017/12/03/基于SMTP协议的邮件发送功能JavaEE实现/index.html">
+<meta property="og:site_name" content="Nicky's blog">
+<meta property="og:description" content="本博客介绍基于SSM框架(Spring4.0+SpringMVC+Mybatis)组合的Javamail应用，邮箱的话基于腾讯的QQ邮箱，其实也是Foxmail邮箱 先要了解一下SMTP协议和SSL加密SMTP：称为简单邮件传输协议（Simple Mail Transfer Protocal），目标是向用户提供高效、可靠的邮件传输。SMTP是一种请求响应的协议，也就是客户机向远程服务器发送请求，服">
+<meta property="og:image" content="http://img.blog.csdn.net/20161226170901273?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20161226172448445?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2020-05-30T10:37:56.563Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于SMTP协议的邮件发送功能JavaEE实现">
+<meta name="twitter:description" content="本博客介绍基于SSM框架(Spring4.0+SpringMVC+Mybatis)组合的Javamail应用，邮箱的话基于腾讯的QQ邮箱，其实也是Foxmail邮箱 先要了解一下SMTP协议和SSL加密SMTP：称为简单邮件传输协议（Simple Mail Transfer Protocal），目标是向用户提供高效、可靠的邮件传输。SMTP是一种请求响应的协议，也就是客户机向远程服务器发送请求，服">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20161226170901273?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Nicky&#39;s blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>基于SMTP协议的邮件发送功能JavaEE实现 | Nicky&#39;s blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Nicky</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/nickypm@foxmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" href="http://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Nicky</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Nicky</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/nickypm@foxmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="http://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-基于SMTP协议的邮件发送功能JavaEE实现" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/03/基于SMTP协议的邮件发送功能JavaEE实现/" class="article-date">
+      <time datetime="2017-12-02T16:00:00.000Z" itemprop="datePublished">2017-12-03</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      基于SMTP协议的邮件发送功能JavaEE实现
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><excerpt in="" index="" |="" 首页摘要=""><br>本博客介绍基于SSM框架(Spring4.0+SpringMVC+Mybatis)组合的Javamail应用，邮箱的话基于腾讯的QQ邮箱，其实也是Foxmail邮箱</excerpt></p>
+<p>先要了解一下SMTP协议和SSL加密<br>SMTP：称为简单邮件传输协议（Simple Mail Transfer Protocal），目标是向用户提供高效、可靠的邮件传输。SMTP是一种请求响应的协议，也就是客户机向远程服务器发送请求，服务器响应，监听端口是25，所以其工作模式有两种：发送SMTP，接收SMTP</p>
+<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+
+<p>本博客介绍基于SSM框架(Spring4.0+SpringMVC+Mybatis)组合的Javamail应用，邮箱的话基于腾讯的QQ邮箱，其实也是Foxmail邮箱</p>
+<p>先要了解一下SMTP协议和SSL加密<br>SMTP：称为简单邮件传输协议（Simple Mail Transfer Protocal），目标是向用户提供高效、可靠的邮件传输。SMTP是一种请求响应的协议，也就是客户机向远程服务器发送请求，服务器响应，监听端口是25，所以其工作模式有两种：发送SMTP，接收SMTP</p>
+<p>SSL加密：用来保障浏览器和网站服务器的安全性，其原理用译文解释就是：<br>当你的浏览器向服务器请求一个安全的网页(通常是 https://)</p>
+<p>服务器就把它的证书和公匙发回来</p>
+<p>浏览器检查证书是不是由可以信赖的机构颁发的，确认证书有效和此证书是此网站的。</p>
+<p>使用公钥加密了一个随机对称密钥，包括加密的URL一起发送到服务器</p>
+<p>服务器用自己的私匙解密了你发送的钥匙。然后用这把对称加密的钥匙给你请求的URL链接解密。</p>
+<p>服务器用你发的对称钥匙给你请求的网页加密。你也有相同的钥匙就可以解密发回来的网页了</p>
+<p>然后介绍怎么实现javamail发送邮件，先要下载javamail的jar：<a href="http://download.csdn.net/detail/u014427391/9721520" target="_blank" rel="external">http://download.csdn.net/detail/u014427391/9721520</a></p>
+<p>去充当服务器的QQ邮箱开启SMTP服务：<br><img src="http://img.blog.csdn.net/20161226170901273?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>写个发送邮件的业务类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">package com.appms.email;</div><div class="line"></div><div class="line">import java.util.Date;</div><div class="line">import java.util.Properties;</div><div class="line"></div><div class="line">import javax.mail.Address;</div><div class="line">import javax.mail.Message;</div><div class="line">import javax.mail.Session;</div><div class="line">import javax.mail.Transport;</div><div class="line">import javax.mail.internet.InternetAddress;</div><div class="line">import javax.mail.internet.MimeMessage;</div><div class="line"></div><div class="line">import com.sun.mail.util.MailSSLSocketFactory;</div><div class="line"></div><div class="line">public class JavaEmailSender &#123;</div><div class="line">	</div><div class="line"></div><div class="line">	public static void sendEmail(String toEmailAddress,String emailTitle,String emailContent)throws Exception&#123;</div><div class="line">		Properties props = new Properties();</div><div class="line"></div><div class="line">        // 开启debug调试</div><div class="line">        props.setProperty(&quot;mail.debug&quot;, &quot;true&quot;);</div><div class="line">        // 发送服务器需要身份验证</div><div class="line">        props.setProperty(&quot;mail.smtp.auth&quot;, &quot;true&quot;);</div><div class="line">        // 设置邮件服务器主机名</div><div class="line">        props.setProperty(&quot;mail.host&quot;, &quot;smtp.qq.com&quot;);</div><div class="line">        // 发送邮件协议名称</div><div class="line">        props.setProperty(&quot;mail.transport.protocol&quot;, &quot;smtp&quot;);</div><div class="line"></div><div class="line">        /**SSL认证，注意腾讯邮箱是基于SSL加密的，所有需要开启才可以使用**/</div><div class="line">        MailSSLSocketFactory sf = new MailSSLSocketFactory();</div><div class="line">        sf.setTrustAllHosts(true);</div><div class="line">        props.put(&quot;mail.smtp.ssl.enable&quot;, &quot;true&quot;);</div><div class="line">        props.put(&quot;mail.smtp.ssl.socketFactory&quot;, sf);</div><div class="line"></div><div class="line">        //创建会话</div><div class="line">        Session session = Session.getInstance(props);</div><div class="line"></div><div class="line">        //发送的消息，基于观察者模式进行设计的</div><div class="line">        Message msg = new MimeMessage(session);</div><div class="line">        msg.setSubject(emailTitle);</div><div class="line">        //使用StringBuilder，因为StringBuilder加载速度会比String快，而且线程安全性也不错</div><div class="line">        StringBuilder builder = new StringBuilder();</div><div class="line">        builder.append(&quot;\n&quot;+emailContent);</div><div class="line">        builder.append(&quot;\n时间 &quot; + new Date());</div><div class="line">        msg.setText(builder.toString());</div><div class="line">        msg.setFrom(new InternetAddress(&quot;你的QQ邮箱&quot;));</div><div class="line"></div><div class="line">        Transport transport = session.getTransport();</div><div class="line">        transport.connect(&quot;smtp.qq.com&quot;, &quot;你的QQ邮箱&quot;, &quot;你开启SMTP服务申请的独立密码&quot;);</div><div class="line">		//发送消息</div><div class="line">        transport.sendMessage(msg, new Address[] &#123; new InternetAddress(toEmailAddress) &#125;);</div><div class="line">        transport.close();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后写个SpringMVC框架的Controller类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">/**</div><div class="line"> * 跳转到发送邮件页面</div><div class="line"> * @return</div><div class="line"> * @throws Exception</div><div class="line"> */</div><div class="line">@RequestMapping(&quot;/goSendEmail&quot;)</div><div class="line">public ModelAndView goSendEmail(HttpServletRequest request)throws Exception&#123;</div><div class="line">	ModelAndView mv = this.getModelAndView();</div><div class="line">	String email = request.getParameter(&quot;email&quot;);</div><div class="line">	if(email!=null&amp;&amp;!&quot;&quot;.equals(email))&#123;</div><div class="line">		email = email.trim();</div><div class="line">		mv.setViewName(&quot;member/send_email&quot;);</div><div class="line">		mv.addObject(&quot;email&quot;, email);</div><div class="line">	&#125;</div><div class="line">	return mv;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 发送邮件</div><div class="line"> * @return</div><div class="line"> * @throws Exception</div><div class="line"> */</div><div class="line">@RequestMapping(value=&quot;/sendEmail&quot;,produces=&quot;application/json;charset=UTF-8&quot;)</div><div class="line">@ResponseBody</div><div class="line">public Object sendEmail(HttpServletRequest request)throws Exception&#123;</div><div class="line">	Map&lt;String,String&gt; map = new HashMap&lt;String,String&gt;();</div><div class="line">	String msg = &quot;ok&quot;;		//发送状态</div><div class="line">	String toEMAIL = request.getParameter(&quot;EMAIL&quot;);					//对方邮箱</div><div class="line">	String TITLE = request.getParameter(&quot;TITLE&quot;);					//标题</div><div class="line">	String CONTENT = request.getParameter(&quot;CONTENT&quot;);				//内容</div><div class="line">	JavaEmailSender.sendEmail(toEMAIL, TITLE, CONTENT);</div><div class="line">	map.put(&quot;result&quot;, msg);</div><div class="line">	return map;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里用了Jquery TIP插件进行验证提示，所以需要引入相应的Jquery文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;source/js/jquery-1.7.2.js&quot;&gt;&lt;/script&gt;</div><div class="line">	&lt;!--提示框--&gt;</div><div class="line">	&lt;script type=&quot;text/javascript&quot; src=&quot;source/js/jquery.tips.js&quot;&gt;&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>Jquery表单验证和Ajax异步请求：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div></pre></td><td class="code"><pre><div class="line">&lt;!-- 发送邮件 --&gt;</div><div class="line">	&lt;script type=&quot;text/javascript&quot;&gt;</div><div class="line">//发送</div><div class="line">function sendEm()&#123;</div><div class="line">	</div><div class="line">	if($(&quot;#TYPE&quot;).val()==&quot;1&quot;)&#123;</div><div class="line">		$(&quot;#CONTENT&quot;).val(getContentTxt());</div><div class="line">	&#125;else&#123;</div><div class="line">		$(&quot;#CONTENT&quot;).val(getContent());</div><div class="line">	&#125;</div><div class="line">	if($(&quot;#EMAIL&quot;).val()==&quot;&quot;)&#123;</div><div class="line">		$(&quot;#EMAIL&quot;).tips(&#123;</div><div class="line">			side:3,</div><div class="line">            msg:&apos;请输入邮箱&apos;,</div><div class="line">            bg:&apos;#AE81FF&apos;,</div><div class="line">            time:2</div><div class="line">        &#125;);</div><div class="line">		$(&quot;#EMAIL&quot;).focus();</div><div class="line">		return false;</div><div class="line">	&#125;</div><div class="line">	if($(&quot;#TITLE&quot;).val()==&quot;&quot;)&#123;</div><div class="line">		$(&quot;#TITLE&quot;).tips(&#123;</div><div class="line">			side:3,</div><div class="line">            msg:&apos;请输入标题&apos;,</div><div class="line">            bg:&apos;#AE81FF&apos;,</div><div class="line">            time:2</div><div class="line">        &#125;);</div><div class="line">		$(&quot;#TITLE&quot;).focus();</div><div class="line">		return false;</div><div class="line">	&#125;</div><div class="line">	if($(&quot;#CONTENT&quot;).val()==&quot;&quot;)&#123;</div><div class="line">		</div><div class="line">		$(&quot;#nr&quot;).tips(&#123;</div><div class="line">			side:1,</div><div class="line">            msg:&apos;请输入内容&apos;,</div><div class="line">            bg:&apos;#AE81FF&apos;,</div><div class="line">            time:3</div><div class="line">        &#125;);</div><div class="line">		return false;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	var EMAIL = $(&quot;#EMAIL&quot;).val();</div><div class="line">	var TYPE  = $(&quot;#TYPE&quot;).val();</div><div class="line">	var TITLE = $(&quot;#TITLE&quot;).val();</div><div class="line">	var CONTENT = $(&quot;#CONTENT&quot;).val();</div><div class="line"></div><div class="line">	$(&quot;#zhongxin&quot;).hide();</div><div class="line">	$(&quot;#zhongxin2&quot;).show();</div><div class="line">	</div><div class="line">	$.ajax(&#123;</div><div class="line">		type: &quot;POST&quot;,</div><div class="line">		url: &apos;retroaction/sendEmail.do?tm=&apos;+new Date().getTime(),</div><div class="line">    	data: &#123;EMAIL:EMAIL,TITLE:TITLE,CONTENT:CONTENT&#125;,</div><div class="line">		dataType:&apos;json&apos;,</div><div class="line">		//beforeSend: validateData,</div><div class="line">		cache: false,</div><div class="line">		success: function(data)&#123;</div><div class="line">			if(&quot;ok&quot; == data.result)&#123;</div><div class="line">				$(&quot;#msg&quot;).tips(&#123;</div><div class="line">						side:3,</div><div class="line">			            msg:&apos;发送成功！&apos;,</div><div class="line">			            bg:&apos;#68B500&apos;,</div><div class="line">			            time:5</div><div class="line">				      &#125;);</div><div class="line">				setTimeout(&quot;showdiv()&quot;,1000);	</div><div class="line">			&#125;else&#123;</div><div class="line">				$(&quot;#msg&quot;).tips(&#123;</div><div class="line">						side:3,</div><div class="line">			            msg:&apos;发送失败!&apos;,</div><div class="line">			            bg:&apos;#68B500&apos;,</div><div class="line">			            time:5</div><div class="line">				      &#125;);</div><div class="line">			&#125;</div><div class="line">			</div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line">	</div><div class="line">&#125;</div><div class="line"></div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>JSP页面的调用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">&lt;!-- 编辑邮箱  --&gt;</div><div class="line">		&lt;div&gt;</div><div class="line">		&lt;table style=&quot;width:98%;&quot; &gt;</div><div class="line">			&lt;tr&gt;</div><div class="line">				&lt;td style=&quot;margin-top:0px;&quot;&gt;</div><div class="line">					 &lt;div style=&quot;float: left;&quot; style=&quot;width:81%&quot;&gt;&lt;textarea name=&quot;EMAIL&quot; id=&quot;EMAIL&quot; rows=&quot;1&quot; cols=&quot;50&quot; style=&quot;width:600px;height:20px;&quot; placeholder=&quot;请选输入对方邮箱,多个请用(;)分号隔开&quot; title=&quot;请选输入对方邮箱,多个请用(;)分号隔开&quot;&gt;$&#123;email&#125;&lt;/textarea&gt;&lt;/div&gt;</div><div class="line">					 &lt;div style=&quot;float: right;&quot; style=&quot;width:19%&quot;&gt;&lt;a class=&apos;btn btn-mini btn-info&apos; title=&quot;编辑邮箱&quot; onclick=&quot;dialog_open();&quot;&gt;编辑邮箱&lt;/i&gt;&lt;/a&gt;&lt;/div&gt;</div><div class="line">				&lt;/td&gt;</div><div class="line">			&lt;/tr&gt;</div><div class="line">			&lt;tr&gt;</div><div class="line">				&lt;td&gt;</div><div class="line">					 &lt;input type=&quot;text&quot; name=&quot;TITLE&quot; id=&quot;TITLE&quot; value=&quot;&quot; placeholder=&quot;请选输入邮件标题&quot; style=&quot;width:98%&quot;/&gt;</div><div class="line">				&lt;/td&gt;</div><div class="line">			&lt;/tr&gt;</div><div class="line">			&lt;tr&gt;</div><div class="line">				&lt;td id=&quot;nr&quot;&gt;</div><div class="line">					 &lt;script id=&quot;editor&quot; type=&quot;text/plain&quot; style=&quot;width:650px;height:259px;&quot;&gt;&lt;/script&gt;</div><div class="line">				&lt;/td&gt;</div><div class="line">			&lt;/tr&gt;</div><div class="line">			&lt;tr&gt;</div><div class="line">				&lt;td style=&quot;text-align: center;&quot;&gt;</div><div class="line">					&lt;a class=&quot;btn btn-mini btn-primary&quot; onclick=&quot;sendEm();&quot;&gt;发送&lt;/a&gt;</div><div class="line">					&lt;a class=&quot;btn btn-mini btn-danger&quot; onclick=&quot;top.Dialog.close();&quot;&gt;取消&lt;/a&gt;</div><div class="line">				&lt;/td&gt;</div><div class="line">			&lt;/tr&gt;</div><div class="line">		&lt;/table&gt;</div><div class="line">		&lt;/div&gt;</div><div class="line">		&lt;div id=&quot;zhongxin2&quot; class=&quot;center&quot; style=&quot;display:none&quot;&gt;&lt;br/&gt;&lt;img src=&quot;assets/images/jzx.gif&quot; id=&apos;msg&apos; /&gt;&lt;br/&gt;&lt;h4 class=&quot;lighter block green&quot; id=&apos;msg&apos;&gt;正在发送...&lt;/h4&gt;&lt;/div&gt;</div></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20161226172448445?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxNDQyNzM5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+</the>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2017/12/03/基于SMTP协议的邮件发送功能JavaEE实现/">基于SMTP协议的邮件发送功能JavaEE实现</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage">Nicky</a></p>
+        <p><span>Created:</span>2017-12-03, 00:00:00</p>
+        <p><span>Updated:</span>2020-05-30, 18:37:56</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2017/12/03/基于SMTP协议的邮件发送功能JavaEE实现/" title="基于SMTP协议的邮件发送功能JavaEE实现">http://yoursite.com/2017/12/03/基于SMTP协议的邮件发送功能JavaEE实现/</a>
+            <span class="copy-path" data-clipboard-text="From http://yoursite.com/2017/12/03/基于SMTP协议的邮件发送功能JavaEE实现/　　By Nicky" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/12/03/Hexo+Github搭建个人博客/">
+                    Hexo+Github搭建个人博客
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"true"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"基于SMTP协议的邮件发送功能JavaEE实现　| Nicky's blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+<section id="comments">
+<!--高速版，加载速度快，使用前需测试页面的兼容性-->
+<div id="SOHUCS" sid="基于SMTP协议的邮件发送功能JavaEE实现" style="padding: 0px 30px 0px 46px;"></div>
+<script>
+  (function(){
+    var appid = 'cysY1Qh4z',
+    conf = '44ad028ed833bee63e407681b65de68d';
+    var doc = document,
+    s = doc.createElement('script'),
+    h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
+    s.type = 'text/javascript';
+    s.charset = 'utf-8';
+    s.src =  'http://assets.changyan.sohu.com/upload/changyan.js?conf='+ conf +'&appid=' + appid;
+    h.insertBefore(s,h.firstChild);
+    window.SCS_NO_IFRAME = true;
+  })()
+</script>
+</section>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="Back to Homepage"><i class="fa fa-home"></i></a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/12/03/Hexo+Github搭建个人博客/" title="Next: Hexo+Github搭建个人博客">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/12/03/MySQL基础之事务编程学习笔记/">MySQL基础之事务编程学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/25/SpringBoot系列之HATEOAS用法简介/">SpringBoot系列之HATEOAS用法简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/25/SpringBoot系列之i18n国际化多语言支持教程/">SpringBoot系列之i18n国际化多语言支持教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/03/linux系列之常用运维命令整理笔录/">linux系列之常用运维命令整理笔录</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/基于SMTP协议的邮件发送功能JavaEE实现/">基于SMTP协议的邮件发送功能JavaEE实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/Hexo+Github搭建个人博客/">Hexo+Github搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/基于Spring Data框架的文章归档实现/">基于Spring Data框架的文章归档实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/Spring微框架Spring Boot/">Spring微框架SpringBoot</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/SpringBoot系列之学习教程汇总/">SpringBoot系列博客专栏</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/Java中间件入门教程/">Java中间件入门教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/RabbitMQ系列之极速入门与实战教程/">SpringBoot系列之RabbitMQ使用实用教程</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2020 Nicky
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+             title: "a.article-title, .article-more-link a", 
+            
+             tags: ".article-tag a", 
+             categories: ".article-category a, a.tag-list-link", 
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+            
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
