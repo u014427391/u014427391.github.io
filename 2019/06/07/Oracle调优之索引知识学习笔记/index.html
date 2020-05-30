@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Nicky" />
+
+
+
+<meta name="description" content="在看《收获，不止SQL优化》一书，并根据书中例子进行实践，整理成笔记">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="oracle细节之like模糊查询不能走索引？">
+<meta property="og:url" content="http://yoursite.com/2019/06/07/Oracle调优之索引知识学习笔记/index.html">
+<meta property="og:site_name" content="Nicky's blog">
+<meta property="og:description" content="在看《收获，不止SQL优化》一书，并根据书中例子进行实践，整理成笔记">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190530211511979.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9zbWlsZW5pY2t5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70">
+<meta property="og:updated_time" content="2020-05-30T11:18:42.750Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="oracle细节之like模糊查询不能走索引？">
+<meta name="twitter:description" content="在看《收获，不止SQL优化》一书，并根据书中例子进行实践，整理成笔记">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190530211511979.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9zbWlsZW5pY2t5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Nicky&#39;s blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>oracle细节之like模糊查询不能走索引？ | Nicky&#39;s blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Nicky</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/nickypm@foxmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" href="http://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Nicky</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Nicky</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/nickypm@foxmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/u014427391" title="GitHub"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="http://www.jianshu.com/u/176aa10e9315" title="简书"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/u014427391" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-Oracle调优之索引知识学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/06/07/Oracle调优之索引知识学习笔记/" class="article-date">
+      <time datetime="2019-06-06T16:00:00.000Z" itemprop="datePublished">2019-06-07</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      oracle细节之like模糊查询不能走索引？
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><excerpt in="" index="" |="" 首页摘要=""><br>在看《收获，不止SQL优化》一书，并根据书中例子进行实践，整理成笔记<a id="more"></a></excerpt></p>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+
+<p>@[toc]</p>
+<h2 id="一、Oracle索引简介"><a href="#一、Oracle索引简介" class="headerlink" title="一、Oracle索引简介"></a>一、Oracle索引简介</h2><p>在看《收获，不止SQL优化》一书，并根据书中例子进行实践，整理成笔记</p>
+<h3 id="1-1-索引分类"><a href="#1-1-索引分类" class="headerlink" title="1.1 索引分类"></a>1.1 索引分类</h3><p>Oracle索引分为BTree索引、位图索引、反向索引、函数索引、全文索引等等。</p>
+<h3 id="1-2-索引数据结构"><a href="#1-2-索引数据结构" class="headerlink" title="1.2 索引数据结构"></a>1.2 索引数据结构</h3><p>Oracle索引中最常用的是BTree索引，所以就以BTree索引为例，讲一下BTree索引，BTree索引数据结构是一种二叉树的结构，索引由根块(Root)、茎块(Branch)、叶子块(Leaf)组成，其中叶子块主要存储索引列具体值(Key Column Value)以及能定位到数据块具体位置的Rowid，茎块和根块主要保存对应下级对应索引</p>
+<p><img src="https://img-blog.csdnimg.cn/20190530211511979.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9zbWlsZW5pY2t5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="1-3-索引特性"><a href="#1-3-索引特性" class="headerlink" title="1.3 索引特性"></a>1.3 索引特性</h3><p>索引特性：</p>
+<ul>
+<li>索引本身是有序的</li>
+<li>索引本身能存储列值</li>
+</ul>
+<h3 id="1-4-索引使用注意要点"><a href="#1-4-索引使用注意要点" class="headerlink" title="1.4 索引使用注意要点"></a>1.4 索引使用注意要点</h3><ul>
+<li><p>(1)、仅等值无范围查询时，组合的顺序不影晌性能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">drop table t purge; </div><div class="line">create table t as select * from dba objects;</div><div class="line">update t set object_id=rownum ;</div><div class="line">commit;</div><div class="line">create index idx_id_type on t(object_id, object_type) ; </div><div class="line">create index idx_type_id on t(object_type , object_id) ; </div><div class="line">set autotrace off; </div><div class="line">alter session set statistics_level=all ; </div><div class="line">select /*+index(t idx_id_type)*/ * from t where object_id=20 and object_type=&apos;TABLE&apos;;</div><div class="line">select * from table(dbms_xplan.display cursor(null , null , &apos;allstats last&apos;)); </div><div class="line">select /*+index(t,idx_type id)*/ * from t where object_id=20 and object_type= &apos;TABLE&apos;; </div><div class="line">select * from table(dbms_xplan.display cursor(null , null , &apos;allstats last&apos;));</div></pre></td></tr></table></figure>
+</li>
+<li><p>(2)、范围查询时，组合索引最佳顺序一般是将等值查询的列置前</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">select /*+index (t, idx_id_type)*/ * from t where object_id&gt;=20 and object_id&lt;2000 and </div><div class="line">object_type=&apos;TABLE&apos;;</div><div class="line"></div><div class="line">select /*+index (t , idx_type_id) */ * from t where object_id&gt;=20 and object_id&lt;2000 </div><div class="line">and object type=&apos;TABLE&apos;;</div></pre></td></tr></table></figure>
+<ul>
+<li>(3)、Oracle不能同时在索引根的两段寻找最大值和最小值</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">set autotrace on</div><div class="line">select max(object_id) , min(object_id) from t;</div></pre></td></tr></table></figure>
+<p>笛卡尔乘积写法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">set autotrace on</div><div class="line"></div><div class="line">select max, min </div><div class="line">from (select max(object_id) max from t ) a , </div><div class="line">(select min(object_id) min from t ) b;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>(4)、索引最新的数据块一般是在最右边</li>
+</ul>
+<h3 id="1-5、索引的缺点"><a href="#1-5、索引的缺点" class="headerlink" title="1.5、索引的缺点"></a>1.5、索引的缺点</h3><ul>
+<li>热快竞争：索引最新的数据块一般在最右边，而访问也一般是访问比较新的数据，所以容易造成热快竞争</li>
+<li>更新新增问题：索引本身是有序的，所以查询时候很快，但是更新时候就麻烦了，新增更新索引都需要保证排序</li>
+</ul>
+<h3 id="1-6、索引失效"><a href="#1-6、索引失效" class="headerlink" title="1.6、索引失效"></a>1.6、索引失效</h3><p>索引失效分为逻辑失效和物理失效</p>
+<ul>
+<li>逻辑失效<br>逻辑失效是因为一些sql语法导致索引失效，比如加了一些函数，而索引列不是函数索引</li>
+<li>物理失效<br>物理失效是真的失效,比如被设置unusable属性,分区表的不规范操作也会导致索引失效等等情况</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter index index_name unusable;</div></pre></td></tr></table></figure>
+<h2 id="二、索引分类介绍"><a href="#二、索引分类介绍" class="headerlink" title="二、索引分类介绍"></a>二、索引分类介绍</h2><p>索引分类：BTree索引、位图索引、函数索引、反向索引、全文索引</p>
+<h3 id="2-1、位图索引"><a href="#2-1、位图索引" class="headerlink" title="2.1、位图索引"></a>2.1、位图索引</h3><p>位图索引：位图索引储存的就是比特值</p>
+<p>环境准备，位图索引性质适用于count时，效率最高<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">drop table t purge;</div><div class="line">create table t as select * from dba_objects;</div><div class="line">update t set object_id = rownum;</div><div class="line">commit;</div></pre></td></tr></table></figure></p>
+<p>不用索引的情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">SQL&gt; set autotrace on</div><div class="line">SQL&gt; select count(*) from t;</div><div class="line">  COUNT(*)</div><div class="line">----------</div><div class="line">     72016</div><div class="line">执行计划</div><div class="line">----------------------------------------------------------</div><div class="line">Plan hash value: 2966233522</div><div class="line">-------------------------------------------------------------------</div><div class="line">| Id  | Operation          | Name | Rows  | Cost (%CPU)| Time     |</div><div class="line">-------------------------------------------------------------------</div><div class="line">|   0 | SELECT STATEMENT   |      |     1 |   288   (1)| 00:00:04 |</div><div class="line">|   1 |  SORT AGGREGATE    |      |     1 |            |          |</div><div class="line">|   2 |   TABLE ACCESS FULL| T    | 86565 |   288   (1)| 00:00:04 |</div><div class="line">-------------------------------------------------------------------</div><div class="line">Note</div><div class="line">-----</div><div class="line">   - dynamic sampling used for this statement (level=2)</div><div class="line">统计信息</div><div class="line">----------------------------------------------------------</div><div class="line">          4  recursive calls</div><div class="line">          0  db block gets</div><div class="line">       1111  consistent gets</div><div class="line">          0  physical reads</div><div class="line">          0  redo size</div><div class="line">        432  bytes sent via SQL*Net to client</div><div class="line">        419  bytes received via SQL*Net from client</div><div class="line">          2  SQL*Net roundtrips to/from client</div><div class="line">          0  sorts (memory)</div><div class="line">          0  sorts (disk)</div><div class="line">          1  rows processed</div><div class="line">SQL&gt;</div></pre></td></tr></table></figure></p>
+<p>创建位图索引：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">create bitmap index idx_bitm_t_status on t(status);</div></pre></td></tr></table></figure></p>
+<p>再次查询，走位图索引查询：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">SQL&gt; set autotrace on</div><div class="line">SQL&gt; select count(*) from t;</div><div class="line">  COUNT(*)</div><div class="line">----------</div><div class="line">     72016</div><div class="line">执行计划</div><div class="line">----------------------------------------------------------</div><div class="line">Plan hash value: 4272013625</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">-----------</div><div class="line">| Id  | Operation                     | Name              | Rows  | Cost (%CPU)|</div><div class="line"> Time     |</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">-----------</div><div class="line">|   0 | SELECT STATEMENT              |                   |     1 |     5   (0)|</div><div class="line"> 00:00:01 |</div><div class="line">|   1 |  SORT AGGREGATE               |                   |     1 |            |</div><div class="line">          |</div><div class="line">|   2 |   BITMAP CONVERSION COUNT     |                   | 86565 |     5   (0)|</div><div class="line"> 00:00:01 |</div><div class="line">|   3 |    BITMAP INDEX FAST FULL SCAN| IDX_BITM_T_STATUS |       |            |</div><div class="line">          |</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">-----------</div><div class="line">Note</div><div class="line">-----</div><div class="line">   - dynamic sampling used for this statement (level=2)</div><div class="line">统计信息</div><div class="line">----------------------------------------------------------</div><div class="line">          0  recursive calls</div><div class="line">          0  db block gets</div><div class="line">          6  consistent gets</div><div class="line">          0  physical reads</div><div class="line">          0  redo size</div><div class="line">        432  bytes sent via SQL*Net to client</div><div class="line">        419  bytes received via SQL*Net from client</div><div class="line">          2  SQL*Net roundtrips to/from client</div><div class="line">          0  sorts (memory)</div><div class="line">          0  sorts (disk)</div><div class="line">          1  rows processed</div><div class="line">SQL&gt;</div></pre></td></tr></table></figure></p>
+<p>注意要点：</p>
+<blockquote>
+<p>位图索引更新列容易造成死锁，所以查询比较多列才适合建位图索引，更新比较多的列就尽量不要建索引</p>
+</blockquote>
+<h3 id="1-2、函数索引"><a href="#1-2、函数索引" class="headerlink" title="1.2、函数索引"></a>1.2、函数索引</h3><p>函数索引：就是将一个函数计算的结果存储在行的列中</p>
+<p>环境准备：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">drop table t purge;</div><div class="line">create table t (id int, status varchar2(2));</div><div class="line">insert into t select 1,&apos;N&apos; from dual;</div><div class="line">insert into t select rownum ,&apos;Y&apos; from dual connect by rownum &lt;1000;</div><div class="line">commit;</div></pre></td></tr></table></figure></p>
+<p>不走索引的查询：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">SQL&gt; set autotrace on</div><div class="line">SQL&gt; select * from t where (case when status=&apos;N&apos; then &apos;No&apos; end)=&apos;No&apos;;</div><div class="line">        ID STAT</div><div class="line">---------- ----</div><div class="line">         1 N</div><div class="line">执行计划</div><div class="line">----------------------------------------------------------</div><div class="line">Plan hash value: 1601196873</div><div class="line">--------------------------------------------------------------------------</div><div class="line">| Id  | Operation         | Name | Rows  | Bytes | Cost (%CPU)| Time     |</div><div class="line">--------------------------------------------------------------------------</div><div class="line">|   0 | SELECT STATEMENT  |      |     1 |    16 |     3   (0)| 00:00:01 |</div><div class="line">|*  1 |  TABLE ACCESS FULL| T    |     1 |    16 |     3   (0)| 00:00:01 |</div><div class="line">--------------------------------------------------------------------------</div><div class="line">Predicate Information (identified by operation id):</div><div class="line">---------------------------------------------------</div><div class="line">   1 - filter(CASE &quot;STATUS&quot; WHEN &apos;N&apos; THEN &apos;No&apos; END =&apos;No&apos;)</div><div class="line">Note</div><div class="line">-----</div><div class="line">   - dynamic sampling used for this statement (level=2)</div><div class="line">统计信息</div><div class="line">----------------------------------------------------------</div><div class="line">          0  recursive calls</div><div class="line">          0  db block gets</div><div class="line">          8  consistent gets</div><div class="line">          0  physical reads</div><div class="line">          0  redo size</div><div class="line">        486  bytes sent via SQL*Net to client</div><div class="line">        419  bytes received via SQL*Net from client</div><div class="line">          2  SQL*Net roundtrips to/from client</div><div class="line">          0  sorts (memory)</div><div class="line">          0  sorts (disk)</div><div class="line">          1  rows processed</div><div class="line">SQL&gt;</div></pre></td></tr></table></figure></p>
+<p>创建函数索引：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">create index idx_status on t (case when status =&apos;N&apos; then &apos;No&apos; end);</div></pre></td></tr></table></figure></p>
+<p>走函数索引的查询：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">SQL&gt; select * from t where (case when status=&apos;N&apos; then &apos;No&apos; end)=&apos;No&apos;;</div><div class="line">        ID STAT</div><div class="line">---------- ----</div><div class="line">         1 N</div><div class="line">执行计划</div><div class="line">----------------------------------------------------------</div><div class="line">Plan hash value: 3908194542</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">----------</div><div class="line">| Id  | Operation                   | Name       | Rows  | Bytes | Cost (%CPU)|</div><div class="line">Time     |</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">----------</div><div class="line">|   0 | SELECT STATEMENT            |            |    10 |   200 |     2   (0)|</div><div class="line">00:00:01 |</div><div class="line">|   1 |  TABLE ACCESS BY INDEX ROWID| T          |    10 |   200 |     2   (0)|</div><div class="line">00:00:01 |</div><div class="line">|*  2 |   INDEX RANGE SCAN          | IDX_STATUS |     4 |       |     1   (0)|</div><div class="line">00:00:01 |</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">----------</div><div class="line">Predicate Information (identified by operation id):</div><div class="line">---------------------------------------------------</div><div class="line">   2 - access(CASE &quot;STATUS&quot; WHEN &apos;N&apos; THEN &apos;No&apos; END =&apos;No&apos;)</div><div class="line">Note</div><div class="line">-----</div><div class="line">   - dynamic sampling used for this statement (level=2)</div><div class="line">统计信息</div><div class="line">----------------------------------------------------------</div><div class="line">          0  recursive calls</div><div class="line">          0  db block gets</div><div class="line">          2  consistent gets</div><div class="line">          0  physical reads</div><div class="line">          0  redo size</div><div class="line">        486  bytes sent via SQL*Net to client</div><div class="line">        419  bytes received via SQL*Net from client</div><div class="line">          2  SQL*Net roundtrips to/from client</div><div class="line">          0  sorts (memory)</div><div class="line">          0  sorts (disk)</div><div class="line">          1  rows processed</div><div class="line">SQL&gt;</div></pre></td></tr></table></figure></p>
+<p>注意要点：</p>
+<blockquote>
+<p>自定义函数时要加上deterministic 关键字，不然不能建立函数索引</p>
+</blockquote>
+<p>建立一个自定义函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">create or replace function f_addusl(i int) return int is</div><div class="line">begin</div><div class="line">  return(i + 1);</div><div class="line">end;</div></pre></td></tr></table></figure></p>
+<p>尝试建立函数索引：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">create index idx_ljb_test on t(f_addusl(id));</div></pre></td></tr></table></figure></p>
+<p>提示：ORA-30553:函数不能确定</p>
+<p>用deterministic 关键字，就可以建立函数索引<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">create or replace function f_addusl(i int) return int deterministic is</div><div class="line">begin</div><div class="line">  return(i + 1);</div><div class="line">end;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>在自定义函数代码更新时，对应的函数索引也要重建，否则不能用到原来的函数索引</p>
+</blockquote>
+<h3 id="1-3、反向索引"><a href="#1-3、反向索引" class="headerlink" title="1.3、反向索引"></a>1.3、反向索引</h3><p>反向索引：反向索引其实也是BTree索引的一种特例，不过在列中字节会反转的(反向索引是为了避免热快竞争，比如索引列中存储的列值是递增的，比如250101,250102，按照BTree索引的特性，一般是按照顺序存储在索引右边的，所以容易形成热快竞争，而反向索引可以避免这种情况，因为反向索引是这样存储的，比如101052,201052，这样列值就距离很远了，避免了热快竞争)</p>
+<blockquote>
+<p>反向索引不能用到范围查询</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">SQL&gt; set autotrace on</div><div class="line">SQL&gt; select * from t where created=sysdate;</div><div class="line">未选定行</div><div class="line">执行计划</div><div class="line">----------------------------------------------------------</div><div class="line">Plan hash value: 913247507</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">---------------</div><div class="line">| Id  | Operation                   | Name            | Rows  | Bytes | Cost (%C</div><div class="line">PU)| Time     |</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">---------------</div><div class="line">|   0 | SELECT STATEMENT            |                 |    12 |  2484 |   286</div><div class="line">(0)| 00:00:04 |</div><div class="line">|   1 |  TABLE ACCESS BY INDEX ROWID| T               |    12 |  2484 |   286</div><div class="line">(0)| 00:00:04 |</div><div class="line">|*  2 |   INDEX RANGE SCAN          | IDX_REV_CREATED |   346 |       |     1</div><div class="line">(0)| 00:00:01 |</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">---------------</div><div class="line">Predicate Information (identified by operation id):</div><div class="line">---------------------------------------------------</div><div class="line">   2 - access(&quot;CREATED&quot;=SYSDATE@!)</div><div class="line">Note</div><div class="line">-----</div><div class="line">   - dynamic sampling used for this statement (level=2)</div><div class="line">统计信息</div><div class="line">----------------------------------------------------------</div><div class="line">          0  recursive calls</div><div class="line">          0  db block gets</div><div class="line">          2  consistent gets</div><div class="line">          0  physical reads</div><div class="line">          0  redo size</div><div class="line">       1191  bytes sent via SQL*Net to client</div><div class="line">        408  bytes received via SQL*Net from client</div><div class="line">          1  SQL*Net roundtrips to/from client</div><div class="line">          0  sorts (memory)</div><div class="line">          0  sorts (disk)</div><div class="line">          0  rows processed</div><div class="line">SQL&gt;</div></pre></td></tr></table></figure>
+<p>范围查询，发现不走反向索引查询<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div></pre></td><td class="code"><pre><div class="line">SQL&gt; select * from t where created&gt;= sysdate-10 and created &lt;= sysdate-1;</div><div class="line">OWNER</div><div class="line">------------------------------------------------------------</div><div class="line">OBJECT_NAME</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">SUBOBJECT_NAME                                                OBJECT_ID</div><div class="line">------------------------------------------------------------ ----------</div><div class="line">DATA_OBJECT_ID OBJECT_TYPE                            CREATED</div><div class="line">-------------- -------------------------------------- --------------</div><div class="line">LAST_DDL_TIME  TIMESTAMP                              STATUS         TE GE SE</div><div class="line">-------------- -------------------------------------- -------------- -- -- --</div><div class="line"> NAMESPACE EDITION_NAME</div><div class="line">---------- ------------------------------------------------------------</div><div class="line">SYS</div><div class="line">ICOL$</div><div class="line">                                                                     20</div><div class="line">             2 TABLE                                  15-6月 -19</div><div class="line">02-4月 -10     2010-04-02:13:18:38                    VALID          N  N  N</div><div class="line">         1</div><div class="line">SYS</div><div class="line">I_USER1</div><div class="line">                                                                     46</div><div class="line">            46 INDEX                                  14-6月 -19</div><div class="line">OWNER</div><div class="line">------------------------------------------------------------</div><div class="line">OBJECT_NAME</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">SUBOBJECT_NAME                                                OBJECT_ID</div><div class="line">------------------------------------------------------------ ----------</div><div class="line">DATA_OBJECT_ID OBJECT_TYPE                            CREATED</div><div class="line">-------------- -------------------------------------- --------------</div><div class="line">LAST_DDL_TIME  TIMESTAMP                              STATUS         TE GE SE</div><div class="line">-------------- -------------------------------------- -------------- -- -- --</div><div class="line"> NAMESPACE EDITION_NAME</div><div class="line">---------- ------------------------------------------------------------</div><div class="line">02-4月 -10     2010-04-02:13:18:38                    VALID          N  N  N</div><div class="line">         4</div><div class="line">SYS</div><div class="line">CON$</div><div class="line">                                                                     28</div><div class="line">            28 TABLE                                  13-6月 -19</div><div class="line">02-4月 -10     2010-04-02:13:18:38                    VALID          N  N  N</div><div class="line">         1</div><div class="line">SYS</div><div class="line">OWNER</div><div class="line">------------------------------------------------------------</div><div class="line">OBJECT_NAME</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">SUBOBJECT_NAME                                                OBJECT_ID</div><div class="line">------------------------------------------------------------ ----------</div><div class="line">DATA_OBJECT_ID OBJECT_TYPE                            CREATED</div><div class="line">-------------- -------------------------------------- --------------</div><div class="line">LAST_DDL_TIME  TIMESTAMP                              STATUS         TE GE SE</div><div class="line">-------------- -------------------------------------- -------------- -- -- --</div><div class="line"> NAMESPACE EDITION_NAME</div><div class="line">---------- ------------------------------------------------------------</div><div class="line">UNDO$</div><div class="line">                                                                     15</div><div class="line">            15 TABLE                                  12-6月 -19</div><div class="line">02-4月 -10     2010-04-02:13:18:38                    VALID          N  N  N</div><div class="line">         1</div><div class="line">SYS</div><div class="line">C_COBJ#</div><div class="line">                                                                     29</div><div class="line">            29 CLUSTER                                11-6月 -19</div><div class="line">02-4月 -10     2010-04-02:13:18:38                    VALID          N  N  N</div><div class="line">OWNER</div><div class="line">------------------------------------------------------------</div><div class="line">OBJECT_NAME</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">SUBOBJECT_NAME                                                OBJECT_ID</div><div class="line">------------------------------------------------------------ ----------</div><div class="line">DATA_OBJECT_ID OBJECT_TYPE                            CREATED</div><div class="line">-------------- -------------------------------------- --------------</div><div class="line">LAST_DDL_TIME  TIMESTAMP                              STATUS         TE GE SE</div><div class="line">-------------- -------------------------------------- -------------- -- -- --</div><div class="line"> NAMESPACE EDITION_NAME</div><div class="line">---------- ------------------------------------------------------------</div><div class="line">         5</div><div class="line">SYS</div><div class="line">I_OBJ#</div><div class="line">                                                                      3</div><div class="line">             3 INDEX                                  10-6月 -19</div><div class="line">02-4月 -10     2010-04-02:13:18:38                    VALID          N  N  N</div><div class="line">         4</div><div class="line">SYS</div><div class="line">PROXY_ROLE_DATA$</div><div class="line">OWNER</div><div class="line">------------------------------------------------------------</div><div class="line">OBJECT_NAME</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">SUBOBJECT_NAME                                                OBJECT_ID</div><div class="line">------------------------------------------------------------ ----------</div><div class="line">DATA_OBJECT_ID OBJECT_TYPE                            CREATED</div><div class="line">-------------- -------------------------------------- --------------</div><div class="line">LAST_DDL_TIME  TIMESTAMP                              STATUS         TE GE SE</div><div class="line">-------------- -------------------------------------- -------------- -- -- --</div><div class="line"> NAMESPACE EDITION_NAME</div><div class="line">---------- ------------------------------------------------------------</div><div class="line">                                                                     25</div><div class="line">            25 TABLE                                  09-6月 -19</div><div class="line">02-4月 -10     2010-04-02:13:18:38                    VALID          N  N  N</div><div class="line">         1</div><div class="line">SYS</div><div class="line">I_IND1</div><div class="line">                                                                     41</div><div class="line">            41 INDEX                                  08-6月 -19</div><div class="line">02-4月 -10     2010-04-02:13:18:38                    VALID          N  N  N</div><div class="line">         4</div><div class="line">OWNER</div><div class="line">------------------------------------------------------------</div><div class="line">OBJECT_NAME</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">SUBOBJECT_NAME                                                OBJECT_ID</div><div class="line">------------------------------------------------------------ ----------</div><div class="line">DATA_OBJECT_ID OBJECT_TYPE                            CREATED</div><div class="line">-------------- -------------------------------------- --------------</div><div class="line">LAST_DDL_TIME  TIMESTAMP                              STATUS         TE GE SE</div><div class="line">-------------- -------------------------------------- -------------- -- -- --</div><div class="line"> NAMESPACE EDITION_NAME</div><div class="line">---------- ------------------------------------------------------------</div><div class="line">SYS</div><div class="line">I_CDEF2</div><div class="line">                                                                     54</div><div class="line">            54 INDEX                                  07-6月 -19</div><div class="line">02-4月 -10     2010-04-02:13:18:38                    VALID          N  N  N</div><div class="line">         4</div><div class="line">已选择9行。</div><div class="line">执行计划</div><div class="line">----------------------------------------------------------</div><div class="line">Plan hash value: 1322348184</div><div class="line">---------------------------------------------------------------------------</div><div class="line">| Id  | Operation          | Name | Rows  | Bytes | Cost (%CPU)| Time     |</div><div class="line">---------------------------------------------------------------------------</div><div class="line">|   0 | SELECT STATEMENT   |      |    12 |  2484 |   292   (2)| 00:00:04 |</div><div class="line">|*  1 |  FILTER            |      |       |       |            |          |</div><div class="line">|*  2 |   TABLE ACCESS FULL| T    |    12 |  2484 |   292   (2)| 00:00:04 |</div><div class="line">---------------------------------------------------------------------------</div><div class="line">Predicate Information (identified by operation id):</div><div class="line">---------------------------------------------------</div><div class="line">   1 - filter(SYSDATE@!-10&lt;=SYSDATE@!-1)</div><div class="line">   2 - filter(&quot;CREATED&quot;&gt;=SYSDATE@!-10 AND &quot;CREATED&quot;&lt;=SYSDATE@!-1)</div><div class="line">Note</div><div class="line">-----</div><div class="line">   - dynamic sampling used for this statement (level=2)</div><div class="line">统计信息</div><div class="line">----------------------------------------------------------</div><div class="line">          5  recursive calls</div><div class="line">          0  db block gets</div><div class="line">       1112  consistent gets</div><div class="line">          0  physical reads</div><div class="line">          0  redo size</div><div class="line">       1770  bytes sent via SQL*Net to client</div><div class="line">        419  bytes received via SQL*Net from client</div><div class="line">          2  SQL*Net roundtrips to/from client</div><div class="line">          0  sorts (memory)</div><div class="line">          0  sorts (disk)</div><div class="line">          9  rows processed</div><div class="line">SQL&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="1-4、全文索引"><a href="#1-4、全文索引" class="headerlink" title="1.4、全文索引"></a>1.4、全文索引</h3><p>全文索引：所谓Oracle全文索引是通过Oracle词法分析器(lexer)将所有的表意单元term存储dr$开头的表里并存储term出现的位置、次数、hash值等等信息，Oracle提供了basic_lexer(针对英语)、chinese_vgram_lexer(汉语分析器)、chinese_lexer(新的汉语分析器)。</p>
+<ul>
+<li>basic_lexer：是一种适用于英文的分析器，根据空格或者标点符号将词元分离，不管对于中文来说是没有空格的，所以这种分析器不适合中文</li>
+<li>chinese_vgram_lexer：这是一种原先专门的中文分析器，支持所有的汉字字符集，比如zhs16gbk单点。这种分析器，分析过程是按字为单元进行分析的，举个例子，“索引本身是有序的”，按照这种分析器，会分成词元“索”、“索引”、“引本”、“本身”、“身是”、“是有”、“有序”、“序的”、“的”这些词元，然后你发现像“序的”这些词在中文中基本是不成立的，不过这种Oracle分析器本身就不认识中文，所以只能全部分析，很明显效率是不好的</li>
+<li>chinese_lexer：这是一种新的中文分析器，前面提到chinese_vgram_lexer这种分析器虽然支持所有的中文字符集，但是效率不高，所以chinese_lexer是对其的改进版本，这种分析器认识很多中文词汇，能够比较快查询，提高效率，不过这种分析器只能支持utf-8字符集</li>
+</ul>
+<p>Oracle的全文索引具体可以采用通配符查找、模糊匹配、相关分类、近似查找、条件加权和词意扩充等方法</p>
+<p>环境准备<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">drop table t purge;</div><div class="line">create table t as select * from dba_objects where object_name is not null;</div><div class="line">update t set object_name =&apos;高兴&apos; where rownum&lt;=2;</div><div class="line">commit;</div><div class="line">select * from t where object_name like &apos;%高兴%&apos;;</div></pre></td></tr></table></figure></p>
+<p>设置词法分析器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">//设置词法分析器</div><div class="line">BEGIN</div><div class="line">  ctx_ddl.create_preference (&apos;lexer1&apos;, &apos;chinese_vgram_lexer&apos;);</div><div class="line">END;</div></pre></td></tr></table></figure></p>
+<p>解锁ctxsys用户，同时给你的测试账号(我这里用scott)授权使用ctx_ddl<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//解锁ctxsys用户同时授权</div><div class="line">grant ctxapp to scott;</div><div class="line">alter user ctxsys account unlock;</div><div class="line">alter user ctxsys identified by ctxsys;</div><div class="line">connect ctxsys/ctxsys;</div><div class="line">grant execute on ctx_ddl to scott;</div><div class="line">connect scott/11;</div></pre></td></tr></table></figure></p>
+<p>建立全文索引<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//删除全文索引</div><div class="line">drop index idx_content;</div><div class="line">//查看数据文件信息</div><div class="line">select * from v$datafile; </div><div class="line">//建立全文索引</div><div class="line">CREATE INDEX  idx_content ON t(object_name) indextype is ctxsys.context  parameters(&apos;lexer lexer1&apos;);</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意要点：更新数据时候记得执行全文索引同步命令，否则将看不到更新数据</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">exec ctx_ddl.sync_index(&apos;idx_content&apos;,&apos;20M&apos;);</div></pre></td></tr></table></figure>
+</the>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2019/06/07/Oracle调优之索引知识学习笔记/">oracle细节之like模糊查询不能走索引？</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Nicky</a></p>
+        <p><span>发布时间:</span>2019-06-07, 00:00:00</p>
+        <p><span>最后更新:</span>2020-05-30, 19:18:42</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/06/07/Oracle调优之索引知识学习笔记/" title="oracle细节之like模糊查询不能走索引？">http://yoursite.com/2019/06/07/Oracle调优之索引知识学习笔记/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/06/07/Oracle调优之索引知识学习笔记/　　作者: Nicky" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2019/06/07/oracle细节之like模糊查询不能走索引？/">
+                    oracle细节之like模糊查询不能走索引？
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2019/10/03/linux系列之常用运维命令整理笔录/">
+                    linux系列之常用运维命令整理笔录
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、Oracle索引简介"><span class="toc-number">1.</span> <span class="toc-text">一、Oracle索引简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-索引分类"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 索引分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-索引数据结构"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 索引数据结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-索引特性"><span class="toc-number">1.3.</span> <span class="toc-text">1.3 索引特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-索引使用注意要点"><span class="toc-number">1.4.</span> <span class="toc-text">1.4 索引使用注意要点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5、索引的缺点"><span class="toc-number">1.5.</span> <span class="toc-text">1.5、索引的缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-6、索引失效"><span class="toc-number">1.6.</span> <span class="toc-text">1.6、索引失效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、索引分类介绍"><span class="toc-number">2.</span> <span class="toc-text">二、索引分类介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1、位图索引"><span class="toc-number">2.1.</span> <span class="toc-text">2.1、位图索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2、函数索引"><span class="toc-number">2.2.</span> <span class="toc-text">1.2、函数索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3、反向索引"><span class="toc-number">2.3.</span> <span class="toc-text">1.3、反向索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4、全文索引"><span class="toc-number">2.4.</span> <span class="toc-text">1.4、全文索引</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"true"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"oracle细节之like模糊查询不能走索引？　| Nicky's blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+<section id="comments">
+<!--高速版，加载速度快，使用前需测试页面的兼容性-->
+<div id="SOHUCS" sid="oracle细节之like模糊查询不能走索引？" style="padding: 0px 30px 0px 46px;"></div>
+<script>
+  (function(){
+    var appid = 'cysY1Qh4z',
+    conf = '44ad028ed833bee63e407681b65de68d';
+    var doc = document,
+    s = doc.createElement('script'),
+    h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
+    s.type = 'text/javascript';
+    s.charset = 'utf-8';
+    s.src =  'http://assets.changyan.sohu.com/upload/changyan.js?conf='+ conf +'&appid=' + appid;
+    h.insertBefore(s,h.firstChild);
+    window.SCS_NO_IFRAME = true;
+  })()
+</script>
+</section>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2019/06/07/oracle细节之like模糊查询不能走索引？/" title="上一篇: oracle细节之like模糊查询不能走索引？">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2019/10/03/linux系列之常用运维命令整理笔录/" title="下一篇: linux系列之常用运维命令整理笔录">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/12/03/MySQL基础之事务编程学习笔记/">MySQL基础之事务编程学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/25/SpringBoot系列之HATEOAS用法简介/">SpringBoot系列之HATEOAS用法简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/25/SpringBoot系列之i18n国际化多语言支持教程/">SpringBoot系列之i18n国际化多语言支持教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/03/linux系列之常用运维命令整理笔录/">linux系列之常用运维命令整理笔录</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/07/oracle细节之like模糊查询不能走索引？/">oracle细节之like模糊查询不能走索引？</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/07/Oracle调优之索引知识学习笔记/">oracle细节之like模糊查询不能走索引？</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/Spring微框架Spring Boot/">Spring微框架SpringBoot</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/基于SMTP协议的邮件发送功能JavaEE实现/">基于SMTP协议的邮件发送功能JavaEE实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/基于Spring Data框架的文章归档实现/">基于Spring Data框架的文章归档实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/Java中间件入门教程/">Java中间件入门教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/SpringBoot系列之学习教程汇总/">SpringBoot系列博客专栏</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/Hexo+Github搭建个人博客/">Hexo+Github搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/03/RabbitMQ系列之极速入门与实战教程/">SpringBoot系列之RabbitMQ使用实用教程</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2020 Nicky
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+             title: "a.article-title, .article-more-link a", 
+            
+             tags: ".article-tag a", 
+             categories: ".article-category a, a.tag-list-link", 
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+            
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
